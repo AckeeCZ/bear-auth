@@ -1,0 +1,8 @@
+{
+    "name": "@tooling/staged",
+    "version": "0.0.1",
+    "type": "module",
+    "exports": {
+        ".": "./index.mjs"
+    }
+}

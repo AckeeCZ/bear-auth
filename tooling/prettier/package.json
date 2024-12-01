@@ -1,0 +1,20 @@
+{
+    "name": "@tooling/prettier",
+    "version": "0.0.1",
+    "type": "module",
+    "bin": {
+        "prettier-format": "./bin/cli.mjs"
+    },
+    "exports": {
+        "./config": "./config/index.mjs"
+    },
+    "scripts": {
+        "format": "prettier-format"
+    },
+    "dependencies": {
+        "@ianvs/prettier-plugin-sort-imports": "4.4.0",
+        "@tooling/staged": "workspace:*",
+        "prettier": "3.4.1"
+    },
+    "prettier": "./config/index.mjs"
+}

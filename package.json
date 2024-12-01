@@ -1,0 +1,30 @@
+{
+  "name": "bear-auth",
+  "version": "0.0.1",
+  "author": "Jiří Čermák <jiri.cermak@ackee.cz>",
+  "packageManager": "yarn@4.5.3+sha256.dddc0b96ad2dca8d56a5302b56bf3cbf8210654474a6bf88877da61e866f3d46",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "20"
+  },
+  "workspaces": [
+    "packages/*",
+    "examples/*",
+    "tooling/*"
+  ],
+  "dependencies": {
+    "@tooling/eslint": "workspace:*",
+    "@tooling/prettier": "workspace:*",
+    "turbo": "2.3.3"
+  },
+  "scripts": {
+    "cir-dep": "turbo run cir-dep --parallel",
+    "lint": "turbo run lint --parallel",
+    "lint:fix": "turbo run lint --parallel -- --fix",
+    "format": "turbo run format --parallel"
+  },
+  "devDependencies": {
+    "tsc-alias": "1.8.10"
+  }
+}

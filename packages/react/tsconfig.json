@@ -1,0 +1,21 @@
+{
+    "extends": "@tooling/typescript/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "build",
+        "tsBuildInfoFile": ".cache/tsconfig.tsbuildinfo",
+        "rootDir": "./src",
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "~/*": [
+                "src/*"
+            ]
+        },
+        "strictFunctionTypes": true,
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.d.ts"
+    ]
+}

@@ -1,0 +1,38 @@
+{
+    "name": "@bear-auth/react",
+    "version": "0.0.1",
+    "type": "module",
+    "sideEffects": false,
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./build/index.d.ts",
+                "default": "./build/index.js"
+            }
+        }
+    },
+    "scripts": {
+        "clean": "rm -rf dist .cache",
+        "build": "tsc && tsc-alias",
+        "dev": "tsc -w & tsc-alias -w",
+        "format": "prettier-format",
+        "cir-dep": "check-cir-deps ./src",
+        "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
+    },
+    "devDependencies": {
+        "@bear-auth/core": "0.0.1",
+        "@tooling/eslint": "workspace:*",
+        "@tooling/madge": "workspace:*",
+        "@tooling/prettier": "workspace:*",
+        "@tooling/typescript": "workspace:*",
+        "react": "18.3.1",
+        "tsc-alias": "1.8.10",
+        "typescript": "5.7.2"
+    },
+    "peerDependencies": {
+        "react": "^18.3.1"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}

@@ -1,0 +1,39 @@
+import { stopTokenAutoRefresh } from '~/autoRefreshToken';
+import { getInstance, instances, setInstance, type BearAuth } from '~/create';
+import { setUnauthenticatedSession } from '~/store/session';
+
+import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
+
+export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
+    let instance = getInstance<AuthInfo>(instanceId);
+
+    if (!instance) {
+        return;
+    }
+
+    instance = stopTokenAutoRefresh<AuthInfo>(instance);
+
+    instance.logger.debug('destroy', 'Destroying auth session.');
+
+    if (instance.hooks.logout) {
+        await instance.hooks.logout();
+    } else {
+        await instance.storage?.clear(instance.id);
+
+        instance.state = setUnauthenticatedSession(instance.state);
+
+        setInstance(instance);
+
+        await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+    }
+
+    const keys = Object.keys(instance) as (keyof BearAuth<AuthInfo>)[];
+
+    for (const key of keys) {
+        delete instance[key];
+    }
+
+    instances.delete(instanceId);
+
+    return;
+}

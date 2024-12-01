@@ -1,0 +1,22 @@
+{
+    // ESlint
+    "eslint.format.enable": true,
+    "eslint.useFlatConfig": true,
+    "eslint.runtime": "node",
+    "eslint.nodePath": "node_modules",
+    "eslint.workingDirectories": [
+        {
+            "!cwd": false,
+            "pattern": "./**/*"
+        }
+    ],
+    // Editor
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit",
+        "source.fixAll.eslint": "explicit",
+        "source.addMissingImports": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "typescript.tsdk": "node_modules/typescript/lib"
+}

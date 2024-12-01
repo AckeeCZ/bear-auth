@@ -1,0 +1,27 @@
+{
+    "$schema": "https://turbo.build/schema.json",
+    "ui": "tui",
+    "cacheDir": ".cache/turbo",
+    "tasks": {
+        "lint": {
+            "cache": true,
+            "outputLogs": "full"
+        },
+        "format": {
+            "cache": true,
+            "outputLogs": "errors-only"
+        },
+        "cir-dep": {
+            "cache": true,
+            "outputLogs": "errors-only"
+        },
+        "//#audit": {
+            "dependsOn": [],
+            "cache": false
+        },
+        "//#pre-commit": {
+            "dependsOn": [],
+            "cache": true
+        }
+    }
+}
