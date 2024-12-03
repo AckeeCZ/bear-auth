@@ -1,4 +1,4 @@
-import './App.css';
+import './styles/App.css';
 
 import { authenticate, getAccessToken, retrieveAuthSession } from '@bear-auth/core';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -45,7 +45,7 @@ function App() {
 
     return (
         <>
-            <h1>Bear Auth</h1>
+            <h1>Bear Auth - Core Example</h1>
 
             {retrieveAuthSessionResult.isLoading && <p>Loading...</p>}
             {retrieveAuthSessionResult.error && <p>Status: {retrieveAuthSessionResult.error?.message}</p>}

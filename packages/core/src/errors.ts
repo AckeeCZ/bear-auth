@@ -28,11 +28,17 @@ export class BearAuthError<Code extends ErrorCode> extends Error {
     }
 }
 
+/**
+ * A TS guard function to recognize BearAuthError.
+ */
 export const isBearAuthError = (error: unknown): error is BearAuthError<ErrorCode> =>
     error instanceof BearAuthError && error.name === 'BearAuthError';
 
 const errorCodeValues = new Set(errorCodes);
 
+/**
+ * Specify BearAuthError with specific error codes you want to handle.
+ */
 export const isBearAuthErrorWithCodes = <const Codes extends ErrorCode[]>(
     error: unknown,
     codes: Codes,

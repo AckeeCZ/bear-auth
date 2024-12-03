@@ -18,6 +18,13 @@ export type RefreshTokenHook<AuthInfo> = {
     action: (props?: { forceUpdate?: boolean }) => Promise<void>;
 };
 
+/**
+ * - Set a function to make API call to your app's backend and fetch fresh access token.
+ * - Required when the `authenticaion` method returns `refreshToken` & `expiresIn` properties.
+ * @param instanceId - return value of `create` method
+ * @param handler - function to refresh the access token
+ * @returns
+ */
 export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<AuthInfo> = RefreshTokenHook<AuthInfo>>(
     instanceId: BearAuth<AuthInfo>['id'],
     handler: AuthHook['handler'],

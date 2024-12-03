@@ -7,6 +7,17 @@ import { setAuthenticatedSession, setUnauthenticatedSession } from '~/store/sess
 
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
+/**
+ * - Attempts to retrieve the auth session from the storage.
+ * - Refreshes the access token if it's expired and refresh token is available.
+ * - Refetches the auth info if it's available.
+ * - Persists the fresh session in the storage.
+ * - Calls `onAuthStateChanged` callbacks.
+ * - If any of the above steps fail, destroys the instance.
+ * - Returns the session object on success.
+ * @param instanceId - return value of `create` method
+ * @returns - Session object
+ */
 export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
     let instance = getInstance<AuthInfo>(instanceId);
 

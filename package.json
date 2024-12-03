@@ -22,9 +22,12 @@
     "cir-dep": "turbo run cir-dep --parallel",
     "lint": "turbo run lint --parallel",
     "lint:fix": "turbo run lint --parallel -- --fix",
-    "format": "turbo run format --parallel"
+    "format": "turbo run format --parallel",
+    "release:prepare": "yarn build && yarn changeset",
+    "release:apply": "yarn changeset version && yarn changeset tag && yarn install",
+    "release:publish": "yarn changeset publish"
   },
   "devDependencies": {
-    "tsc-alias": "1.8.10"
+    "@changesets/cli": "2.27.10"
   }
 }

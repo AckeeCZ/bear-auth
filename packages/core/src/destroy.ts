@@ -4,6 +4,13 @@ import { setUnauthenticatedSession } from '~/store/session';
 
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
+/**
+ * Destroys the BearAuth instance.
+ * - Tries to logout user.
+ * - Clears the storage.
+ * - Deletes the instance.
+ * @param instanceId - return value of `create` method
+ */
 export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
     let instance = getInstance<AuthInfo>(instanceId);
 
@@ -34,6 +41,4 @@ export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
     }
 
     instances.delete(instanceId);
-
-    return;
 }

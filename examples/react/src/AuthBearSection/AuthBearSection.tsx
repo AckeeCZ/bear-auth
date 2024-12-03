@@ -3,7 +3,7 @@ import { useBearAuth, useBearAuthSession } from '@bear-auth/react';
 
 import { AuthInfo } from '../App';
 
-export const AuthSection = () => {
+export const AuthBearSection = () => {
     const session = useBearAuthSession<AuthInfo>();
     const { id, actions } = useBearAuth<AuthInfo>();
 

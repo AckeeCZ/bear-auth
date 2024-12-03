@@ -8,12 +8,12 @@ import {
 } from '@bear-auth/core';
 import { BearAuthProvider } from '@bear-auth/react';
 
-import './App.css';
+import './styles/App.css';
 
 import { createIndexedDBStorage } from '@bear-auth/storage';
 import { z } from 'zod';
 
-import { AuthSection } from './AuthSection';
+import { AuthBearSection } from './AuthBearSection';
 
 export type AuthInfo = {
     user: {
@@ -62,9 +62,9 @@ const logout = setLogoutHook<AuthInfo>(bearAuthId, async () => {
 function App() {
     return (
         <>
-            <h1>Bear Auth</h1>
+            <h1>Bear Auth - React Example</h1>
             <BearAuthProvider id={bearAuthId} actions={{ refetchAuthInfo, refreshToken, logout }}>
-                <AuthSection />
+                <AuthBearSection />
             </BearAuthProvider>
         </>
     );

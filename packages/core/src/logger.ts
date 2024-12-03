@@ -28,6 +28,10 @@ export function createDefaultLogger(instanceId: BearAuth<unknown>['id'], logleve
 
 export type Logger = ReturnType<typeof createDefaultLogger>;
 
+/**
+ * Customize the log level.
+ * @param instanceId - return value of `create` method
+ */
 export function setLogLevel(instanceId: BearAuth<unknown>['id'], level: LogLevel) {
     const instance = getInstance(instanceId);
 
@@ -40,6 +44,11 @@ export function setLogLevel(instanceId: BearAuth<unknown>['id'], level: LogLevel
     setInstance(instance);
 }
 
+/**
+ * Override the default logger.
+ * @param instanceId - return value of `create` method
+ * @param logger - custom logger
+ */
 export function setLogger<L extends Logger>(instanceId: BearAuth<unknown>['id'], logger: L) {
     const instance = getInstance(instanceId);
 

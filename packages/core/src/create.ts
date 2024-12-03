@@ -49,6 +49,10 @@ export interface CreateProps {
     instanceId?: string;
 }
 
+/**
+ * Initialize BearAuth instance. Can't be called multiple times with the same instance ID (Call `destroy` first).
+ * @returns a string reference to the created BearAuth instance.
+ */
 export function create({ instanceId = 'bear_auth' }: CreateProps = {}) {
     if (instances.has(instanceId)) {
         throw new BearAuthError(

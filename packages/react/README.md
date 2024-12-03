@@ -1,4 +1,4 @@
-# Bear Auth React
+# 🐻 Bear Auth React
 
 An integration of `@bear-auth/core` for React. 
 

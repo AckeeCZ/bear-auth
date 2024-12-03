@@ -10,6 +10,13 @@ export type LogoutHook<AuthInfo> = {
     action: () => Promise<void>;
 };
 
+/**
+ * - Set a function to make API call to your app's backend and signs-out the user.
+ * - It's always required.
+ * @param instanceId - return value of `create` method
+ * @param handler - function to logout the user
+ * @returns - trigger the logout process
+ */
 export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = LogoutHook<AuthInfo>>(
     instanceId: BearAuth<AuthInfo>['id'],
     handler: AuthHook['handler'],

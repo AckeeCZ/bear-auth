@@ -7,6 +7,9 @@ export type PersistedData<AuthInfo> = {
     data: AuthSession<AuthInfo>;
 };
 
+/**
+ * Storage schema to persist the auth session.
+ */
 export type StorageSchema<AuthInfo> = {
     /**
      * Version of `AuthInfo` schema. Increment this value when `AuthInfo` schema is updated, the storage will be cleared.
@@ -18,6 +21,11 @@ export type StorageSchema<AuthInfo> = {
     clear: (instanceId: string) => Promise<void>;
 };
 
+/**
+ * Set the custom storage to persist the auth session.
+ * @param instanceId - return value of `create` method
+ * @param storage
+ */
 export function setStorage<AuthInfo>(instanceId: BearAuth<AuthInfo>['id'], storage: StorageSchema<AuthInfo>) {
     const instance = getInstance<AuthInfo>(instanceId);
 

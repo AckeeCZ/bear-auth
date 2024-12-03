@@ -11,6 +11,13 @@ export type FetchAuthInfoHook<AuthInfo> = {
     action: () => Promise<void>;
 };
 
+/**
+ * - During configuration of BearAuth, set a function to fetch the auth info from your API.
+ * - Required when the `authenticaion` method returns `authInfo`.
+ * @param instanceId - return value of `create` method
+ * @param handler - function to fetch the auth info
+ * @returns - function to refetch the auth info
+ */
 export function setFetchAuthInfoHook<
     AuthInfo,
     AuthHook extends FetchAuthInfoHook<AuthInfo> = FetchAuthInfoHook<AuthInfo>,

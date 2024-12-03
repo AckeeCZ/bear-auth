@@ -29,6 +29,15 @@ export type AuthenticateProps<AuthInfo> = {
     refreshToken?: string | null;
 };
 
+/**
+ * Once user signs-in / signs-up, this method is called to pass the authentication data to the library.
+ * - Only `accessToken` is required to be returned.
+ * - `expiresIn` and `refreshToken` are optional, but if provided, the library will automatically refresh the access token when it expires.
+ * - Don't forget to `setRefreshTokenHook` before calling this method if you want to use the refresh token.
+ * - Similarly, don't forget to `setFetchAuthInfo` before calling this method if you want to use the `authInfo` property.
+ * @param instanceId - return value of `create` method
+ * @param props - authentication data
+ */
 export async function authenticate<AuthInfo>(
     instanceId: BearAuth<AuthInfo>['id'],
     { accessToken, expiresIn = null, refreshToken = null, authInfo = null }: AuthenticateProps<AuthInfo>,

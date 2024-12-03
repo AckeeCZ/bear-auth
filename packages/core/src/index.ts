@@ -1,5 +1,5 @@
 export * from './authenticate';
-export { create, getCreatedBearAuths, type BearAuth, type CreateProps } from './create';
+export { create, getCreatedBearAuths, type CreateProps } from './create';
 export { destroy } from './destroy';
 export { isBearAuthError, isBearAuthErrorWithCodes } from './errors';
 export * from './getAccessToken';
@@ -12,3 +12,4 @@ export { onAuthStateChanged, type OnAuthStateChangedCallback } from './onAuthSta
 export * from './retrieveAuthSession';
 export { setStorage, type PersistedData, type StorageSchema } from './storage';
 export { type Session } from './store/session';
+export { type AuthSession } from './types';

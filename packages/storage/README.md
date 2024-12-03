@@ -1,4 +1,4 @@
-# Bear Auth Storage
+# 🐻 Bear Auth Storage
 
 A simple wrapper function for creating a IndexedDB storage object for `setStorage` method from `@bear-auth/core`.
 

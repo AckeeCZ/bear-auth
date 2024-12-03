@@ -4,6 +4,12 @@ export type OnAuthStateChangedCallback<AuthInfo> = (
     session: BearAuth<AuthInfo>['state']['session'],
 ) => Promise<void> | void;
 
+/**
+ * Register a callback to be called whenever the auth state changes.
+ * @param instanceId - return value of `create` method
+ * @param callback - function to be called when the auth state changes
+ * @returns a function to unsubscribe the callback
+ */
 export function onAuthStateChanged<AuthInfo>(
     instanceId: BearAuth<AuthInfo>['id'],
     callback: OnAuthStateChangedCallback<AuthInfo>,

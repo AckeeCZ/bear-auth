@@ -17,6 +17,15 @@ async function onResolveAuthState(instanceId: BearAuth<unknown>['id']) {
     unsubscribe();
 }
 
+/**
+ * Get the access token:
+ * 1. If session is 'loading', wait for it to resolve.
+ * 2. If session is 'unauthenticated', return null.
+ * 3. If session is 'authenticated', check if the token is expired.
+ * 4. If token is expired and refresh token is available, refresh the token.
+ * 5. Return the access token.
+ * @param instanceId - return value of `create` method
+ */
 export async function getAccessToken(
     instanceId: BearAuth<unknown>['id'],
     { forceRefresh = false }: { forceRefresh?: boolean } = {},
