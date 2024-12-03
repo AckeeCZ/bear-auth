@@ -1,11 +1,12 @@
 export * from './authenticate';
-export { create, getCreatedBearAuths, type CreateProps } from './create';
+export { create, type CreateProps } from './create';
 export { destroy } from './destroy';
 export { isBearAuthError, isBearAuthErrorWithCodes } from './errors';
 export * from './getAccessToken';
 export * from './hooks/setFetchAuthInfoHook';
 export * from './hooks/setLogoutHook';
 export * from './hooks/setRefreshTokenHook';
+export { getCreatedBearAuths } from './instances';
 export * from './logger';
 export { setContinueWhenOnline } from './network';
 export { onAuthStateChanged, type OnAuthStateChangedCallback } from './onAuthStateChanged';

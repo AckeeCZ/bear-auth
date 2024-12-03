@@ -15,6 +15,11 @@
             "cache": true,
             "outputLogs": "errors-only"
         },
+        "build": {
+            "cache": true,
+            "dependsOn": ["cir-dep", "format", "lint", "^build", "//#audit"],
+            "outputs": ["build/**"]
+        },
         "//#audit": {
             "dependsOn": [],
             "cache": false

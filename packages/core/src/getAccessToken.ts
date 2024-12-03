@@ -1,6 +1,7 @@
 import { isExpired } from '~/autoRefreshToken';
-import { getInstance, type BearAuth } from '~/create';
+import { type BearAuth } from '~/create';
 
+import { getInstance } from './instances';
 import { onAuthStateChanged } from './onAuthStateChanged';
 
 async function onResolveAuthState(instanceId: BearAuth<unknown>['id']) {

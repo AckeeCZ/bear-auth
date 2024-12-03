@@ -2,6 +2,7 @@
     "name": "@tooling/prettier",
     "version": "0.0.1",
     "type": "module",
+    "private": true,
     "bin": {
         "prettier-format": "./bin/cli.mjs"
     },

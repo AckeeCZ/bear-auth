@@ -4,6 +4,7 @@ import type { StorageSchema } from '~/storage';
 import { createInitialState, type State } from '~/store/state';
 import type { AuthSession } from '~/types';
 
+import { instances } from './instances';
 import { defaultContinueWhenOnline } from './network';
 import type { OnAuthStateChangedCallback } from './onAuthStateChanged';
 
@@ -39,8 +40,6 @@ export type BearAuth<AuthInfo> = {
 
     continueWhenOnline: () => Promise<void>;
 };
-
-export const instances = new Map<string, BearAuth<unknown>>();
 
 export interface CreateProps {
     /**
@@ -93,28 +92,4 @@ export function create({ instanceId = 'bear_auth' }: CreateProps = {}) {
     instances.set(instanceId, instance);
 
     return instance.id;
-}
-
-export function getInstance<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const instance = instances.get(instanceId);
-
-    if (!instance) {
-        throw new BearAuthError(
-            'bear-auth/unknown-instance',
-            `No BearAuth instance found for ${instanceId} ID. Call 'create(instanceId: string)' first.`,
-        );
-    }
-
-    return instance as BearAuth<AuthInfo>;
-}
-
-export function setInstance<AuthState>(bearAuth: BearAuth<AuthState>) {
-    instances.set(bearAuth.id, bearAuth as BearAuth<unknown>);
-}
-
-/**
- * Get all active BearAuth instance IDs.
- */
-export function getCreatedBearAuths() {
-    return Array.from(instances.keys());
 }

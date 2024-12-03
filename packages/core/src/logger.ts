@@ -1,6 +1,8 @@
 import { getLogger } from 'loglevel';
 
-import { getInstance, setInstance, type BearAuth } from '~/create';
+import { type BearAuth } from '~/create';
+
+import { getInstance, setInstance } from './instances';
 
 export type LogLevel = 'error' | 'debug' | 'info' | 'silent';
 

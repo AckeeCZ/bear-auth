@@ -1,6 +1,7 @@
 import { stopTokenAutoRefresh } from '~/autoRefreshToken';
-import { getInstance, setInstance, type BearAuth } from '~/create';
+import { type BearAuth } from '~/create';
 import { BearAuthError } from '~/errors';
+import { getInstance, setInstance } from '~/instances';
 import { runOnAuthStateChangedCallbacks } from '~/onAuthStateChanged';
 import { persistAuthSession } from '~/storage';
 import { setUnauthenticatedSession, updateAuthInfo } from '~/store/session';

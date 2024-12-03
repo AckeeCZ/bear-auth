@@ -1,6 +1,8 @@
-import { getInstance, setInstance, type BearAuth } from '~/create';
+import { type BearAuth } from '~/create';
 import { BearAuthError } from '~/errors';
 import type { AuthSession } from '~/types';
+
+import { getInstance, setInstance } from './instances';
 
 export type PersistedData<AuthInfo> = {
     version: number;

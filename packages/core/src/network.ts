@@ -1,4 +1,5 @@
-import { getInstance, setInstance, type BearAuth } from './create';
+import { type BearAuth } from './create';
+import { getInstance, setInstance } from './instances';
 
 type NetworkStatus = 'online' | 'offline';
 

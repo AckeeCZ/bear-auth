@@ -1,10 +1,11 @@
 import { isExpired, startTokenAutoRefresh } from '~/autoRefreshToken';
-import { getInstance, setInstance, type BearAuth } from '~/create';
+import { type BearAuth } from '~/create';
 import { destroy } from '~/destroy';
 import { BearAuthError, isBearAuthError } from '~/errors';
 import { clearStorageOnStorageVersionUpdate, persistAuthSession } from '~/storage';
 import { setAuthenticatedSession, setUnauthenticatedSession } from '~/store/session';
 
+import { getInstance, setInstance } from './instances';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
 /**

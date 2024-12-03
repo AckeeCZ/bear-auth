@@ -2,6 +2,7 @@ import {
     create,
     onAuthStateChanged,
     setFetchAuthInfoHook,
+    setLogLevel,
     setLogoutHook,
     setRefreshTokenHook,
     setStorage,
@@ -18,7 +19,7 @@ export type AuthInfo = {
 
 export const bearAuthId = create();
 
-// setLogLevel(bearAuthId, 'debug');
+setLogLevel(bearAuthId, 'debug');
 
 const storage = createIndexedDBStorage<AuthInfo>({
     bearAuthId,

@@ -1,7 +1,7 @@
 {
     "name": "@tooling/madge",
     "version": "0.0.1",
-    "type": "module",
+    "type": "module","private":true,
     "bin": {
         "check-cir-deps": "./bin/cli.js"
     },

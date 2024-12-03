@@ -1,9 +1,10 @@
 import { convertExpiresInToExpiration, startTokenAutoRefresh } from '~/autoRefreshToken';
-import { getInstance, setInstance, type BearAuth } from '~/create';
+import { type BearAuth } from '~/create';
 import { BearAuthError } from '~/errors';
 import { persistAuthSession } from '~/storage';
 import { setAuthenticatedSession } from '~/store/session';
 
+import { getInstance, setInstance } from './instances';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
 export type AuthenticateProps<AuthInfo> = {
