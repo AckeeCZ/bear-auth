@@ -1,6 +1,6 @@
 # 🐻 Bear Auth Storage
 
-A simple wrapper function for creating a IndexedDB storage object for `setStorage` method from `@bear-auth/core`.
+A simple wrapper function for creating a IndexedDB storage object for `setStorage` method from [`@bear-auth/core`](https://github.com/AckeeCZ/bear-auth/blob/main/packages/core).
 
 ```sh
 yarn add @bear-auth/storage

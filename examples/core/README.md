@@ -1,6 +1,6 @@
 # Bear auth core example
 
-A simple example of using `@bear-auth/core`
+A simple example of using [`@bear-auth/core`](https://github.com/AckeeCZ/bear-auth/blob/main/packages/core)
 
 ## Get started
 

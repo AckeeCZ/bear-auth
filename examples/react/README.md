@@ -1,6 +1,6 @@
 # Bear auth react example
 
-A simple example of using `@bear-auth/react`
+A simple example of using [`@bear-auth/react`](https://github.com/AckeeCZ/bear-auth/blob/main/packages/react)
 
 ## Get started
 

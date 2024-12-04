@@ -1,5 +1,5 @@
-import { useContext } from 'react';
 import type { Session } from '@bear-auth/core';
+import { useContext } from 'react';
 
 import { AuthSessionContext } from '../context';
 
