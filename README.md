@@ -1,6 +1,6 @@
 # 🐻 Bear Auth
 
-Bear auth contains a set of methods for managing JWT tokens in single page application.
+Bear auth contains a set of methods for managing JWT tokens in single page applications.
 
 ## Features
 - 🪶 Ultra-light (TODO: check min gzip size)
