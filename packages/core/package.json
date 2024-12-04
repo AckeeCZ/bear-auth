@@ -3,6 +3,8 @@
     "version": "1.0.0",
     "type": "module",
     "sideEffects": false,
+    "module": "./build/index.js",
+    "types": "./build/index.d.ts",
     "exports": {
         ".": {
             "import": {
