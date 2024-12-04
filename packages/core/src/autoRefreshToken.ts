@@ -57,7 +57,7 @@ export function startTokenAutoRefresh<AuthInfo>(instance: BearAuth<AuthInfo>) {
 
     instance.logger.debug('startTokenAutoRefresh', `Token will be refreshed in ${expiresIn / 1000}s`);
 
-    const refreshTokenTimeoutId = window.setTimeout(() => {
+    const refreshTokenTimeoutId = globalThis.setTimeout(() => {
         instance.hooks.refreshToken!();
     }, expiresIn);
 

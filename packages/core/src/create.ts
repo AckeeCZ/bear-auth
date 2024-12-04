@@ -36,7 +36,7 @@ export type BearAuth<AuthInfo> = {
 
     onAuthStateChanged: Set<OnAuthStateChangedCallback<AuthInfo>>;
 
-    refreshTokenTimeoutId: null | number;
+    refreshTokenTimeoutId: null | (number | NodeJS.Timeout);
 
     continueWhenOnline: () => Promise<void>;
 };
