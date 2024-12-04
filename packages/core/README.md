@@ -1,6 +1,6 @@
 # 🐻 Bear Auth Core
 
-Bear auth contains a set of methods for managing JWT tokens in single page application.
+Bear auth contains a set of methods for managing JWT tokens in single page applications.
 
 ## APIs
 
@@ -8,4 +8,4 @@ Bear auth contains a set of methods for managing JWT tokens in single page appli
 
 ## Usage
 
-👉 The fully working [example](../../examples/core/README.md).
+👉 The usage [example](../../examples/core/README.md).

@@ -1,6 +1,6 @@
 # 🐻 Bear Auth React
 
-An integration of `@bear-auth/core` for React. 
+An integration of [`@bear-auth/core`](../core/README.md) for React. 
 
 ## Install
 
@@ -132,4 +132,4 @@ import { type AuthInfo, bearAuthId } from '....'
 </button>
 ```
 
-Checkout [the react example](../../examples/react) for live demo.
+👉 The usage [example](../../examples/react).
