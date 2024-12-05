@@ -4,9 +4,9 @@ Bear auth contains a set of methods for managing JWT tokens in single page appli
 
 ## Features
 - 🪶 Ultra-light 
-    - `@bear-auth/core`: 7.1 kB (min + gzip)
-    - `@bear-auth/react`: 0.55 kB (min + gzip)
-    - `@bear-auth/storage`: 0.44 kB (min + gzip)
+    - `@bear-auth/core`: [7.1 kB (min + gzip)](https://bundlephobia.com/package/@bear-auth/core)
+    - `@bear-auth/react`: [0.55 kB (min + gzip)](https://bundlephobia.com/package/@bear-auth/react)
+    - `@bear-auth/storage`: [0.44 kB (min + gzip)](https://bundlephobia.com/package/@bear-auth/storage)
 - ♻️ Auto access token refreshment
 - 🛜 Network status detection
 - 🏗️ Highly customizable.
