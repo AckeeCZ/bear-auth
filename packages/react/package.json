@@ -1,6 +1,6 @@
 {
     "name": "@bear-auth/react",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "module",
     "sideEffects": false,
     "module": "./build/index.js",
@@ -22,7 +22,7 @@
         "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
     },
     "devDependencies": {
-        "@bear-auth/core": "1.0.1",
+        "@bear-auth/core": "1.0.2",
         "@tooling/eslint": "workspace:*",
         "@tooling/madge": "workspace:*",
         "@tooling/prettier": "workspace:*",

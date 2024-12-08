@@ -1,5 +1,12 @@
 # @bear-auth/core
 
+## 1.0.2
+
+### Patch Changes
+
+- 641724f: Update scope of publishable files.
+- 3b3f2e2: Update scope of publishable files.
+
 ## 1.0.1
 
 ### Patch Changes
