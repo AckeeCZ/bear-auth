@@ -39,5 +39,13 @@
     },
     "files": [
         "build"
-    ]
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/AckeeCZ/bear-auth"
+    },
+    "homepage": "https://github.com/AckeeCZ/bear-auth",
+    "bugs": {
+        "url": "https://github.com/AckeeCZ/bear-auth/issues"
+    }
 }
