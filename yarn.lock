@@ -221,7 +221,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bear-auth/core@npm:1.0.1, @bear-auth/core@workspace:*, @bear-auth/core@workspace:packages/core":
+"@bear-auth/core@npm:1.0.2, @bear-auth/core@workspace:*, @bear-auth/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@bear-auth/core@workspace:packages/core"
   dependencies:
@@ -240,7 +240,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@bear-auth/react@workspace:packages/react"
   dependencies:
-    "@bear-auth/core": "npm:1.0.1"
+    "@bear-auth/core": "npm:1.0.2"
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
     "@tooling/prettier": "workspace:*"
@@ -257,7 +257,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@bear-auth/storage@workspace:packages/storage"
   dependencies:
-    "@bear-auth/core": "npm:1.0.1"
+    "@bear-auth/core": "npm:1.0.2"
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
     "@tooling/prettier": "workspace:*"
