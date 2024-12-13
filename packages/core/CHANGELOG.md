@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 1.0.3
+
+### Patch Changes
+
+- a1d1eae: Fix updating internal state after token refreshment.
+
 ## 1.0.2
 
 ### Patch Changes
