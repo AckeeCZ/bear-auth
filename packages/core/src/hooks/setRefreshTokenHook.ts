@@ -67,6 +67,8 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             instance.logger.debug('Access token has been successfully refreshed.');
 
+            setInstance(instance);
+
             return instance;
         } catch (error) {
             instance.logger.error(error);

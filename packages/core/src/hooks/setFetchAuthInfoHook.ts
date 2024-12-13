@@ -43,11 +43,11 @@ export function setFetchAuthInfoHook<
 
             if (!retrievedAuthSession) {
                 await persistAuthSession<AuthInfo>(instance);
-
-                setInstance(instance);
             }
 
             instance.logger.debug('Auth data has been fetched:', authInfo);
+
+            setInstance(instance);
 
             return instance;
         } catch (error) {
