@@ -67,6 +67,15 @@ const refreshToken = setRefreshTokenHook<AuthInfo>(
     'myInstance',
     async session => {
         // Refresh token logic
+        return {
+            expiration: '...', // timestamp in ISO format
+            accessToken: '...',
+            refreshToken: '...'
+            // Optionally, refreshed auth. info:
+            authInfo: {
+                // ...
+            }
+        }
     },
     {
         // Optional retry (sync/async) callback or boolean (default `false`)
