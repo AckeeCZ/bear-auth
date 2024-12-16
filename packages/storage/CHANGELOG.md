@@ -1,5 +1,33 @@
 # @bear-auth/storage
 
+## 2.0.0
+
+### Major Changes
+
+- c441650: ## Migration guide
+
+    The `expiresIn` properties have been changed to `expiration` timestamp in ISO format.
+
+    Before:
+
+    ```ts
+    await authenticate<AuthInfo>(bearAuthId, {
+        // ...
+        expiresIn: 3000,
+    });
+    ```
+
+    After:
+
+    ```ts
+    await authenticate<AuthInfo>(bearAuthId, {
+        // ...
+        expiration: new Date(Date.now() + 3000).toISOString(),
+    });
+    ```
+
+    The same applies for the return values of the `setRefreshTokenHook` handler.
+
 ## 1.0.3
 
 ### Patch Changes
