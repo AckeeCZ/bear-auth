@@ -26,10 +26,12 @@
     "build": "turbo run build",
     "release:prepare": "yarn build && yarn changeset",
     "release:apply": "yarn changeset version && yarn changeset tag && yarn install",
-    "release:publish": "yarn changeset publish"
+    "release:publish": "yarn changeset publish",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "@changesets/cli": "2.27.10"
+    "@changesets/cli": "2.27.10",
+    "husky": "9.1.7"
   },
   "license": "GPL-3.0-only",
   "repository": {
