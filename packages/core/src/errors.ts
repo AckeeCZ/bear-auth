@@ -10,6 +10,7 @@ const errorCodes = [
     'bear-auth/unknown-hook',
     'bear-auth/retrieve-auth-session-failed',
     'bear-auth/invalid-expires-in',
+    'bear-auth/log-level',
 ] as const;
 
 type ErrorCodes = typeof errorCodes;

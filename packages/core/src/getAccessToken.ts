@@ -34,7 +34,7 @@ export async function getAccessToken(
     let instance = getInstance(instanceId);
 
     if (instance.state.session.status === 'loading') {
-        instance.logger.debug('getAccessToken', 'Waiting for loading state to resolve...');
+        instance.logger.debug('[getAccessToken]', 'Waiting for loading state to resolve...');
         await onResolveAuthState(instanceId);
     }
 
@@ -42,7 +42,7 @@ export async function getAccessToken(
 
     const { status, data } = instance.state.session;
 
-    instance.logger.debug('getAccessToken', 'Session status:', instance.state.session);
+    instance.logger.debug('[getAccessToken]', 'Session status:', instance.state.session);
 
     if (status === 'unauthenticated') {
         return null;
@@ -51,7 +51,7 @@ export async function getAccessToken(
     if (status === 'authenticated') {
         if (isExpired(data.expiration) && !data.refreshToken) {
             instance.logger.debug(
-                'getAccessToken',
+                '[getAccessToken]',
                 'Access token expired and no refresh token available. Returning null.',
             );
             return null;
@@ -59,19 +59,19 @@ export async function getAccessToken(
 
         if ((isExpired(data.expiration) || forceRefresh) && instance.hooks.refreshToken) {
             instance.logger.debug(
-                'getAccessToken',
+                '[getAccessToken]',
                 'Access token expired or force refresh enabled. Refreshing access token...',
             );
             instance = await instance.hooks.refreshToken();
-            instance.logger.debug('getAccessToken', 'Access token refreshed.', instance.state.session);
+            instance.logger.debug('[getAccessToken]', 'Access token refreshed.', instance.state.session);
         }
 
-        instance.logger.debug('getAccessToken', 'Returning access token:', instance.state.session.data!.accessToken);
+        instance.logger.debug('[getAccessToken]', 'Returning access token:', instance.state.session.data!.accessToken);
 
         return instance.state.session.data!.accessToken;
     }
 
-    instance.logger.debug('getAccessToken', 'Session status is not recognized. Returning null.');
+    instance.logger.debug('[getAccessToken]', 'Session status is not recognized. Returning null.');
 
     return null;
 }

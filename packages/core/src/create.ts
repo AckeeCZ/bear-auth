@@ -25,6 +25,7 @@ export type BearAuth<AuthInfo> = {
     state: State<AuthInfo>;
     flags: {
         autoRefreshAccessTokenEnabled: boolean;
+        customLogger: boolean;
     };
 
     storage: StorageSchema<AuthInfo> | null;
@@ -76,6 +77,7 @@ export function create({ instanceId = 'bear_auth' }: CreateProps = {}) {
 
         flags: {
             autoRefreshAccessTokenEnabled: false,
+            customLogger: false,
         },
 
         storage: null,

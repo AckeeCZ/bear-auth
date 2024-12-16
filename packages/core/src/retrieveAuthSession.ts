@@ -22,7 +22,7 @@ import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
     let instance = getInstance<AuthInfo>(instanceId);
 
-    instance.logger.debug('retrieveAuthSession', 'Retrieving auth session...');
+    instance.logger.debug('[retrieveAuthSession]', 'Retrieving auth session...');
 
     await instance.continueWhenOnline();
 
@@ -30,7 +30,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
     const session = await instance.storage?.get(instance.id);
 
-    instance.logger.debug('retrieveAuthSession', session);
+    instance.logger.debug('[retrieveAuthSession]', session);
 
     if (!session?.data || !session.data.expiration || !session.data.refreshToken) {
         instance.state = setUnauthenticatedSession(instance.state);
@@ -41,7 +41,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
-        instance.logger.debug('No auth session retrieved.');
+        instance.logger.debug('[retrieveAuthSession', 'No auth session retrieved.');
 
         return instance.state.session;
     }
@@ -69,7 +69,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
-        instance.logger.debug('Auth session successfully retrieved.');
+        instance.logger.debug('[retrieveAuthSession]', 'Auth session successfully retrieved.');
 
         return instance.state.session;
     } catch (error) {

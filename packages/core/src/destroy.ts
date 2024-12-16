@@ -21,7 +21,7 @@ export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
 
     instance = stopTokenAutoRefresh<AuthInfo>(instance);
 
-    instance.logger.debug('destroy', 'Destroying auth session.');
+    instance.logger.debug('[destroy]', 'Destroying auth session.');
 
     if (instance.hooks.logout) {
         await instance.hooks.logout();

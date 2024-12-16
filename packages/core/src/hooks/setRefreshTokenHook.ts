@@ -43,7 +43,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
         instance = stopTokenAutoRefresh(instance);
 
         try {
-            instance.logger.debug('Refreshing access token...');
+            instance.logger.debug('[refreshToken]', 'Refreshing access token...');
 
             await instance.continueWhenOnline();
 
@@ -53,7 +53,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             const result = await handler(authSession);
 
-            instance.logger.debug('Received refresh access token result:', result);
+            instance.logger.debug('[refreshToken]', 'Received refresh access token result:', result);
 
             instance.state = updateSessionAfterRefreshToken(instance.state, result);
 
@@ -63,7 +63,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             instance = startTokenAutoRefresh(instance);
 
-            instance.logger.debug('Access token has been successfully refreshed.');
+            instance.logger.debug('[refreshToken]', 'Access token has been successfully refreshed.');
 
             setInstance(instance);
 

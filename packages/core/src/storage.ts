@@ -51,7 +51,10 @@ export async function clearStorageOnStorageVersionUpdate<AuthInfo>(instance: Bea
         const persistedData = await storage.get(instance.id);
 
         if (persistedData && persistedData.version !== currentVersion) {
-            logger.debug('Storage version has been updated. Clearing storage...');
+            logger.debug(
+                '[clearStorageOnStorageVersionUpdate]',
+                'Storage version has been updated. Clearing storage...',
+            );
             await storage.clear(instance.id);
         }
     } catch (error) {

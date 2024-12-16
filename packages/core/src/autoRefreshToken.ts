@@ -7,7 +7,7 @@ export function isExpired(expiration: string | undefined | null) {
 export function startTokenAutoRefresh<AuthInfo>(instance: BearAuth<AuthInfo>) {
     if (!instance.flags.autoRefreshAccessTokenEnabled) {
         instance.logger.debug(
-            'startTokenAutoRefresh',
+            '[startTokenAutoRefresh]',
             `Auto token refresh is disabled. 'authenticate' method must return a 'expiration' and 'refreshToken'.`,
         );
         return instance;
@@ -17,7 +17,7 @@ export function startTokenAutoRefresh<AuthInfo>(instance: BearAuth<AuthInfo>) {
 
     const expiresIn = isExpired(expiration) ? 0 : Date.parse(expiration!) - Date.now();
 
-    instance.logger.debug('startTokenAutoRefresh', `Token will be refreshed in ${expiresIn / 1000}s`);
+    instance.logger.debug('[startTokenAutoRefresh]', `Token will be refreshed in ${expiresIn / 1000}s`);
 
     const refreshTokenTimeoutId = globalThis.setTimeout(() => {
         instance.hooks.refreshToken!();
@@ -33,7 +33,7 @@ export function stopTokenAutoRefresh<AuthInfo>(instance: BearAuth<AuthInfo>) {
         return instance;
     }
 
-    instance.logger.debug('stopTokenAutoRefresh', 'Stopping auto token refresh...');
+    instance.logger.debug('[stopTokenAutoRefresh]', 'Stopping auto token refresh...');
 
     clearTimeout(instance.refreshTokenTimeoutId);
     instance.refreshTokenTimeoutId = null;

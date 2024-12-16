@@ -18,7 +18,7 @@ export function onAuthStateChanged<AuthInfo>(
 ) {
     const instance = getInstance<AuthInfo>(instanceId);
 
-    instance.logger.debug('onAuthStateChanged', 'Subscribing...', callback);
+    instance.logger.debug('[onAuthStateChanged]', 'Subscribing...', callback);
 
     instance.onAuthStateChanged.add(callback);
 
@@ -27,7 +27,7 @@ export function onAuthStateChanged<AuthInfo>(
     callback(instance.state.session);
 
     return function unsubscribe() {
-        instance.logger.debug('onAuthStateChanged', 'Unsubscribing...', callback);
+        instance.logger.debug('[onAuthStateChanged]', 'Unsubscribing...', callback);
         instance.onAuthStateChanged.delete(callback);
     };
 }

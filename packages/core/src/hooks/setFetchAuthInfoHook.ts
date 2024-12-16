@@ -33,7 +33,7 @@ export function setFetchAuthInfoHook<
         }
 
         try {
-            instance.logger.debug('Fetching auth data...');
+            instance.logger.debug('[fetchAuthInfo]', 'Fetching auth data...');
 
             const authSession = retrievedAuthSession ?? (session.data as AuthSession<AuthInfo>);
 
@@ -45,7 +45,7 @@ export function setFetchAuthInfoHook<
                 await persistAuthSession<AuthInfo>(instance);
             }
 
-            instance.logger.debug('Auth data has been fetched:', authInfo);
+            instance.logger.debug('[fetchAuthInfo]', 'Auth data has been fetched:', authInfo);
 
             setInstance(instance);
 
