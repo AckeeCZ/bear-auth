@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "@types/react": "18.3.12",
+        "@types/react": "18.3.16",
         "network-information-types": "0.1.1",
         "typescript": "5.7.2"
     }
