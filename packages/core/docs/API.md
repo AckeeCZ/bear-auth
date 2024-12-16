@@ -247,11 +247,13 @@ console.log(token);
 Convert the `expiresIn` value in ms to a ISO timestamp representing the expiration time.
 
 #### Arguments:
+
 - `expiresIn: number`
 
 #### Example
+
 ```ts
-const expiration = getExpirationTimestamp(30_000) // returns ISO timestamp 30s in the future
+const expiration = getExpirationTimestamp(30_000); // returns ISO timestamp 30s in the future
 ```
 
 ### `isBearAuthError`

@@ -1,5 +1,5 @@
 import { type BearAuth } from '~/create';
-import { BearAuthError } from '~/errors';
+import { BearAuthError, isBearAuthError } from '~/errors';
 import type { AuthSession } from '~/types';
 
 import { getInstance, setInstance } from './instances';
@@ -46,11 +46,21 @@ export async function clearStorageOnStorageVersionUpdate<AuthInfo>(instance: Bea
         return;
     }
 
-    const currentVersion = storage.version + storageVersion;
-    const persistedData = await storage.get(instance.id);
+    try {
+        const currentVersion = storage.version + storageVersion;
+        const persistedData = await storage.get(instance.id);
 
-    if (persistedData && persistedData.version !== currentVersion) {
-        logger.debug('Storage version has been updated. Clearing storage...');
+        if (persistedData && persistedData.version !== currentVersion) {
+            logger.debug('Storage version has been updated. Clearing storage...');
+            await storage.clear(instance.id);
+        }
+    } catch (error) {
+        if (isBearAuthError(error) || !(error instanceof Error)) {
+            logger.error(error);
+        } else {
+            logger.error(new BearAuthError('bear-auth/retrieve-auth-session-failed', error.message, error));
+        }
+
         await storage.clear(instance.id);
     }
 }

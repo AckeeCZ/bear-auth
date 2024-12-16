@@ -1,8 +1,15 @@
 import './styles/App.css';
 
-import { authenticate, getAccessToken, getExpirationTimestamp, onAuthStateChanged, retrieveAuthSession, Session } from '@bear-auth/core';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import {
+    authenticate,
+    getAccessToken,
+    getExpirationTimestamp,
+    onAuthStateChanged,
+    retrieveAuthSession,
+    Session,
+} from '@bear-auth/core';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { AuthInfo, bearAuthId, logout } from './bear-auth';
 import { generateMockToken } from './utils';

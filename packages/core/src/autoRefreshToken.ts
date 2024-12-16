@@ -1,11 +1,8 @@
 import { type BearAuth } from '~/create';
 
-
-
 export function isExpired(expiration: string | undefined | null) {
     return !expiration || Date.now() >= Date.parse(expiration);
 }
-
 
 export function startTokenAutoRefresh<AuthInfo>(instance: BearAuth<AuthInfo>) {
     if (!instance.flags.autoRefreshAccessTokenEnabled) {
