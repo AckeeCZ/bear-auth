@@ -17,14 +17,12 @@
         "clean": "rm -rf dist .cache",
         "build": "tsc",
         "dev": "tsc -w",
-        "format": "prettier-format",
         "cir-dep": "check-cir-deps ./src",
         "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
     },
     "devDependencies": {
         "@tooling/eslint": "workspace:*",
         "@tooling/madge": "workspace:*",
-        "@tooling/prettier": "workspace:*",
         "@tooling/typescript": "workspace:*",
         "typescript": "5.7.2",
         "zod": "3.24.1"

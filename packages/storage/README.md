@@ -7,16 +7,16 @@ yarn add @bear-auth/storage
 ```
 
 ```ts
-import { create, setStorage } from '@bear-auth/core'
-import { createIndexedDBStorage } from '@bear-auth/storage'
-import { z } from 'zod'
+import { create, setStorage } from '@bear-auth/core';
+import { createIndexedDBStorage } from '@bear-auth/storage';
+import { z } from 'zod';
 
 type AuthInfo = {
     user: {
         id: string;
         email: string;
-    }
-}
+    };
+};
 
 const bearAuthId = create();
 
@@ -27,8 +27,8 @@ const storage = createIndexedDBStorage<AuthInfo>({
     authInfo: z.object({
         user: z.object({
             id: z.string(),
-            email: z.string()
-        })
+            email: z.string(),
+        }),
     }),
 
     // Optionally, set custom IndexedDB name and version:
@@ -36,7 +36,7 @@ const storage = createIndexedDBStorage<AuthInfo>({
     //     name: 'my-app',
     //     version: 1,
     // }
-})
+});
 
 setStorage<AuthInfo>(bearAuthId, storage);
 ```

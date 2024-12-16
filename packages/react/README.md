@@ -1,6 +1,6 @@
 # 🐻 Bear Auth React
 
-An integration of [`@bear-auth/core`](https://github.com/AckeeCZ/bear-auth/blob/main/packages/core) for React. 
+An integration of [`@bear-auth/core`](https://github.com/AckeeCZ/bear-auth/blob/main/packages/core) for React.
 
 ## Install
 
@@ -10,12 +10,11 @@ yarn add @bear-auth/core
 
 ## Get started
 
-
 ### 1. Configure bear auth
 
 ```tsx
-import { create, setStorage } from '@bear-auth/core'
-import { createIndexedDBStorage } from '@bear-auth/storage' 
+import { create, setStorage } from '@bear-auth/core';
+import { createIndexedDBStorage } from '@bear-auth/storage';
 
 // Configure the bear auth:
 
@@ -70,14 +69,14 @@ const logout = setLogoutHook<AuthInfo>(bearAuthId, async () => {
 // Note that each of these hooks returns async function which you can use to trigger the hook by yourself if needed.
 ```
 
-
 ### 2. Use `BearAuthProvider`:
 
 Use `useBearAuthSession` and `useBearAuth` hooks within the context of `BearAuthProvider`:
 
 ```tsx
-import { BearAuthProvider } from '@bear-auth/react'
-import { type AuthInfo, bearAuthId } from '...'
+import { BearAuthProvider } from '@bear-auth/react';
+
+import { bearAuthId, type AuthInfo } from '...';
 
 export function App() {
     return (
@@ -88,27 +87,31 @@ export function App() {
     );
 }
 
-
 export function BearAuthSection() {
     const session = useBearAuthSession<AuthInfo>();
     const { id, actions } = useBearAuth<AuthInfo>();
 
-    console.log({ id, actions, session })
+    console.log({ id, actions, session });
 
-    return <div>
-        {session.status}
-        {session.status === 'authenticated' && <button type='button' onClick={() => actions.logout()}>
-            Logout
-        </button>}
-    </div>
+    return (
+        <div>
+            {session.status}
+            {session.status === 'authenticated' && (
+                <button type='button' onClick={() => actions.logout()}>
+                    Logout
+                </button>
+            )}
+        </div>
+    );
 }
 ```
 
 ### 3. Authenticate user
 
 ```tsx
-import { authenticate } from '@bear-auth/core'
-import { type AuthInfo, bearAuthId } from '....'
+import { authenticate } from '@bear-auth/core';
+
+import { bearAuthId, type AuthInfo } from '....';
 
 <button
     type='button'
@@ -125,11 +128,11 @@ import { type AuthInfo, bearAuthId } from '....'
                     username: 'some-user@email.com',
                 },
             },
-        })
+        });
     }}
 >
     Authenticate
-</button>
+</button>;
 ```
 
 👉 The usage [example](https://github.com/AckeeCZ/bear-auth/blob/main/examples/react).

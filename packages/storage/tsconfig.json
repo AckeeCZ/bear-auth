@@ -6,14 +6,9 @@
         "rootDir": "./src",
         "baseUrl": ".",
         "paths": {
-            "~/*": [
-                "src/*"
-            ]
+            "~/*": ["src/*"]
         },
-        "strictFunctionTypes": true,
+        "strictFunctionTypes": true
     },
-    "include": [
-        "src/**/*.ts",
-        "src/**/*.d.ts"
-    ]
+    "include": ["src/**/*.ts", "src/**/*.d.ts"]
 }

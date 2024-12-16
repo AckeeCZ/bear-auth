@@ -227,7 +227,6 @@ __metadata:
   dependencies:
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
-    "@tooling/prettier": "workspace:*"
     "@tooling/typescript": "workspace:*"
     immer: "npm:10.1.1"
     loglevel: "npm:1.9.2"
@@ -243,7 +242,6 @@ __metadata:
     "@bear-auth/core": "npm:1.0.3"
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
-    "@tooling/prettier": "workspace:*"
     "@tooling/typescript": "workspace:*"
     react: "npm:19.0.0"
     tsc-alias: "npm:1.8.10"
@@ -260,7 +258,6 @@ __metadata:
     "@bear-auth/core": "npm:1.0.3"
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
-    "@tooling/prettier": "workspace:*"
     "@tooling/typescript": "workspace:*"
     idb-stores: "npm:0.0.18"
     typescript: "npm:5.7.2"
@@ -766,7 +763,6 @@ __metadata:
     "@bear-auth/storage": "workspace:*"
     "@eslint/js": "npm:9.17.0"
     "@tanstack/react-query": "npm:5.62.7"
-    "@tooling/prettier": "workspace:*"
     "@types/react": "npm:19.0.1"
     "@types/react-dom": "npm:19.0.2"
     "@vitejs/plugin-react": "npm:4.3.4"
@@ -791,7 +787,6 @@ __metadata:
     "@bear-auth/react": "workspace:*"
     "@bear-auth/storage": "workspace:*"
     "@eslint/js": "npm:9.17.0"
-    "@tooling/prettier": "workspace:*"
     "@types/react": "npm:19.0.1"
     "@types/react-dom": "npm:19.0.2"
     "@vitejs/plugin-react": "npm:4.3.4"
@@ -1153,7 +1148,6 @@ __metadata:
   resolution: "@tooling/eslint@workspace:tooling/eslint"
   dependencies:
     "@eslint/js": "npm:9.17.0"
-    "@tooling/prettier": "workspace:*"
     "@tooling/staged": "workspace:*"
     eslint: "npm:9.17.0"
     eslint-config-prettier: "npm:9.1.0"
@@ -1168,22 +1162,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tooling/madge@workspace:tooling/madge"
   dependencies:
-    "@tooling/prettier": "workspace:*"
     madge: "npm:8.0.0"
   bin:
     check-cir-deps: ./bin/cli.js
-  languageName: unknown
-  linkType: soft
-
-"@tooling/prettier@workspace:*, @tooling/prettier@workspace:tooling/prettier":
-  version: 0.0.0-use.local
-  resolution: "@tooling/prettier@workspace:tooling/prettier"
-  dependencies:
-    "@ianvs/prettier-plugin-sort-imports": "npm:4.4.0"
-    "@tooling/staged": "workspace:*"
-    prettier: "npm:3.4.2"
-  bin:
-    prettier-format: ./bin/cli.mjs
   languageName: unknown
   linkType: soft
 
@@ -1704,9 +1685,10 @@ __metadata:
   resolution: "bear-auth@workspace:."
   dependencies:
     "@changesets/cli": "npm:2.27.10"
+    "@ianvs/prettier-plugin-sort-imports": "npm:4.4.0"
     "@tooling/eslint": "workspace:*"
-    "@tooling/prettier": "workspace:*"
     husky: "npm:9.1.7"
+    prettier: "npm:3.4.2"
     turbo: "npm:2.3.3"
   languageName: unknown
   linkType: soft

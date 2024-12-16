@@ -1,12 +1,16 @@
-// @ts-check
-import sortPlugin from '@ianvs/prettier-plugin-sort-imports';
+/* eslint-disable no-undef */
+const generateImportOrder = groups => {
+    const result = [];
+    const groupBreak = '';
 
-import { generateImportOrder } from './utils/index.mjs';
+    for (const group of groups) {
+        result.push(...group, groupBreak);
+    }
 
-/**
- * @type {import('@ianvs/prettier-plugin-sort-imports').PrettierConfig}
- */
-const config = {
+    return result;
+};
+
+module.exports = {
     singleQuote: true,
     jsxSingleQuote: true,
     semi: true,
@@ -15,7 +19,7 @@ const config = {
     tabWidth: 4,
     trailingComma: 'all',
 
-    plugins: [sortPlugin],
+    plugins: ['@ianvs/prettier-plugin-sort-imports'],
     importOrder: generateImportOrder([
         [
             '^(react/(.*)$)|^(react$)|^(react-native(.*)$)',
@@ -42,5 +46,3 @@ const config = {
         },
     ],
 };
-
-export default config;

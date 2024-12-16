@@ -7,7 +7,7 @@
             "cache": true,
             "outputLogs": "full"
         },
-        "format": {
+        "//#prettier:format": {
             "cache": true,
             "outputLogs": "errors-only"
         },
@@ -17,7 +17,7 @@
         },
         "build": {
             "cache": true,
-            "dependsOn": ["cir-dep", "format", "lint", "^build", "//#audit"],
+            "dependsOn": ["cir-dep", "//#prettier:format", "lint", "^build", "//#audit"],
             "outputs": ["build/**"]
         },
         "//#audit": {

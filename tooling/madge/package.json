@@ -6,12 +6,7 @@
     "bin": {
         "check-cir-deps": "./bin/cli.js"
     },
-    "scripts": {
-        "format": "prettier-format"
-    },
     "devDependencies": {
-        "@tooling/prettier": "workspace:*",
         "madge": "8.0.0"
-    },
-    "prettier": "@tooling/prettier/config"
+    }
 }
