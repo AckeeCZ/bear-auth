@@ -1,8 +1,9 @@
-import { type StorageSchema } from '@bear-auth/core';
 import { initIDB } from 'idb-stores';
-import { z, ZodType } from 'zod';
+import { z, type AnyZodObject } from 'zod';
 
-export interface CreateStorageProps<AuthInfo> {
+type UnknownAuthInfoSchema = AnyZodObject;
+
+export interface CreateStorageProps<AuthInfoSchema extends UnknownAuthInfoSchema> {
     /**
      * Bear auth instance ID (return value of the `create` method)
      */
@@ -11,7 +12,7 @@ export interface CreateStorageProps<AuthInfo> {
     /**
      * Define Zod schema for the `authInfo` field of the session.data object.
      */
-    authInfo: ZodType<AuthInfo>;
+    authInfo: AuthInfoSchema;
 
     /**
      * IndexedDB configuration
@@ -31,20 +32,22 @@ export interface CreateStorageProps<AuthInfo> {
 /**
  * Creates a IndexedDB storage for the Bear Auth instance.
  */
-export function createIndexedDBStorage<AuthInfo>({ bearAuthId, authInfo, db }: CreateStorageProps<AuthInfo>) {
-    const authSessionSchema = z.object({
-        accessToken: z.string(),
-        expiration: z.string().nullable(),
-        refreshToken: z.string().nullable(),
-        authInfo,
-    });
-
-    type AuthSession = z.infer<typeof authSessionSchema>;
-
-    const bearAuthInstanceSchema = z.object({
-        version: z.number(),
-        data: authSessionSchema,
-    });
+export function createIndexedDBStorage<AuthInfoSchema extends UnknownAuthInfoSchema>({
+    bearAuthId,
+    authInfo,
+    db,
+}: CreateStorageProps<AuthInfoSchema>) {
+    const bearAuthInstanceSchema = z
+        .object({
+            version: z.number(),
+            data: z.object({
+                accessToken: z.string(),
+                expiration: z.string().nullable(),
+                refreshToken: z.string().nullable(),
+                authInfo: authInfo.nullable(),
+            }),
+        })
+        .optional();
 
     const getStore = initIDB({
         database: db ?? {
@@ -53,7 +56,7 @@ export function createIndexedDBStorage<AuthInfo>({ bearAuthId, authInfo, db }: C
         },
         storeSchemas: {
             'bear-auths': z.object({
-                [bearAuthId]: bearAuthInstanceSchema.optional(),
+                [bearAuthId]: bearAuthInstanceSchema,
             }),
         },
     });
@@ -62,12 +65,10 @@ export function createIndexedDBStorage<AuthInfo>({ bearAuthId, authInfo, db }: C
 
     return {
         version: 1,
-        ...store,
-        // @ts-expect-error TODO:
-        get: key => store.get(key),
-        // @ts-expect-error TODO:
-        set: (key, value) => store.set(key, value),
-        remove: key => store.remove(key),
+        get: (key: typeof bearAuthId) => store.get(key),
+        // @ts-expect-error
+        set: (key: typeof bearAuthId, value) => store.set(key, value),
+        remove: (key: typeof bearAuthId) => store.remove(key),
         clear: () => store.clear(),
-    } satisfies StorageSchema<AuthInfo & AuthSession['authInfo']>;
+    };
 }

@@ -23,7 +23,7 @@ export const bearAuthId = create();
 
 setLogLevel(bearAuthId, 'debug');
 
-const storage = createIndexedDBStorage<AuthInfo>({
+const storage = createIndexedDBStorage({
     bearAuthId,
     authInfo: z.object({
         user: z.object({

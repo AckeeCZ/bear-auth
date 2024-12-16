@@ -18,7 +18,8 @@
         "build": "tsc && tsc-alias",
         "dev": "tsc -w & tsc-alias -w",
         "cir-dep": "check-cir-deps ./src",
-        "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
+        "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts",
+        "types-check": "tsc --noEmit"
     },
     "devDependencies": {
         "@tooling/eslint": "workspace:*",

@@ -255,13 +255,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@bear-auth/storage@workspace:packages/storage"
   dependencies:
-    "@bear-auth/core": "npm:1.0.3"
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
     "@tooling/typescript": "workspace:*"
-    idb-stores: "npm:0.0.18"
+    idb-stores: "npm:0.0.19"
     typescript: "npm:5.7.2"
-    zod: "npm:3.24.1"
+    zod: "npm:3.23.8"
   peerDependencies:
     zod: ^3.23.8
   languageName: unknown
@@ -762,7 +761,7 @@ __metadata:
     "@bear-auth/core": "workspace:*"
     "@bear-auth/storage": "workspace:*"
     "@eslint/js": "npm:9.17.0"
-    "@tanstack/react-query": "npm:5.62.7"
+    "@tanstack/react-query": "npm:5.62.0"
     "@types/react": "npm:19.0.1"
     "@types/react-dom": "npm:19.0.2"
     "@vitejs/plugin-react": "npm:4.3.4"
@@ -770,13 +769,13 @@ __metadata:
     eslint-plugin-react-hooks: "npm:5.1.0"
     eslint-plugin-react-refresh: "npm:0.4.16"
     globals: "npm:15.13.0"
-    idb-stores: "npm:0.0.18"
+    idb-stores: "npm:0.0.19"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
     typescript: "npm:5.7.2"
     typescript-eslint: "npm:8.18.0"
     vite: "npm:6.0.3"
-    zod: "npm:3.24.1"
+    zod: "npm:3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -794,13 +793,13 @@ __metadata:
     eslint-plugin-react-hooks: "npm:5.1.0"
     eslint-plugin-react-refresh: "npm:0.4.16"
     globals: "npm:15.13.0"
-    idb-stores: "npm:0.0.18"
+    idb-stores: "npm:0.0.19"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
     typescript: "npm:5.7.2"
     typescript-eslint: "npm:8.18.0"
     vite: "npm:6.0.3"
-    zod: "npm:3.24.1"
+    zod: "npm:3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -1125,21 +1124,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.62.7":
-  version: 5.62.7
-  resolution: "@tanstack/query-core@npm:5.62.7"
-  checksum: 10c0/d7aa83571b56e7bf1b608b8f56c90a9e9e759ba5a8899686182e8961c94432d1b6437b066a228765250498a3009623a30c5ca17b2714ddb30e2d727adea9aa0c
+"@tanstack/query-core@npm:5.62.0":
+  version: 5.62.0
+  resolution: "@tanstack/query-core@npm:5.62.0"
+  checksum: 10c0/bd1b900c7585572a775af506bb257aeebfd0ff1e943c15b6edd13db185143c5ec52fce925d518cb300d3668abfdb0a32365130f4a0fa64d931ce1878bf22cc52
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:5.62.7":
-  version: 5.62.7
-  resolution: "@tanstack/react-query@npm:5.62.7"
+"@tanstack/react-query@npm:5.62.0":
+  version: 5.62.0
+  resolution: "@tanstack/react-query@npm:5.62.0"
   dependencies:
-    "@tanstack/query-core": "npm:5.62.7"
+    "@tanstack/query-core": "npm:5.62.0"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10c0/4a99bf3f3cdce6a24b6356377697e4b8cc31b0b160942a32d0619b928aec44c42dad61070d9d127512e6139bc4e62e7fe0722054f8152e21a1b8743a1dbd39e0
+  checksum: 10c0/c5cd6c8916889e4195b105eff97f4a333775fd9b883107d27fb5495cc77daf65df2eb725256f5ba77318fd1f4c1689f229b3a4110e261412ad35d68139e16fb2
   languageName: node
   linkType: hard
 
@@ -2927,15 +2926,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idb-stores@npm:0.0.18":
-  version: 0.0.18
-  resolution: "idb-stores@npm:0.0.18"
+"idb-stores@npm:0.0.19":
+  version: 0.0.19
+  resolution: "idb-stores@npm:0.0.19"
   dependencies:
     idb-keyval: "npm:6.2.1"
     loglevel: "npm:1.9.2"
   peerDependencies:
     zod: 3.x
-  checksum: 10c0/0539a0766f5943153179c6ebc16096dd53e59afa2e50169064a378fa6ac8c2e78a0f5e3f9f8a178165b01316ec2ac48d558ee9017787435c6230947add019d6f
+  checksum: 10c0/4d6dbd12f89475c38f20bc323bc2253d1c4fc081ee451d25aa2bb0e33aa235158e67b83bb416d3154259f0af2611041d680597c89e669893ed8b854387811ddb
   languageName: node
   linkType: hard
 
@@ -4968,9 +4967,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.24.1":
-  version: 3.24.1
-  resolution: "zod@npm:3.24.1"
-  checksum: 10c0/0223d21dbaa15d8928fe0da3b54696391d8e3e1e2d0283a1a070b5980a1dbba945ce631c2d1eccc088fdbad0f2dfa40155590bf83732d3ac4fcca2cc9237591b
+"zod@npm:3.23.8":
+  version: 3.23.8
+  resolution: "zod@npm:3.23.8"
+  checksum: 10c0/8f14c87d6b1b53c944c25ce7a28616896319d95bc46a9660fe441adc0ed0a81253b02b5abdaeffedbeb23bdd25a0bf1c29d2c12dd919aef6447652dd295e3e69
   languageName: node
   linkType: hard
