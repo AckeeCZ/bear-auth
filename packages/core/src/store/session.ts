@@ -1,6 +1,6 @@
 import { castDraft, produce } from 'immer';
 
-import { convertExpiresInToExpiration } from '~/autoRefreshToken';
+import { getExpirationTimestampWithBuffer } from '~/expiration';
 import type { RefreshTookHandlerResult } from '~/hooks/setRefreshTokenHook';
 import type { AuthSession } from '~/types';
 
@@ -58,15 +58,13 @@ export function setAuthenticatedSession<AuthInfo>(
 
 export function updateSessionAfterRefreshToken<AuthInfo>(
     state: State<AuthInfo>,
-    { accessToken, refreshToken, expiresIn, authInfo: freshAuthInfo }: RefreshTookHandlerResult<AuthInfo>,
+    { accessToken, refreshToken, expiration, authInfo: freshAuthInfo }: RefreshTookHandlerResult<AuthInfo>,
 ) {
     return produce(state, draft => {
-        const expiration = expiresIn ? convertExpiresInToExpiration(expiresIn * 1000) : null;
-
         Object.assign(draft.session.data!, {
             accessToken,
             refreshToken,
-            expiration,
+            expiration: getExpirationTimestampWithBuffer(expiration),
             authInfo: freshAuthInfo ?? state.session.data!.authInfo,
         });
     });

@@ -1,5 +1,6 @@
 import {
     create,
+    getExpirationTimestamp,
     setFetchAuthInfoHook,
     setLogLevel,
     setLogoutHook,
@@ -14,6 +15,7 @@ import { createIndexedDBStorage } from '@bear-auth/storage';
 import { z } from 'zod';
 
 import { AuthBearSection } from './AuthBearSection';
+import { generateMockToken } from './utils';
 
 export type AuthInfo = {
     user: {
@@ -49,9 +51,9 @@ const refetchAuthInfo = setFetchAuthInfoHook<AuthInfo>(bearAuthId, async () => {
 
 const refreshToken = setRefreshTokenHook<AuthInfo>(bearAuthId, async () => {
     return {
-        accessToken: '...fresh-access-token...',
-        refreshToken: '...refresh-token...',
-        expiresIn: 120,
+        accessToken: generateMockToken('accessToken'),
+        refreshToken: generateMockToken('refreshToken'),
+        expiration: getExpirationTimestamp(250_000), // 250s
     };
 });
 

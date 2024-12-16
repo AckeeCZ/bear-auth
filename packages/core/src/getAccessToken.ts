@@ -33,7 +33,6 @@ export async function getAccessToken(
 ) {
     let instance = getInstance(instanceId);
 
-    
     if (instance.state.session.status === 'loading') {
         instance.logger.debug('getAccessToken', 'Waiting for loading state to resolve...');
         await onResolveAuthState(instanceId);
@@ -51,12 +50,18 @@ export async function getAccessToken(
 
     if (status === 'authenticated') {
         if (isExpired(data.expiration) && !data.refreshToken) {
-            instance.logger.debug('getAccessToken', 'Access token expired and no refresh token available. Returning null.');
+            instance.logger.debug(
+                'getAccessToken',
+                'Access token expired and no refresh token available. Returning null.',
+            );
             return null;
         }
 
         if ((isExpired(data.expiration) || forceRefresh) && instance.hooks.refreshToken) {
-            instance.logger.debug('getAccessToken', 'Access token expired or force refresh enabled. Refreshing access token...');
+            instance.logger.debug(
+                'getAccessToken',
+                'Access token expired or force refresh enabled. Refreshing access token...',
+            );
             instance = await instance.hooks.refreshToken();
             instance.logger.debug('getAccessToken', 'Access token refreshed.', instance.state.session);
         }

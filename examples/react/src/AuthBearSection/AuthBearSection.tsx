@@ -1,7 +1,8 @@
-import { authenticate, getAccessToken } from '@bear-auth/core';
+import { authenticate, getAccessToken, getExpirationTimestamp } from '@bear-auth/core';
 import { useBearAuth, useBearAuthSession } from '@bear-auth/react';
 
 import { AuthInfo } from '../App';
+import { generateMockToken } from '../utils';
 
 export const AuthBearSection = () => {
     const session = useBearAuthSession<AuthInfo>();
@@ -20,9 +21,9 @@ export const AuthBearSection = () => {
                 type='button'
                 onClick={() =>
                     authenticate<AuthInfo>(id, {
-                        accessToken: '...access-token...',
-                        expiresIn: 20,
-                        refreshToken: '...refresh-token...',
+                        accessToken: generateMockToken('accessToken'),
+                        expiration: getExpirationTimestamp(250_000),
+                        refreshToken: generateMockToken('refreshToken'),
                         authInfo: {
                             user: {
                                 id: 'some-user-id',

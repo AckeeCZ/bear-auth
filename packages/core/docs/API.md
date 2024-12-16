@@ -41,7 +41,7 @@ const refetchAuthInfo = setFetchAuthInfoHook<AuthInfo>('myInstance', async sessi
 
 ### `setRefreshTokenHook`
 
-Configures a function to refresh the access token via an API call, required when `authenticate` returns `refreshToken` and `expiresIn`.
+Configures a function to refresh the access token via an API call, required when `authenticate` returns `refreshToken` and `expiration`.
 
 #### Arguments:
 
@@ -193,7 +193,7 @@ console.log(session);
 
 ### `authenticate`
 
-Once a user signs-in or signs-up, this method is called to pass the authentication data to the library. Only `accessToken` is required. `expiresIn` and `refreshToken` are optional.
+Once a user signs-in or signs-up, this method is called to pass the authentication data to the library. Only `accessToken` is required. `expiration` and `refreshToken` are optional.
 
 #### Arguments:
 
@@ -210,14 +210,13 @@ type AuthInfo = {
 };
 
 const bearAuthId = create();
-const authData = {
+
+await authenticate<AuthInfo>(bearAuthId, {
     accessToken: 'yourAccessToken',
     refreshToken: 'yourRefreshToken',
-    expiresIn: 3600,
+    expiration: new Date(Date.now() + 30_000).toISOString(), // expires in 30s
     authInfo: { email: 'user@email.com' },
-};
-
-await authenticate<AuthInfo>(bearAuthId, authData);
+});
 ```
 
 ### `getAccessToken`
@@ -242,6 +241,18 @@ console.log(token);
 ---
 
 ## Helpers
+
+### `getExpirationTimestamp`
+
+Convert the `expiresIn` value in ms to a ISO timestamp representing the expiration time.
+
+#### Arguments:
+- `expiresIn: number`
+
+#### Example
+```ts
+const expiration = getExpirationTimestamp(30_000) // returns ISO timestamp 30s in the future
+```
 
 ### `isBearAuthError`
 

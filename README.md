@@ -8,7 +8,7 @@ Bear auth contains a set of methods for managing JWT tokens in single page appli
     - `@bear-auth/react`: [0.55 kB (min + gzip)](https://bundlephobia.com/package/@bear-auth/react)
     - `@bear-auth/storage`: [0.44 kB (min + gzip)](https://bundlephobia.com/package/@bear-auth/storage)
 - ♻️ __Auto access token refreshment__
-    - If the `authenticate` method returns `expiresIn` and `refreshToken`, the `@bear-auth/core` will use the refresh token hook to maintain fresh access token.
+    - If the `authenticate` method returns valid `expiration` and `refreshToken`, the `@bear-auth/core` will use the refresh token hook to maintain fresh access token.
 - 🛜 __Network status detection__
     - To avoid refreshing access token while the app is offline.
     - By default it uses `navigator.onLine` flag and the `online` event but can be changed via the `setContinueWhenOnline` method.

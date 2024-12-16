@@ -1,9 +1,10 @@
-import { convertExpiresInToExpiration, startTokenAutoRefresh } from '~/autoRefreshToken';
+import { startTokenAutoRefresh } from '~/autoRefreshToken';
 import { type BearAuth } from '~/create';
 import { BearAuthError } from '~/errors';
 import { persistAuthSession } from '~/storage';
 import { setAuthenticatedSession } from '~/store/session';
 
+import { getExpirationTimestampWithBuffer } from './expiration';
 import { getInstance, setInstance } from './instances';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
@@ -19,10 +20,9 @@ export type AuthenticateProps<AuthInfo> = {
     authInfo?: AuthInfo | null;
 
     /**
-     * Expiration time in seconds. Minimal values is }
-     *
+     * Expiration timestamp in ISO format.
      */
-    expiresIn?: number | null;
+    expiration?: string | null;
 
     /**
      * Refresh token
@@ -33,7 +33,7 @@ export type AuthenticateProps<AuthInfo> = {
 /**
  * Once user signs-in / signs-up, this method is called to pass the authentication data to the library.
  * - Only `accessToken` is required to be returned.
- * - `expiresIn` and `refreshToken` are optional, but if provided, the library will automatically refresh the access token when it expires.
+ * - `expiration` and `refreshToken` are optional, but if provided, the library will automatically refresh the access token when it expires.
  * - Don't forget to `setRefreshTokenHook` before calling this method if you want to use the refresh token.
  * - Similarly, don't forget to `setFetchAuthInfo` before calling this method if you want to use the `authInfo` property.
  * @param instanceId - return value of `create` method
@@ -41,14 +41,14 @@ export type AuthenticateProps<AuthInfo> = {
  */
 export async function authenticate<AuthInfo>(
     instanceId: BearAuth<AuthInfo>['id'],
-    { accessToken, expiresIn = null, refreshToken = null, authInfo = null }: AuthenticateProps<AuthInfo>,
+    { accessToken, expiration = null, refreshToken = null, authInfo = null }: AuthenticateProps<AuthInfo>,
 ) {
     let instance = getInstance<AuthInfo>(instanceId);
 
     const refreshTokenHookRequired = Boolean(refreshToken);
     const fetchAuthInfoHookRequired = Boolean(authInfo);
 
-    instance.flags.autoRefreshAccessTokenEnabled = Boolean(refreshTokenHookRequired && expiresIn);
+    instance.flags.autoRefreshAccessTokenEnabled = Boolean(refreshTokenHookRequired && expiration);
 
     if (refreshTokenHookRequired && !instance.hooks.refreshToken) {
         throw new BearAuthError(
@@ -64,11 +64,9 @@ export async function authenticate<AuthInfo>(
         );
     }
 
-    const expiration = expiresIn ? convertExpiresInToExpiration(expiresIn * 1000) : null;
-
     instance.state = setAuthenticatedSession<AuthInfo>(instance.state, {
         accessToken,
-        expiration,
+        expiration: getExpirationTimestampWithBuffer(expiration),
         refreshToken,
         authInfo,
     });

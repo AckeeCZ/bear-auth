@@ -1,4 +1,4 @@
-import { isExpired, startTokenAutoRefresh, stopTokenAutoRefresh, validateExpiresIn } from '~/autoRefreshToken';
+import { isExpired, startTokenAutoRefresh, stopTokenAutoRefresh } from '~/autoRefreshToken';
 import { type BearAuth } from '~/create';
 import { BearAuthError } from '~/errors';
 import { getInstance, setInstance } from '~/instances';
@@ -10,7 +10,7 @@ import type { AuthSession } from '~/types';
 export type RefreshTookHandlerResult<AuthInfo> = {
     accessToken: string;
     refreshToken: string;
-    expiresIn?: number | null;
+    expiration?: string | null;
     authInfo?: AuthInfo | null;
 };
 
@@ -21,7 +21,7 @@ export type RefreshTokenHook<AuthInfo> = {
 
 /**
  * - Set a function to make API call to your app's backend and fetch fresh access token.
- * - Required when the `authenticaion` method returns `refreshToken` & `expiresIn` properties.
+ * - Required when the `authenticaion` method returns `refreshToken` & `expiration` properties.
  * @param instanceId - return value of `create` method
  * @param handler - function to refresh the access token
  * @returns
@@ -54,8 +54,6 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             const result = await handler(authSession);
 
             instance.logger.debug('Received refresh access token result:', result);
-
-            validateExpiresIn(result.expiresIn ? result.expiresIn * 1000 : 0);
 
             instance.state = updateSessionAfterRefreshToken(instance.state, result);
 

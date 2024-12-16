@@ -1,18 +1,17 @@
 import './styles/App.css';
 
-import { authenticate, getAccessToken, onAuthStateChanged, retrieveAuthSession, Session } from '@bear-auth/core';
+import { authenticate, getAccessToken, getExpirationTimestamp, onAuthStateChanged, retrieveAuthSession, Session } from '@bear-auth/core';
 import { useMutation, useQuery } from '@tanstack/react-query';
-
 import { useState } from 'react';
+
 import { AuthInfo, bearAuthId, logout } from './bear-auth';
 import { generateMockToken } from './utils';
 
-
 function App() {
     const [session, setSession] = useState<Session<AuthInfo>>({
-        'data': null,
-        'status': 'loading',
-    })
+        data: null,
+        status: 'loading',
+    });
 
     const retrieveAuthSessionResult = useQuery({
         queryKey: ['retrieveAuthSession'],
@@ -36,7 +35,7 @@ function App() {
         mutationFn: async () => {
             await authenticate<AuthInfo>(bearAuthId, {
                 accessToken: generateMockToken('accessToken'),
-                expiresIn: 20,
+                expiration: getExpirationTimestamp(250_000), // 250s
                 refreshToken: generateMockToken('refreshToken'),
                 authInfo: {
                     user: {

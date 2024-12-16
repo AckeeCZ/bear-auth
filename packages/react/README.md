@@ -58,7 +58,7 @@ const refreshToken = setRefreshTokenHook<AuthInfo>(bearAuthId, async () => {
     return {
         accessToken: '...fresh-access-token...',
         refreshToken: '...refresh-token...',
-        expiresIn: 120,
+        expiration: new Date(Date.now() + 30_000).toISOString(), // expires in 30s
     };
 });
 
@@ -117,7 +117,7 @@ import { type AuthInfo, bearAuthId } from '....'
 
         await authenticate<AuthInfo>(bearAuthId, {
             accessToken: '...access-token...',
-            expiresIn: 20,
+            expiration: new Date(Date.now() + 30_000).toISOString(), // expires in 30s
             refreshToken: '...refresh-token...',
             authInfo: {
                 user: {
