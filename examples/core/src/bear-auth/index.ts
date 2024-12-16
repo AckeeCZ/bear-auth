@@ -1,14 +1,14 @@
 import {
     create,
-    onAuthStateChanged,
     setFetchAuthInfoHook,
     setLogLevel,
     setLogoutHook,
     setRefreshTokenHook,
-    setStorage,
+    setStorage
 } from '@bear-auth/core';
 import { createIndexedDBStorage } from '@bear-auth/storage';
 import { z } from 'zod';
+import { generateMockToken } from '../utils';
 
 export type AuthInfo = {
     user: {
@@ -35,10 +35,6 @@ setStorage<AuthInfo>(bearAuthId, storage);
 
 // setContinueWhenOnline(bearAuthId, async () => {});
 
-onAuthStateChanged<AuthInfo>(bearAuthId, async session => {
-    console.log('onAuthStateChanged', session.status);
-});
-
 setFetchAuthInfoHook<AuthInfo>(bearAuthId, async () => {
     return {
         user: {
@@ -50,8 +46,8 @@ setFetchAuthInfoHook<AuthInfo>(bearAuthId, async () => {
 
 setRefreshTokenHook<AuthInfo>(bearAuthId, async () => {
     return {
-        accessToken: '...fresh-access-token...',
-        refreshToken: '...refresh-token...',
+        accessToken: generateMockToken('accessToken'),
+        refreshToken: generateMockToken('refreshToken'),
         expiresIn: 120,
     };
 });

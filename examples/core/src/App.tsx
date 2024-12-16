@@ -1,15 +1,28 @@
 import './styles/App.css';
 
-import { authenticate, getAccessToken, retrieveAuthSession } from '@bear-auth/core';
+import { authenticate, getAccessToken, onAuthStateChanged, retrieveAuthSession, Session } from '@bear-auth/core';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { bearAuthId, logout } from './bear-auth';
+import { useState } from 'react';
+import { AuthInfo, bearAuthId, logout } from './bear-auth';
+import { generateMockToken } from './utils';
+
 
 function App() {
+    const [session, setSession] = useState<Session<AuthInfo>>({
+        'data': null,
+        'status': 'loading',
+    })
+
     const retrieveAuthSessionResult = useQuery({
         queryKey: ['retrieveAuthSession'],
         queryFn: async () => {
-            await retrieveAuthSession(bearAuthId);
+            onAuthStateChanged<AuthInfo>(bearAuthId, async session => {
+                console.log('onAuthStateChanged', session.status);
+                setSession(session);
+            });
+
+            await retrieveAuthSession<AuthInfo>(bearAuthId);
 
             return null;
         },
@@ -21,10 +34,10 @@ function App() {
 
     const signIn = useMutation({
         mutationFn: async () => {
-            await authenticate(bearAuthId, {
-                accessToken: '...access-token...',
+            await authenticate<AuthInfo>(bearAuthId, {
+                accessToken: generateMockToken('accessToken'),
                 expiresIn: 20,
-                refreshToken: '...refresh-token...',
+                refreshToken: generateMockToken('refreshToken'),
                 authInfo: {
                     user: {
                         id: 'some-user-id',
@@ -47,15 +60,14 @@ function App() {
         <>
             <h1>Bear Auth - Core Example</h1>
 
-            {retrieveAuthSessionResult.isLoading && <p>Loading...</p>}
-            {retrieveAuthSessionResult.error && <p>Status: {retrieveAuthSessionResult.error?.message}</p>}
-
             <div
                 style={{
                     display: 'grid',
                     gap: '8px',
                 }}
             >
+                <p>Status: {session.status}</p>
+
                 <button
                     type='button'
                     onClick={() => signIn.mutateAsync()}
