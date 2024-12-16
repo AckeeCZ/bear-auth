@@ -27,12 +27,12 @@
         "@tooling/madge": "workspace:*",
         "@tooling/prettier": "workspace:*",
         "@tooling/typescript": "workspace:*",
-        "react": "18.3.1",
+        "react": "19.0.0",
         "tsc-alias": "1.8.10",
         "typescript": "5.7.2"
     },
     "peerDependencies": {
-        "react": "^18.3.1"
+        "react": "^18 || ^19"
     },
     "publishConfig": {
         "access": "public"
