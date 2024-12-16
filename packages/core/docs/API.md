@@ -34,9 +34,19 @@ Configures a function to fetch auth info from an API, required when the `authent
 ```typescript
 import { setFetchAuthInfoHook } from '@bear-auth/core';
 
-const refetchAuthInfo = setFetchAuthInfoHook<AuthInfo>('myInstance', async session => {
-    // Fetch auth info logic
-});
+const refetchAuthInfo = setFetchAuthInfoHook<AuthInfo>(
+    'myInstance',
+    async session => {
+        // Fetch auth info logic
+    },
+    {
+        // Optional retry (sync/async) callback or boolean (default `false`)
+        // If `true`, it will retry up to internal limit (5).
+        retry(error, failureCount) {
+            return failureCount < 3;
+        },
+    },
+);
 ```
 
 ### `setRefreshTokenHook`
@@ -53,9 +63,46 @@ Configures a function to refresh the access token via an API call, required when
 ```typescript
 import { setRefreshTokenHook } from '@bear-auth/core';
 
-const refreshToken = setRefreshTokenHook<AuthInfo>('myInstance', async session => {
-    // Refresh token logic
-});
+const refreshToken = setRefreshTokenHook<AuthInfo>(
+    'myInstance',
+    async session => {
+        // Refresh token logic
+    },
+    {
+        // Optional retry (sync/async) callback or boolean (default `false`)
+        // If `true`, it will retry up to internal limit (5).
+        async retry(error, failureCount) {
+            return failureCount < 3;
+        },
+    },
+);
+```
+
+### `setLogoutHook`
+
+Sets a function to log out the user via an API call to the app's backend.
+
+#### Arguments:
+
+- `instanceId: string`: return value of `create` method
+- `handler: (authSession: AuthSession<AuthInfo>) => Promise<void>`: function to logout the user
+
+#### Example:
+
+```typescript
+import { setLogoutHook } from '@bear-auth/core';
+
+const logout = setLogoutHook<AuthInfo>(
+    'myInstance',
+    async session => {
+        // Logout logic
+    },
+    {
+        // Optional retry (sync/async) callback or boolean (default `false`)
+        // If `true`, it will retry up to internal limit (5).
+        retry: true,
+    },
+);
 ```
 
 ### `onAuthStateChanged`
@@ -78,25 +125,6 @@ const unsubscribe = onAuthStateChanged<AuthInfo>('myInstance', session => {
 
 // To unsubscribe
 unsubscribe();
-```
-
-### `setLogoutHook`
-
-Sets a function to log out the user via an API call to the app's backend.
-
-#### Arguments:
-
-- `instanceId: string`: return value of `create` method
-- `handler: (authSession: AuthSession<AuthInfo>) => Promise<void>`: function to logout the user
-
-#### Example:
-
-```typescript
-import { setLogoutHook } from '@bear-auth/core';
-
-const logout = setLogoutHook<AuthInfo>('myInstance', async session => {
-    // Logout logic
-});
 ```
 
 ### `destroy`

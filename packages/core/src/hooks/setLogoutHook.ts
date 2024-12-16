@@ -6,6 +6,8 @@ import { runOnAuthStateChangedCallbacks } from '~/onAuthStateChanged';
 import { setUnauthenticatedSession } from '~/store/session';
 import type { AuthSession } from '~/types';
 
+import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry';
+
 export type LogoutHook<AuthInfo> = {
     handler: (authSession: AuthSession<AuthInfo>) => Promise<void>;
     action: () => Promise<void>;
@@ -21,8 +23,11 @@ export type LogoutHook<AuthInfo> = {
 export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = LogoutHook<AuthInfo>>(
     instanceId: BearAuth<AuthInfo>['id'],
     handler: AuthHook['handler'],
+    options?: {
+        retry: Retry;
+    },
 ): AuthHook['action'] {
-    async function logout() {
+    async function logout(failureCount = 0) {
         let instance = getInstance<AuthInfo>(instanceId);
 
         const { session } = instance.state;
@@ -52,7 +57,13 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
         } catch (error) {
             instance.logger.error(error);
 
-            throw new BearAuthError('bear-auth/logout-failed', 'Failed to logout.', error);
+            failureCount++;
+
+            if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
+                return logout(failureCount);
+            } else {
+                throw new BearAuthError('bear-auth/logout-failed', 'Failed to logout.', error);
+            }
         }
     }
 

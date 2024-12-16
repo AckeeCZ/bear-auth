@@ -7,6 +7,8 @@ import { persistAuthSession } from '~/storage';
 import { setUnauthenticatedSession, updateSessionAfterRefreshToken } from '~/store/session';
 import type { AuthSession } from '~/types';
 
+import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry';
+
 export type RefreshTookHandlerResult<AuthInfo> = {
     accessToken: string;
     refreshToken: string;
@@ -29,8 +31,11 @@ export type RefreshTokenHook<AuthInfo> = {
 export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<AuthInfo> = RefreshTokenHook<AuthInfo>>(
     instanceId: BearAuth<AuthInfo>['id'],
     handler: AuthHook['handler'],
+    options?: {
+        retry: Retry;
+    },
 ): AuthHook['action'] {
-    async function refreshToken(retrievedAuthSession?: AuthSession<AuthInfo>) {
+    async function refreshToken(retrievedAuthSession?: AuthSession<AuthInfo>, failureCount = 0) {
         let instance = getInstance<AuthInfo>(instanceId);
 
         if (!retrievedAuthSession && instance.state.session.status !== 'authenticated') {
@@ -71,15 +76,21 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
         } catch (error) {
             instance.logger.error(error);
 
-            instance.state = setUnauthenticatedSession(instance.state);
+            failureCount++;
 
-            await instance.storage?.clear(instance.id);
+            if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
+                return refreshToken(retrievedAuthSession, failureCount);
+            } else {
+                instance.state = setUnauthenticatedSession(instance.state);
 
-            setInstance(instance);
+                await instance.storage?.clear(instance.id);
 
-            await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+                setInstance(instance);
 
-            throw new BearAuthError('bear-auth/refresh-token-failed', 'Failed to refresh access token', error);
+                await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+
+                throw new BearAuthError('bear-auth/refresh-token-failed', 'Failed to refresh access token', error);
+            }
         }
     }
 

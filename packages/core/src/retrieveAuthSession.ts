@@ -41,7 +41,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
-        instance.logger.debug('[retrieveAuthSession', 'No auth session retrieved.');
+        instance.logger.debug('[retrieveAuthSession]', 'No auth session retrieved.');
 
         return instance.state.session;
     }

@@ -7,6 +7,8 @@ import { persistAuthSession } from '~/storage';
 import { setUnauthenticatedSession, updateAuthInfo } from '~/store/session';
 import type { AuthSession } from '~/types';
 
+import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry';
+
 export type FetchAuthInfoHook<AuthInfo> = {
     handler: (authSession: AuthSession<AuthInfo>) => Promise<AuthInfo>;
     action: () => Promise<void>;
@@ -22,8 +24,14 @@ export type FetchAuthInfoHook<AuthInfo> = {
 export function setFetchAuthInfoHook<
     AuthInfo,
     AuthHook extends FetchAuthInfoHook<AuthInfo> = FetchAuthInfoHook<AuthInfo>,
->(instanceId: BearAuth<AuthInfo>['id'], handler: AuthHook['handler']): AuthHook['action'] {
-    async function fetchAuthInfo(retrievedAuthSession?: AuthSession<AuthInfo>) {
+>(
+    instanceId: BearAuth<AuthInfo>['id'],
+    handler: AuthHook['handler'],
+    options?: {
+        retry: Retry;
+    },
+): AuthHook['action'] {
+    async function fetchAuthInfo(retrievedAuthSession?: AuthSession<AuthInfo>, failureCount = 0) {
         let instance = getInstance<AuthInfo>(instanceId);
 
         const { session } = instance.state;
@@ -53,17 +61,23 @@ export function setFetchAuthInfoHook<
         } catch (error) {
             instance.logger.error(error);
 
-            instance = stopTokenAutoRefresh(instance);
+            failureCount++;
 
-            instance.state = setUnauthenticatedSession(instance.state);
+            if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
+                return fetchAuthInfo(retrievedAuthSession, failureCount);
+            } else {
+                instance = stopTokenAutoRefresh(instance);
 
-            await instance.storage?.clear(instance.id);
+                instance.state = setUnauthenticatedSession(instance.state);
 
-            setInstance(instance);
+                await instance.storage?.clear(instance.id);
 
-            await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+                setInstance(instance);
 
-            throw new BearAuthError('bear-auth/fetch-auth-data-failed', 'Failed to fetch auth data.', error);
+                await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+
+                throw new BearAuthError('bear-auth/fetch-auth-data-failed', 'Failed to fetch auth data.', error);
+            }
         }
     }
 

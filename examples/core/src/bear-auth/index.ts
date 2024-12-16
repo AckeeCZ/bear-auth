@@ -37,21 +37,40 @@ setStorage<AuthInfo>(bearAuthId, storage);
 
 // setContinueWhenOnline(bearAuthId, async () => {});
 
-setFetchAuthInfoHook<AuthInfo>(bearAuthId, async () => {
-    return {
-        user: {
-            id: 'some-user-id',
-            email: 'updated-user@email.com',
+setFetchAuthInfoHook<AuthInfo>(
+    bearAuthId,
+    async () => {
+        return {
+            user: {
+                id: 'some-user-id',
+                email: 'updated-user@email.com',
+            },
+        } satisfies AuthInfo;
+    },
+    {
+        retry: async (error, failureCount) => {
+            console.error('fetchAuthInfoHook error', error);
+            return failureCount < 3;
         },
-    } satisfies AuthInfo;
-});
+    },
+);
 
-setRefreshTokenHook<AuthInfo>(bearAuthId, async () => {
-    return {
-        accessToken: generateMockToken('accessToken'),
-        refreshToken: generateMockToken('refreshToken'),
-        expiration: getExpirationTimestamp(250_000), // 250s
-    };
-});
+setRefreshTokenHook<AuthInfo>(
+    bearAuthId,
+    async () => {
+        return {
+            accessToken: generateMockToken('accessToken'),
+            refreshToken: generateMockToken('refreshToken'),
+            expiration: getExpirationTimestamp(250_000), // 250s
+        };
+    },
+    {
+        retry: (error, failureCount) => {
+            console.error('fetchAuthInfoHook error', error);
+
+            return failureCount < 3;
+        },
+    },
+);
 
 export const logout = setLogoutHook<AuthInfo>(bearAuthId, async () => {});
