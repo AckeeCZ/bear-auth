@@ -4,7 +4,9 @@
 
 ### Major Changes
 
-- c441650: ## Migration guide
+#### Breaking changes
+
+- 💥 Access expiration timestamp instead of expiresIn value
 
     The `expiresIn` properties have been changed to `expiration` timestamp in ISO format.
 
@@ -27,6 +29,25 @@
     ```
 
     The same applies for the return values of the `setRefreshTokenHook` handler.
+
+#### New features
+
+- ✨ Add hook retry mechanism
+- ✨ Support React v19
+- 🔊 Add debug logs to getAccessToken
+- ⬆️ Minor & patch dependencies upgrade
+
+#### Bug fixes
+
+- 🐛 Throw an error when using setLogLevel method with custom logger
+- 🐛 Clear storage on zod schema change
+- ♻️ Fix storage type
+
+#### Internal
+
+- 🐛 Fix prettier (on save)
+- ➕ Add husky
+- ♻️ Update the core example
 
 ## 1.0.3
 
