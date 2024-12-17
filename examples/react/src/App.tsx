@@ -65,7 +65,7 @@ function App() {
     return (
         <>
             <h1>Bear Auth - React Example</h1>
-            <BearAuthProvider id={bearAuthId} actions={{ refetchAuthInfo, refreshToken, logout }}>
+            <BearAuthProvider<AuthInfo> id={bearAuthId} actions={{ refetchAuthInfo, refreshToken, logout }}>
                 <AuthBearSection />
             </BearAuthProvider>
         </>
