@@ -1,5 +1,19 @@
 # @bear-auth/storage
 
+## 2.1.0
+
+### Minor Changes
+
+- 17409b7: #### Changes:
+
+    - ♻️ Make types more accurate
+    - ♻️ State management & extend session states
+
+        - use mutable state (remove immer package)
+        - remove setInstance (all changes have been already applied)
+        - remove `loading` session state
+        - add `retrieving`, `refreshing`, and `signing-out` session state
+
 ## 2.0.0
 
 ### Major Changes
