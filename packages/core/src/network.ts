@@ -1,5 +1,5 @@
 import { type BearAuth } from './create';
-import { getInstance, setInstance } from './instances';
+import { getInstance } from './instances';
 
 type NetworkStatus = 'online' | 'offline';
 
@@ -37,6 +37,4 @@ export function setContinueWhenOnline(
         await continueWhenOnline();
         instance.logger.debug('[resolveWhenOnline]', 'Network is online.');
     };
-
-    setInstance(instance);
 }

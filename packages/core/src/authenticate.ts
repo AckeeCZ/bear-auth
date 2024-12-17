@@ -5,7 +5,7 @@ import { persistAuthSession } from '~/storage';
 import { setAuthenticatedSession } from '~/store/session';
 
 import { getExpirationTimestampWithBuffer } from './expiration';
-import { getInstance, setInstance } from './instances';
+import { getInstance } from './instances';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
 export type AuthenticateProps<AuthInfo> = {
@@ -43,7 +43,7 @@ export async function authenticate<AuthInfo>(
     instanceId: BearAuth<AuthInfo>['id'],
     { accessToken, expiration = null, refreshToken = null, authInfo = null }: AuthenticateProps<AuthInfo>,
 ) {
-    let instance = getInstance<AuthInfo>(instanceId);
+    const instance = getInstance<AuthInfo>(instanceId);
 
     const refreshTokenHookRequired = Boolean(refreshToken);
     const fetchAuthInfoHookRequired = Boolean(authInfo);
@@ -64,18 +64,16 @@ export async function authenticate<AuthInfo>(
         );
     }
 
-    instance.state = setAuthenticatedSession<AuthInfo>(instance.state, {
+    setAuthenticatedSession<AuthInfo>(instance.state, {
         accessToken,
         expiration: getExpirationTimestampWithBuffer(expiration),
         refreshToken,
         authInfo,
     });
 
-    await persistAuthSession<AuthInfo>(instance);
+    await persistAuthSession<AuthInfo>(instanceId);
 
-    instance = startTokenAutoRefresh<AuthInfo>(instance);
-
-    setInstance<AuthInfo>(instance);
+    startTokenAutoRefresh<AuthInfo>(instanceId);
 
     await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 

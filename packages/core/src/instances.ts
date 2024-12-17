@@ -16,10 +16,6 @@ export function getInstance<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
     return instance as BearAuth<AuthInfo>;
 }
 
-export function setInstance<AuthState>(bearAuth: BearAuth<AuthState>) {
-    instances.set(bearAuth.id, bearAuth as BearAuth<unknown>);
-}
-
 /**
  * Get all active BearAuth instance IDs.
  */

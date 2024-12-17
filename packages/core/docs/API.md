@@ -331,7 +331,7 @@ Represents the session state.
 
 ```typescript
 type Session = {
-    status: 'unauthenticated' | 'loading' | 'authenticated';
+    status: 'unauthenticated' | 'retrieving' | 'refreshing' | 'signing-out' | 'authenticated';
     data: AuthSession | null;
 };
 

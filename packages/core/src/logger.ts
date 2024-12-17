@@ -3,7 +3,7 @@ import { getLogger } from 'loglevel';
 import { type BearAuth } from '~/create';
 
 import { BearAuthError } from './errors';
-import { getInstance, setInstance } from './instances';
+import { getInstance } from './instances';
 
 export type LogLevel = 'error' | 'debug' | 'info' | 'silent';
 
@@ -47,8 +47,6 @@ export function setLogLevel(instanceId: BearAuth<unknown>['id'], level: LogLevel
     instance.logger.debug('[setLogLevel]', 'Setting log level', level);
 
     getLogger(instanceId).setLevel(level, true);
-
-    setInstance(instance);
 }
 
 /**
@@ -70,6 +68,4 @@ export function setLogger<L extends Logger>(instanceId: BearAuth<unknown>['id'],
     instance.flags.customLogger = true;
 
     debug('setLogger', 'Custom logger is set. The setLogLevel method will not do anything.');
-
-    setInstance(instance);
 }

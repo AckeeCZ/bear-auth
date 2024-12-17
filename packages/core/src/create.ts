@@ -7,6 +7,7 @@ import type { AuthSession } from '~/types';
 import { instances } from './instances';
 import { defaultContinueWhenOnline } from './network';
 import type { OnAuthStateChangedCallback } from './onAuthStateChanged';
+import type { Session } from './store/session';
 
 export type BearAuth<AuthInfo> = {
     id: string;
@@ -18,8 +19,8 @@ export type BearAuth<AuthInfo> = {
     logger: Logger;
 
     hooks: {
-        refreshToken: null | ((authSession?: AuthSession<AuthInfo>) => Promise<BearAuth<AuthInfo>>);
-        fetchAuthInfo: null | ((authSession?: AuthSession<AuthInfo>) => Promise<BearAuth<AuthInfo>>);
+        refreshToken: null | ((authSession?: AuthSession<AuthInfo>) => Promise<Session<AuthInfo>>);
+        fetchAuthInfo: null | ((authSession?: AuthSession<AuthInfo>) => Promise<Session<AuthInfo>>);
         logout: null | (() => Promise<void>);
     };
     state: State<AuthInfo>;

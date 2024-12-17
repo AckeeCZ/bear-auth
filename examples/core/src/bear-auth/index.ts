@@ -10,7 +10,7 @@ import {
 import { createIndexedDBStorage } from '@bear-auth/storage';
 import { z } from 'zod';
 
-import { generateMockToken } from '../utils';
+import { delay, generateMockToken } from '../utils';
 
 export type AuthInfo = {
     user: {
@@ -40,6 +40,8 @@ setStorage<AuthInfo>(bearAuthId, storage);
 setFetchAuthInfoHook<AuthInfo>(
     bearAuthId,
     async () => {
+        await delay(1_000);
+
         return {
             user: {
                 id: 'some-user-id',
@@ -58,6 +60,8 @@ setFetchAuthInfoHook<AuthInfo>(
 setRefreshTokenHook<AuthInfo>(
     bearAuthId,
     async () => {
+        await delay(5_000);
+
         return {
             accessToken: generateMockToken('accessToken'),
             refreshToken: generateMockToken('refreshToken'),

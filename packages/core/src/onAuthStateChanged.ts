@@ -1,6 +1,6 @@
 import { type BearAuth } from '~/create';
 
-import { getInstance, setInstance } from './instances';
+import { getInstance } from './instances';
 
 export type OnAuthStateChangedCallback<AuthInfo> = (
     session: BearAuth<AuthInfo>['state']['session'],
@@ -21,8 +21,6 @@ export function onAuthStateChanged<AuthInfo>(
     instance.logger.debug('[onAuthStateChanged]', 'Subscribing...', callback);
 
     instance.onAuthStateChanged.add(callback);
-
-    setInstance(instance);
 
     callback(instance.state.session);
 

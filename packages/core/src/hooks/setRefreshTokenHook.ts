@@ -1,10 +1,10 @@
 import { isExpired, startTokenAutoRefresh, stopTokenAutoRefresh } from '~/autoRefreshToken';
 import { type BearAuth } from '~/create';
 import { BearAuthError } from '~/errors';
-import { getInstance, setInstance } from '~/instances';
+import { getInstance } from '~/instances';
 import { runOnAuthStateChangedCallbacks } from '~/onAuthStateChanged';
 import { persistAuthSession } from '~/storage';
-import { setUnauthenticatedSession, updateSessionAfterRefreshToken } from '~/store/session';
+import { setRefreshingSession, setUnauthenticatedSession, updateSessionAfterRefreshToken } from '~/store/session';
 import type { AuthSession } from '~/types';
 
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry';
@@ -36,7 +36,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
     },
 ): AuthHook['action'] {
     async function refreshToken(retrievedAuthSession?: AuthSession<AuthInfo>, failureCount = 0) {
-        let instance = getInstance<AuthInfo>(instanceId);
+        const instance = getInstance<AuthInfo>(instanceId);
 
         if (!retrievedAuthSession && instance.state.session.status !== 'authenticated') {
             throw new BearAuthError(
@@ -45,14 +45,17 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             );
         }
 
-        instance = stopTokenAutoRefresh(instance);
+        setRefreshingSession<AuthInfo>(instance.state);
+
+        await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+
+        stopTokenAutoRefresh<AuthInfo>(instanceId);
 
         try {
             instance.logger.debug('[refreshToken]', 'Refreshing access token...');
 
             await instance.continueWhenOnline();
 
-            instance = getInstance<AuthInfo>(instanceId);
             const { session } = instance.state;
             const authSession = retrievedAuthSession ?? (session.data as AuthSession<AuthInfo>);
 
@@ -60,19 +63,19 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             instance.logger.debug('[refreshToken]', 'Received refresh access token result:', result);
 
-            instance.state = updateSessionAfterRefreshToken(instance.state, result);
+            updateSessionAfterRefreshToken<AuthInfo>(instance.state, result);
 
             if (!retrievedAuthSession) {
-                await persistAuthSession<AuthInfo>(instance);
+                await persistAuthSession<AuthInfo>(instanceId);
             }
 
-            instance = startTokenAutoRefresh(instance);
+            startTokenAutoRefresh<AuthInfo>(instanceId);
 
             instance.logger.debug('[refreshToken]', 'Access token has been successfully refreshed.');
 
-            setInstance(instance);
+            await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
-            return instance;
+            return instance.state.session;
         } catch (error) {
             instance.logger.error(error);
 
@@ -81,11 +84,9 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
                 return refreshToken(retrievedAuthSession, failureCount);
             } else {
-                instance.state = setUnauthenticatedSession(instance.state);
+                setUnauthenticatedSession<AuthInfo>(instance.state);
 
                 await instance.storage?.clear(instance.id);
-
-                setInstance(instance);
 
                 await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
@@ -97,8 +98,6 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
     const instance = getInstance<AuthInfo>(instanceId);
 
     instance.hooks.refreshToken = refreshToken;
-
-    setInstance(instance);
 
     const triggerRefreshToken: AuthHook['action'] = async options => {
         const instance = getInstance<AuthInfo>(instanceId);

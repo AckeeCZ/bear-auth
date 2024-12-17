@@ -9,7 +9,7 @@ async function onResolveAuthState(instanceId: BearAuth<unknown>['id']) {
 
     await new Promise<void>(resolve => {
         unsubscribe = onAuthStateChanged(instanceId, session => {
-            if (session.status !== 'loading') {
+            if (session.status === 'authenticated' || session.status === 'unauthenticated') {
                 resolve();
             }
         });
@@ -20,9 +20,9 @@ async function onResolveAuthState(instanceId: BearAuth<unknown>['id']) {
 
 /**
  * Get the access token:
- * 1. If session is 'loading', wait for it to resolve.
- * 2. If session is 'unauthenticated', return null.
- * 3. If session is 'authenticated', check if the token is expired.
+ * 1. If session is `refreshing` or `retrieving`, wait for it to resolve.
+ * 2. If session is `unauthenticated` or 'signing-out`, return null.
+ * 3. If session is `authenticated`, check if the token is expired.
  * 4. If token is expired and refresh token is available, refresh the token.
  * 5. Return the access token.
  * @param instanceId - return value of `create` method
@@ -31,18 +31,21 @@ export async function getAccessToken(
     instanceId: BearAuth<unknown>['id'],
     { forceRefresh = false }: { forceRefresh?: boolean } = {},
 ) {
-    let instance = getInstance(instanceId);
+    const { logger, state, hooks } = getInstance(instanceId);
 
-    if (instance.state.session.status === 'loading') {
-        instance.logger.debug('[getAccessToken]', 'Waiting for loading state to resolve...');
+    if (state.session.status === 'signing-out') {
+        logger.debug('[getAccessToken]', 'Just signing-out. Access token is not available anymore.');
+        return null;
+    }
+
+    if (state.session.status === 'refreshing' || state.session.status === 'retrieving') {
+        logger.debug('[getAccessToken]', `Waiting for '${state.session.status}' status to resolve...`);
         await onResolveAuthState(instanceId);
     }
 
-    instance = getInstance(instanceId);
+    const { status, data } = state.session;
 
-    const { status, data } = instance.state.session;
-
-    instance.logger.debug('[getAccessToken]', 'Session status:', instance.state.session);
+    logger.debug('[getAccessToken]', 'Session status:', state.session);
 
     if (status === 'unauthenticated') {
         return null;
@@ -50,28 +53,27 @@ export async function getAccessToken(
 
     if (status === 'authenticated') {
         if (isExpired(data.expiration) && !data.refreshToken) {
-            instance.logger.debug(
-                '[getAccessToken]',
-                'Access token expired and no refresh token available. Returning null.',
-            );
+            logger.debug('[getAccessToken]', 'Access token expired and no refresh token available. Returning null.');
             return null;
         }
 
-        if ((isExpired(data.expiration) || forceRefresh) && instance.hooks.refreshToken) {
-            instance.logger.debug(
+        if ((isExpired(data.expiration) || forceRefresh) && hooks.refreshToken) {
+            logger.debug(
                 '[getAccessToken]',
                 'Access token expired or force refresh enabled. Refreshing access token...',
             );
-            instance = await instance.hooks.refreshToken();
-            instance.logger.debug('[getAccessToken]', 'Access token refreshed.', instance.state.session);
+
+            await hooks.refreshToken();
+
+            logger.debug('[getAccessToken]', 'Access token refreshed.', state.session);
         }
 
-        instance.logger.debug('[getAccessToken]', 'Returning access token:', instance.state.session.data!.accessToken);
+        logger.debug('[getAccessToken]', 'Returning access token:', state.session.data!.accessToken);
 
-        return instance.state.session.data!.accessToken;
+        return state.session.data!.accessToken;
     }
 
-    instance.logger.debug('[getAccessToken]', 'Session status is not recognized. Returning null.');
+    logger.debug('[getAccessToken]', 'Session status is not recognized. Returning null.');
 
     return null;
 }

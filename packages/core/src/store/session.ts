@@ -1,79 +1,90 @@
-import { castDraft, produce } from 'immer';
-
 import { getExpirationTimestampWithBuffer } from '~/expiration';
 import type { RefreshTookHandlerResult } from '~/hooks/setRefreshTokenHook';
 import type { AuthSession } from '~/types';
 
 import type { State } from './state';
 
+export type RetrievingSession = {
+    status: 'retrieving';
+    data: null;
+};
+
+export type RefreshingSession<AuthInfo> = {
+    status: 'refreshing';
+    data: AuthSession<AuthInfo> | null;
+};
+
+export type SigningOutSession<AuthInfo> = {
+    status: 'signing-out';
+    data: AuthSession<AuthInfo>;
+};
+
 export type UnauthenticatedSession = {
     status: 'unauthenticated';
     data: null;
 };
 
-export function setUnauthenticatedSession<AuthInfo>(state: State<AuthInfo>) {
-    return produce(state, draft => {
-        draft.session = {
-            status: 'unauthenticated',
-            data: null,
-        } satisfies UnauthenticatedSession;
-    });
-}
-
-export type LoadingSession = {
-    status: 'loading';
-    data: null;
-};
-
-export function setLoadingSession<AuthInfo>(state: State<AuthInfo>) {
-    return produce(state, draft => {
-        draft.session = {
-            status: 'loading',
-            data: null,
-        } satisfies LoadingSession;
-    });
-}
-
-export type Authenticatedession<AuthInfo> = {
+export type AuthenticatedSession<AuthInfo> = {
     status: 'authenticated';
     data: AuthSession<AuthInfo>;
 };
 
+export function createSession(): RetrievingSession {
+    return {
+        status: 'retrieving',
+        data: null,
+    };
+}
+
+export function setRefreshingSession<AuthInfo>(state: State<AuthInfo>) {
+    state.session.status = 'refreshing';
+}
+
+export function setSigningOutSession<AuthInfo>(state: State<AuthInfo>) {
+    state.session.status = 'signing-out';
+}
+
+export function setUnauthenticatedSession<AuthInfo>(state: State<AuthInfo>) {
+    state.session = {
+        status: 'unauthenticated',
+        data: null,
+    } satisfies UnauthenticatedSession;
+}
+
 export function setAuthenticatedSession<AuthInfo>(
     state: State<AuthInfo>,
-    { accessToken, expiration, refreshToken, authInfo }: Authenticatedession<AuthInfo>['data'],
+    { accessToken, expiration, refreshToken, authInfo }: AuthenticatedSession<AuthInfo>['data'],
 ) {
-    return produce(state, draft => {
-        draft.session = {
-            status: 'authenticated',
-            data: {
-                accessToken,
-                expiration,
-                refreshToken,
-                authInfo: castDraft(authInfo),
-            },
-        };
-    });
+    state.session = {
+        status: 'authenticated',
+        data: {
+            accessToken,
+            expiration,
+            refreshToken,
+            authInfo,
+        },
+    };
 }
 
 export function updateSessionAfterRefreshToken<AuthInfo>(
     state: State<AuthInfo>,
     { accessToken, refreshToken, expiration, authInfo: freshAuthInfo }: RefreshTookHandlerResult<AuthInfo>,
 ) {
-    return produce(state, draft => {
-        Object.assign(draft.session.data!, {
-            accessToken,
-            refreshToken,
-            expiration: getExpirationTimestampWithBuffer(expiration),
-            authInfo: freshAuthInfo ?? state.session.data!.authInfo,
-        });
+    setAuthenticatedSession(state, {
+        accessToken,
+        refreshToken,
+        expiration: getExpirationTimestampWithBuffer(expiration),
+        authInfo: freshAuthInfo ?? state.session.data!.authInfo,
     });
 }
 
 export function updateAuthInfo<AuthInfo>(state: State<AuthInfo>, authInfo: AuthInfo) {
-    return produce(state, draft => {
-        draft.session.data!.authInfo = castDraft(authInfo);
-    });
+    state.session.data!.authInfo = authInfo;
 }
 
-export type Session<AuthInfo> = LoadingSession | Authenticatedession<AuthInfo> | UnauthenticatedSession;
+export type Session<AuthInfo> =
+    | RetrievingSession
+    | RefreshingSession<AuthInfo>
+    | SigningOutSession<AuthInfo>
+    | AuthenticatedSession<AuthInfo>
+    | UnauthenticatedSession;

@@ -5,7 +5,7 @@ import { BearAuthError, isBearAuthError } from '~/errors';
 import { clearStorageOnStorageVersionUpdate, persistAuthSession } from '~/storage';
 import { setAuthenticatedSession, setUnauthenticatedSession } from '~/store/session';
 
-import { getInstance, setInstance } from './instances';
+import { getInstance } from './instances';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
 /**
@@ -20,24 +20,22 @@ import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
  * @returns - Session object
  */
 export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    let instance = getInstance<AuthInfo>(instanceId);
+    const instance = getInstance<AuthInfo>(instanceId);
 
     instance.logger.debug('[retrieveAuthSession]', 'Retrieving auth session...');
 
     await instance.continueWhenOnline();
 
-    await clearStorageOnStorageVersionUpdate(instance);
+    await clearStorageOnStorageVersionUpdate(instanceId);
 
-    const session = await instance.storage?.get(instance.id);
+    const peristedSession = await instance.storage?.get(instance.id);
 
-    instance.logger.debug('[retrieveAuthSession]', session);
+    instance.logger.debug('[retrieveAuthSession]', { peristedSession });
 
-    if (!session?.data || !session.data.expiration || !session.data.refreshToken) {
-        instance.state = setUnauthenticatedSession(instance.state);
-
-        setInstance(instance);
-
+    if (!peristedSession?.data || !peristedSession.data.expiration || !peristedSession.data.refreshToken) {
         await instance.storage?.clear(instance.id);
+
+        setUnauthenticatedSession(instance.state);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
@@ -47,25 +45,23 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
     }
 
     try {
-        const authSession = session.data;
+        const authSession = peristedSession.data;
 
         instance.flags.autoRefreshAccessTokenEnabled = Boolean(authSession.expiration && authSession.refreshToken);
 
-        instance.state = setAuthenticatedSession(instance.state, authSession);
+        setAuthenticatedSession(instance.state, authSession);
 
         if (isExpired(authSession.expiration) && instance.hooks.refreshToken) {
-            instance = await instance.hooks.refreshToken(authSession);
+            await instance.hooks.refreshToken(authSession);
         } else {
-            instance = startTokenAutoRefresh(instance);
+            startTokenAutoRefresh(instanceId);
         }
 
         if (authSession.authInfo && instance.hooks.fetchAuthInfo) {
-            instance = await instance.hooks.fetchAuthInfo(authSession);
+            await instance.hooks.fetchAuthInfo(authSession);
         }
 
-        await persistAuthSession<AuthInfo>(instance);
-
-        setInstance(instance);
+        await persistAuthSession<AuthInfo>(instanceId);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 

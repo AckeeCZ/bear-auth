@@ -1,7 +1,7 @@
 import { stopTokenAutoRefresh } from '~/autoRefreshToken';
 import { type BearAuth } from '~/create';
 import { BearAuthError } from '~/errors';
-import { getInstance, setInstance } from '~/instances';
+import { getInstance } from '~/instances';
 import { runOnAuthStateChangedCallbacks } from '~/onAuthStateChanged';
 import { persistAuthSession } from '~/storage';
 import { setUnauthenticatedSession, updateAuthInfo } from '~/store/session';
@@ -32,7 +32,7 @@ export function setFetchAuthInfoHook<
     },
 ): AuthHook['action'] {
     async function fetchAuthInfo(retrievedAuthSession?: AuthSession<AuthInfo>, failureCount = 0) {
-        let instance = getInstance<AuthInfo>(instanceId);
+        const instance = getInstance<AuthInfo>(instanceId);
 
         const { session } = instance.state;
 
@@ -47,17 +47,15 @@ export function setFetchAuthInfoHook<
 
             const authInfo = await handler(authSession);
 
-            instance.state = updateAuthInfo(instance.state, authInfo);
+            updateAuthInfo(instance.state, authInfo);
 
             if (!retrievedAuthSession) {
-                await persistAuthSession<AuthInfo>(instance);
+                await persistAuthSession<AuthInfo>(instanceId);
             }
 
             instance.logger.debug('[fetchAuthInfo]', 'Auth data has been fetched:', authInfo);
 
-            setInstance(instance);
-
-            return instance;
+            return instance.state.session;
         } catch (error) {
             instance.logger.error(error);
 
@@ -66,13 +64,11 @@ export function setFetchAuthInfoHook<
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
                 return fetchAuthInfo(retrievedAuthSession, failureCount);
             } else {
-                instance = stopTokenAutoRefresh(instance);
+                stopTokenAutoRefresh(instanceId);
 
-                instance.state = setUnauthenticatedSession(instance.state);
+                setUnauthenticatedSession(instance.state);
 
                 await instance.storage?.clear(instance.id);
-
-                setInstance(instance);
 
                 await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
@@ -84,8 +80,6 @@ export function setFetchAuthInfoHook<
     const instance = getInstance<AuthInfo>(instanceId);
 
     instance.hooks.fetchAuthInfo = fetchAuthInfo;
-
-    setInstance(instance);
 
     async function refreshAuthInfo() {
         await fetchAuthInfo();

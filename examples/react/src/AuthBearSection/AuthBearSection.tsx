@@ -8,6 +8,8 @@ export const AuthBearSection = () => {
     const session = useBearAuthSession<AuthInfo>();
     const { id, actions } = useBearAuth<AuthInfo>();
 
+    const loadingSession = session.status === 'refreshing' || session.status === 'retrieving';
+
     console.log({ session, id, actions });
 
     return (
@@ -32,12 +34,16 @@ export const AuthBearSection = () => {
                         },
                     })
                 }
-                disabled={session.status === 'loading'}
+                disabled={loadingSession}
             >
                 Authenticate
             </button>
 
-            <button type='button' onClick={() => actions.logout()} disabled={session.status === 'loading'}>
+            <button
+                type='button'
+                onClick={() => actions.logout()}
+                disabled={loadingSession || session.status === 'signing-out'}
+            >
                 Logout
             </button>
 

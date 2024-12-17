@@ -17,7 +17,7 @@ import { generateMockToken } from './utils';
 function App() {
     const [session, setSession] = useState<Session<AuthInfo>>({
         data: null,
-        status: 'loading',
+        status: 'retrieving',
     });
 
     const retrieveAuthSessionResult = useQuery({

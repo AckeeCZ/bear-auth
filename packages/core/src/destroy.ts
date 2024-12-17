@@ -2,7 +2,7 @@ import { stopTokenAutoRefresh } from '~/autoRefreshToken';
 import { type BearAuth } from '~/create';
 import { setUnauthenticatedSession } from '~/store/session';
 
-import { getInstance, instances, setInstance } from './instances';
+import { getInstance, instances } from './instances';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
 /**
@@ -13,13 +13,13 @@ import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
  * @param instanceId - return value of `create` method
  */
 export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    let instance = getInstance<AuthInfo>(instanceId);
+    const instance = getInstance<AuthInfo>(instanceId);
 
     if (!instance) {
         return;
     }
 
-    instance = stopTokenAutoRefresh<AuthInfo>(instance);
+    stopTokenAutoRefresh<AuthInfo>(instanceId);
 
     instance.logger.debug('[destroy]', 'Destroying auth session.');
 
@@ -28,9 +28,7 @@ export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
     } else {
         await instance.storage?.clear(instance.id);
 
-        instance.state = setUnauthenticatedSession(instance.state);
-
-        setInstance(instance);
+        setUnauthenticatedSession(instance.state);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
     }

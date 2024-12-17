@@ -1,10 +1,14 @@
 import { type BearAuth } from '~/create';
 
+import { getInstance } from './instances';
+
 export function isExpired(expiration: string | undefined | null) {
     return !expiration || Date.now() >= Date.parse(expiration);
 }
 
-export function startTokenAutoRefresh<AuthInfo>(instance: BearAuth<AuthInfo>) {
+export function startTokenAutoRefresh<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
+    const instance = getInstance<AuthInfo>(instanceId);
+
     if (!instance.flags.autoRefreshAccessTokenEnabled) {
         instance.logger.debug(
             '[startTokenAutoRefresh]',
@@ -24,19 +28,17 @@ export function startTokenAutoRefresh<AuthInfo>(instance: BearAuth<AuthInfo>) {
     }, expiresIn);
 
     instance.refreshTokenTimeoutId = refreshTokenTimeoutId;
-
-    return instance;
 }
 
-export function stopTokenAutoRefresh<AuthInfo>(instance: BearAuth<AuthInfo>) {
+export function stopTokenAutoRefresh<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
+    const instance = getInstance<AuthInfo>(instanceId);
+
     if (instance.refreshTokenTimeoutId === null || !instance.flags.autoRefreshAccessTokenEnabled) {
-        return instance;
+        return;
     }
 
     instance.logger.debug('[stopTokenAutoRefresh]', 'Stopping auto token refresh...');
 
     clearTimeout(instance.refreshTokenTimeoutId);
     instance.refreshTokenTimeoutId = null;
-
-    return instance;
 }
