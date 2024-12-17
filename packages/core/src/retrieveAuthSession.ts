@@ -3,7 +3,7 @@ import { type BearAuth } from '~/create';
 import { destroy } from '~/destroy';
 import { BearAuthError, isBearAuthError } from '~/errors';
 import { clearStorageOnStorageVersionUpdate, persistAuthSession } from '~/storage';
-import { setAuthenticatedSession, setUnauthenticatedSession } from '~/store/session';
+import { setAuthenticatedSession, setUnauthenticatedSession, type RefreshingSession } from '~/store/session';
 
 import { getInstance } from './instances';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
@@ -52,7 +52,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
         setAuthenticatedSession(instance.state, authSession);
 
         if (isExpired(authSession.expiration) && instance.hooks.refreshToken) {
-            await instance.hooks.refreshToken(authSession);
+            await instance.hooks.refreshToken(authSession as RefreshingSession<AuthInfo>['data']);
         } else {
             startTokenAutoRefresh(instanceId);
         }

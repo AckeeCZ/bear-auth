@@ -4,15 +4,16 @@ import { BearAuthError } from '~/errors';
 import { getInstance } from '~/instances';
 import { runOnAuthStateChangedCallbacks } from '~/onAuthStateChanged';
 import { persistAuthSession } from '~/storage';
-import { setUnauthenticatedSession, updateAuthInfo } from '~/store/session';
-import type { AuthSession } from '~/types';
+import { setUnauthenticatedSession, updateAuthInfo, type AuthenticatedSession, type Session } from '~/store/session';
 
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry';
 
 export type FetchAuthInfoHook<AuthInfo> = {
-    handler: (authSession: AuthSession<AuthInfo>) => Promise<AuthInfo>;
-    action: () => Promise<void>;
+    handler: (authSession: AuthenticatedSession<AuthInfo>['data']) => Promise<AuthInfo>;
+    action: () => Promise<Session<AuthInfo>>;
 };
+
+type AuthData<AuthInfo> = AuthenticatedSession<AuthInfo>['data'];
 
 /**
  * - During configuration of BearAuth, set a function to fetch the auth info from your API.
@@ -31,7 +32,7 @@ export function setFetchAuthInfoHook<
         retry: Retry;
     },
 ): AuthHook['action'] {
-    async function fetchAuthInfo(retrievedAuthSession?: AuthSession<AuthInfo>, failureCount = 0) {
+    async function fetchAuthInfo(retrievedAuthSession?: AuthData<AuthInfo>, failureCount = 0) {
         const instance = getInstance<AuthInfo>(instanceId);
 
         const { session } = instance.state;
@@ -43,11 +44,11 @@ export function setFetchAuthInfoHook<
         try {
             instance.logger.debug('[fetchAuthInfo]', 'Fetching auth data...');
 
-            const authSession = retrievedAuthSession ?? (session.data as AuthSession<AuthInfo>);
+            const authSession = retrievedAuthSession ?? (session.data as AuthData<AuthInfo>);
 
             const authInfo = await handler(authSession);
 
-            updateAuthInfo(instance.state, authInfo);
+            updateAuthInfo<AuthInfo>(instance.state, authInfo);
 
             if (!retrievedAuthSession) {
                 await persistAuthSession<AuthInfo>(instanceId);
@@ -64,9 +65,9 @@ export function setFetchAuthInfoHook<
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
                 return fetchAuthInfo(retrievedAuthSession, failureCount);
             } else {
-                stopTokenAutoRefresh(instanceId);
+                stopTokenAutoRefresh<AuthInfo>(instanceId);
 
-                setUnauthenticatedSession(instance.state);
+                setUnauthenticatedSession<AuthInfo>(instance.state);
 
                 await instance.storage?.clear(instance.id);
 
@@ -82,7 +83,7 @@ export function setFetchAuthInfoHook<
     instance.hooks.fetchAuthInfo = fetchAuthInfo;
 
     async function refreshAuthInfo() {
-        await fetchAuthInfo();
+        return await fetchAuthInfo();
     }
 
     return refreshAuthInfo;

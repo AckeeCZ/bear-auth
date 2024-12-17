@@ -4,21 +4,21 @@ import { BearAuthError } from '~/errors';
 import { getInstance } from '~/instances';
 import { runOnAuthStateChangedCallbacks } from '~/onAuthStateChanged';
 import { persistAuthSession } from '~/storage';
-import { setRefreshingSession, setUnauthenticatedSession, updateSessionAfterRefreshToken } from '~/store/session';
-import type { AuthSession } from '~/types';
+import {
+    setRefreshingSession,
+    setUnauthenticatedSession,
+    updateSessionAfterRefreshToken,
+    type RefreshingSession,
+    type Session,
+} from '~/store/session';
 
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry';
 
-export type RefreshTookHandlerResult<AuthInfo> = {
-    accessToken: string;
-    refreshToken: string;
-    expiration?: string | null;
-    authInfo?: AuthInfo | null;
-};
+type AuthData<AuthInfo> = RefreshingSession<AuthInfo>['data'];
 
 export type RefreshTokenHook<AuthInfo> = {
-    handler: (authSession: AuthSession<AuthInfo>) => Promise<RefreshTookHandlerResult<AuthInfo>>;
-    action: (props?: { forceUpdate?: boolean }) => Promise<void>;
+    handler: (authSession: AuthData<AuthInfo>) => Promise<AuthData<AuthInfo>>;
+    action: (props?: { forceUpdate?: boolean }) => Promise<Session<AuthInfo>>;
 };
 
 /**
@@ -35,7 +35,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
         retry: Retry;
     },
 ): AuthHook['action'] {
-    async function refreshToken(retrievedAuthSession?: AuthSession<AuthInfo>, failureCount = 0) {
+    async function refreshToken(retrievedAuthSession?: AuthData<AuthInfo>, failureCount = 0) {
         const instance = getInstance<AuthInfo>(instanceId);
 
         if (!retrievedAuthSession && instance.state.session.status !== 'authenticated') {
@@ -57,7 +57,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             await instance.continueWhenOnline();
 
             const { session } = instance.state;
-            const authSession = retrievedAuthSession ?? (session.data as AuthSession<AuthInfo>);
+            const authSession = retrievedAuthSession ?? (session.data as AuthData<AuthInfo>);
 
             const result = await handler(authSession);
 
@@ -103,8 +103,10 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
         const instance = getInstance<AuthInfo>(instanceId);
 
         if (options?.forceUpdate || isExpired(instance.state.session.data?.expiration)) {
-            await refreshToken();
+            return await refreshToken();
         }
+
+        return instance.state.session;
     };
 
     return triggerRefreshToken;

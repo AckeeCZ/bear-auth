@@ -1,12 +1,12 @@
 import { type BearAuth } from '~/create';
 import { BearAuthError, isBearAuthError } from '~/errors';
-import type { AuthSession } from '~/types';
 
 import { getInstance } from './instances';
+import type { SessionData } from './store/session';
 
 export type PersistedData<AuthInfo> = {
     version: number;
-    data: AuthSession<AuthInfo>;
+    data: SessionData<AuthInfo>;
 };
 
 /**

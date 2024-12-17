@@ -27,7 +27,7 @@ Configures a function to fetch auth info from an API, required when the `authent
 #### Arguments:
 
 - `instanceId: string`: return value of `create` method
-- `handler: (authSession: AuthSession<AuthInfo>) => Promise<AuthInfo>`: function to fetch the auth info
+- `handler: (authSession: AuthenticatedSession<AuthInfo>['data']) => Promise<AuthInfo>`: function to fetch the auth info
 
 #### Example:
 
@@ -56,7 +56,7 @@ Configures a function to refresh the access token via an API call, required when
 #### Arguments:
 
 - `instanceId: string`: return value of `create` method
-- `handler: (authSession: AuthSession<AuthInfo>) => Promise<RefreshTookHandlerResult<AuthInfo>>`: function to refresh the access token
+- `handler: (authSession: RefreshingSession<AuthInfo>['data']) => Promise<RefreshingSession<AuthInfo>['data']>`: function to refresh the access token
 
 #### Example:
 
@@ -94,7 +94,7 @@ Sets a function to log out the user via an API call to the app's backend.
 #### Arguments:
 
 - `instanceId: string`: return value of `create` method
-- `handler: (authSession: AuthSession<AuthInfo>) => Promise<void>`: function to logout the user
+- `handler: (authSession: AuthenticatedSession<AuthInfo>['data']) => Promise<void>`: function to logout the user
 
 #### Example:
 
@@ -330,18 +330,21 @@ Represents the session state.
 #### Example:
 
 ```typescript
-type Session = {
-    status: 'unauthenticated' | 'retrieving' | 'refreshing' | 'signing-out' | 'authenticated';
-    data: AuthSession | null;
-};
+import type { Session } from '@bear-auth/core';
 
-const session: Session = {
+type AuthInfo = {
+    email: string;
+}
+
+const session: Session<AuthInfo> = {
     status: 'authenticated',
     data: {
         accessToken: 'yourAccessToken',
         expiration: '2024-12-31T23:59:59Z',
         refreshToken: 'yourRefreshToken',
-        authInfo: null,
+        authInfo: {
+            email: 'test@gmail.com
+        },
     },
 };
 ```

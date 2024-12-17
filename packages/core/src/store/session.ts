@@ -1,6 +1,4 @@
 import { getExpirationTimestampWithBuffer } from '~/expiration';
-import type { RefreshTookHandlerResult } from '~/hooks/setRefreshTokenHook';
-import type { AuthSession } from '~/types';
 
 import type { State } from './state';
 
@@ -11,12 +9,22 @@ export type RetrievingSession = {
 
 export type RefreshingSession<AuthInfo> = {
     status: 'refreshing';
-    data: AuthSession<AuthInfo> | null;
+    data: {
+        accessToken: string;
+        expiration: string;
+        refreshToken: string;
+        authInfo?: AuthInfo | null;
+    };
 };
 
 export type SigningOutSession<AuthInfo> = {
     status: 'signing-out';
-    data: AuthSession<AuthInfo>;
+    data: {
+        accessToken: string;
+        expiration: string | null;
+        refreshToken: string | null;
+        authInfo?: AuthInfo | null;
+    };
 };
 
 export type UnauthenticatedSession = {
@@ -26,7 +34,19 @@ export type UnauthenticatedSession = {
 
 export type AuthenticatedSession<AuthInfo> = {
     status: 'authenticated';
-    data: AuthSession<AuthInfo>;
+    data: {
+        accessToken: string;
+        /**
+         * Expiration timestamp in ISO format.
+         */
+        expiration: string | null;
+        refreshToken: string | null;
+
+        /**
+         * Auth data (e.g. user info)
+         */
+        authInfo?: AuthInfo | null;
+    };
 };
 
 export function createSession(): RetrievingSession {
@@ -68,7 +88,7 @@ export function setAuthenticatedSession<AuthInfo>(
 
 export function updateSessionAfterRefreshToken<AuthInfo>(
     state: State<AuthInfo>,
-    { accessToken, refreshToken, expiration, authInfo: freshAuthInfo }: RefreshTookHandlerResult<AuthInfo>,
+    { accessToken, refreshToken, expiration, authInfo: freshAuthInfo }: RefreshingSession<AuthInfo>['data'],
 ) {
     setAuthenticatedSession(state, {
         accessToken,
@@ -88,3 +108,5 @@ export type Session<AuthInfo> =
     | SigningOutSession<AuthInfo>
     | AuthenticatedSession<AuthInfo>
     | UnauthenticatedSession;
+
+export type SessionData<AuthInfo> = Session<AuthInfo>['data'];

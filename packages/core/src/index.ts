@@ -13,5 +13,11 @@ export { setContinueWhenOnline } from './network';
 export { onAuthStateChanged, type OnAuthStateChangedCallback } from './onAuthStateChanged';
 export * from './retrieveAuthSession';
 export { setStorage, type PersistedData, type StorageSchema } from './storage';
-export { type Session } from './store/session';
-export { type AuthSession } from './types';
+export {
+    type AuthenticatedSession,
+    type RefreshingSession,
+    type RetrievingSession,
+    type Session,
+    type SigningOutSession,
+    type UnauthenticatedSession,
+} from './store/session';
