@@ -3,7 +3,12 @@ import { type BearAuth } from '~/create';
 import { destroy } from '~/destroy';
 import { BearAuthError, isBearAuthError } from '~/errors';
 import { clearStorageOnStorageVersionUpdate, persistAuthSession } from '~/storage';
-import { setAuthenticatedSession, setUnauthenticatedSession, type RefreshingSession } from '~/store/session';
+import {
+    setAuthenticatedSession,
+    setUnauthenticatedSession,
+    type AuthenticatedSession,
+    type RefreshingSession,
+} from '~/store/session';
 
 import { getInstance } from './instances';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
@@ -58,7 +63,10 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
         }
 
         if (authSession.authInfo && instance.hooks.fetchAuthInfo) {
-            await instance.hooks.fetchAuthInfo(authSession);
+            const session = getInstance<AuthInfo>(instanceId).state.session
+                .data! as AuthenticatedSession<AuthInfo>['data'];
+
+            await instance.hooks.fetchAuthInfo?.(session);
         }
 
         await persistAuthSession<AuthInfo>(instanceId);
