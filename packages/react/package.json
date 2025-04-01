@@ -21,7 +21,7 @@
         "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
     },
     "devDependencies": {
-        "@bear-auth/core": "2.1.0",
+        "@bear-auth/core": "2.1.1",
         "@tooling/eslint": "workspace:*",
         "@tooling/madge": "workspace:*",
         "@tooling/typescript": "workspace:*",

@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 2.1.1
+
+### Patch Changes
+
+- d50fa73: Fix retrieveAuthSession method (pass fresh auth session to the fetchAuthInfo hook).
+
 ## 2.1.0
 
 ### Minor Changes
