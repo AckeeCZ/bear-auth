@@ -18,6 +18,7 @@ export {
     type RefreshingSession,
     type RetrievingSession,
     type Session,
+    type SessionData,
     type SigningOutSession,
     type UnauthenticatedSession,
 } from './store/session';

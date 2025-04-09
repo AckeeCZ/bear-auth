@@ -12,28 +12,27 @@ import { z } from 'zod';
 
 import { delay, generateMockToken } from '../utils';
 
-export type AuthInfo = {
-    user: {
-        id: string;
-        email: string;
-    };
-};
-
 export const bearAuthId = create();
 
 setLogLevel(bearAuthId, 'debug');
 
-const storage = createIndexedDBStorage({
-    bearAuthId,
-    authInfo: z.object({
+const authInfo = z
+    .object({
         user: z.object({
             id: z.string(),
             email: z.string(),
         }),
-    }),
+    })
+    .strict();
+
+export type AuthInfo = z.infer<typeof authInfo>;
+
+const storage = createIndexedDBStorage({
+    bearAuthId,
+    authInfo,
 });
 
-setStorage<AuthInfo>(bearAuthId, storage);
+setStorage(bearAuthId, storage);
 
 // setContinueWhenOnline(bearAuthId, async () => {});
 

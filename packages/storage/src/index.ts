@@ -1,13 +1,14 @@
+import { type SessionData } from '@bear-auth/core';
 import { initIDB } from 'idb-stores';
 import { z, type AnyZodObject } from 'zod';
 
 type UnknownAuthInfoSchema = AnyZodObject;
 
-export interface CreateStorageProps<AuthInfoSchema extends UnknownAuthInfoSchema> {
+export interface CreateStorageProps<AuthInfoSchema extends UnknownAuthInfoSchema, BearAuthId extends Readonly<string>> {
     /**
      * Bear auth instance ID (return value of the `create` method)
      */
-    bearAuthId: string;
+    bearAuthId: BearAuthId;
 
     /**
      * Define Zod schema for the `authInfo` field of the session.data object.
@@ -32,11 +33,10 @@ export interface CreateStorageProps<AuthInfoSchema extends UnknownAuthInfoSchema
 /**
  * Creates a IndexedDB storage for the Bear Auth instance.
  */
-export function createIndexedDBStorage<AuthInfoSchema extends UnknownAuthInfoSchema>({
-    bearAuthId,
-    authInfo,
-    db,
-}: CreateStorageProps<AuthInfoSchema>) {
+export function createIndexedDBStorage<
+    AuthInfoSchema extends UnknownAuthInfoSchema,
+    BearAuthId extends Readonly<string>,
+>({ bearAuthId, authInfo, db }: CreateStorageProps<AuthInfoSchema, BearAuthId>) {
     const bearAuthInstanceSchema = z
         .object({
             version: z.number(),
@@ -47,7 +47,14 @@ export function createIndexedDBStorage<AuthInfoSchema extends UnknownAuthInfoSch
                 authInfo: authInfo.nullable(),
             }),
         })
+        .strict()
         .optional();
+
+    const storeSchemas = z
+        .object({
+            [bearAuthId]: bearAuthInstanceSchema,
+        })
+        .strict();
 
     const getStore = initIDB({
         database: db ?? {
@@ -55,20 +62,29 @@ export function createIndexedDBStorage<AuthInfoSchema extends UnknownAuthInfoSch
             name: 'bear-auth',
         },
         storeSchemas: {
-            'bear-auths': z.object({
-                [bearAuthId]: bearAuthInstanceSchema,
-            }),
+            'bear-auths': storeSchemas,
         },
     });
 
     const store = getStore('bear-auths');
 
+    type BearAuthInstance =
+        | {
+              version: number;
+              data: SessionData<z.infer<AuthInfoSchema>>;
+          }
+        | undefined;
+
     return {
-        version: 1,
-        get: (key: typeof bearAuthId) => store.get(key),
-        // @ts-expect-error
-        set: (key: typeof bearAuthId, value) => store.set(key, value),
-        remove: (key: typeof bearAuthId) => store.remove(key),
-        clear: () => store.clear(),
-    };
+        version: db?.version ?? 1,
+        get(key: typeof bearAuthId) {
+            return store.get<typeof bearAuthId>(key) as Promise<BearAuthInstance | undefined>;
+        },
+        async set(key: typeof bearAuthId, value: BearAuthInstance) {
+            // @ts-expect-error
+            await store.set(key, value);
+        },
+        remove: store.remove<typeof bearAuthId>,
+        clear: store.clear,
+    } as const;
 }

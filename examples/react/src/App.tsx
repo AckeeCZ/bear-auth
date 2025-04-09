@@ -17,12 +17,16 @@ import { z } from 'zod';
 import { AuthBearSection } from './AuthBearSection';
 import { generateMockToken } from './utils';
 
-export type AuthInfo = {
-    user: {
-        id: string;
-        username: string;
-    };
-};
+const authInfo = z
+    .object({
+        user: z.object({
+            id: z.string(),
+            username: z.string(),
+        }),
+    })
+    .strict();
+
+export type AuthInfo = z.infer<typeof authInfo>;
 
 const bearAuthId = create();
 
@@ -30,15 +34,10 @@ setLogLevel(bearAuthId, 'debug');
 
 const storage = createIndexedDBStorage({
     bearAuthId,
-    authInfo: z.object({
-        user: z.object({
-            id: z.string(),
-            username: z.string(),
-        }),
-    }),
+    authInfo,
 });
 
-setStorage<AuthInfo>(bearAuthId, storage);
+setStorage(bearAuthId, storage);
 
 const refetchAuthInfo = setFetchAuthInfoHook<AuthInfo>(bearAuthId, async () => {
     return {
