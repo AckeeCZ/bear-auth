@@ -782,6 +782,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@example/react@workspace:examples/react"
   dependencies:
+    "@bear-auth/core": "workspace:*"
     "@bear-auth/react": "workspace:*"
     "@bear-auth/storage": "workspace:*"
     "@eslint/js": "npm:9.17.0"

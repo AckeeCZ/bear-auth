@@ -10,6 +10,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@bear-auth/core": "workspace:*",
         "@bear-auth/react": "workspace:*",
         "@bear-auth/storage": "workspace:*",
         "idb-stores": "0.0.19",
