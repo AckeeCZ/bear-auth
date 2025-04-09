@@ -1,5 +1,13 @@
 # @bear-auth/react
 
+## 2.1.4
+
+### Patch Changes
+
+- 253251a: Fix circular type.
+- Updated dependencies [253251a]
+    - @bear-auth/core@2.1.4
+
 ## 2.1.3
 
 ### Patch Changes

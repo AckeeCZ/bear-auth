@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 2.1.4
+
+### Patch Changes
+
+- 253251a: Fix circular type.
+
 ## 2.1.3
 
 ### Patch Changes
