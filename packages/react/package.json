@@ -20,18 +20,17 @@
         "cir-dep": "check-cir-deps ./src",
         "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
     },
-    "dependencies": {
-        "@bear-auth/core": "2.1.3"
-    },
     "devDependencies": {
+        "@bear-auth/core": "2.1.3",
         "@tooling/eslint": "workspace:*",
         "@tooling/madge": "workspace:*",
         "@tooling/typescript": "workspace:*",
-        "react": "19.0.0",
-        "tsc-alias": "1.8.10",
-        "typescript": "5.7.2"
+        "react": "19.1.0",
+        "tsc-alias": "1.8.14",
+        "typescript": "5.8.3"
     },
     "peerDependencies": {
+        "@bear-auth/core": "2.1.3",
         "react": "^18 || ^19"
     },
     "publishConfig": {

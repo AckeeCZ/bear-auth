@@ -22,20 +22,19 @@
         "types-check": "tsc --noEmit"
     },
     "devDependencies": {
+        "@bear-auth/core": "workspace:*",
         "@tooling/eslint": "workspace:*",
         "@tooling/madge": "workspace:*",
         "@tooling/typescript": "workspace:*",
-        "typescript": "5.7.2",
+        "typescript": "5.8.3",
         "zod": "3.24.2"
     },
     "peerDependencies": {
+        "@bear-auth/core": "2.1.3",
         "zod": "^3.23.8"
     },
     "publishConfig": {
         "access": "public"
-    },
-    "dependencies": {
-        "idb-stores": "0.0.21"
     },
     "files": [
         "build"
@@ -48,5 +47,8 @@
     "homepage": "https://github.com/AckeeCZ/bear-auth",
     "bugs": {
         "url": "https://github.com/AckeeCZ/bear-auth/issues"
+    },
+    "dependencies": {
+        "idb-stores": "0.0.22"
     }
 }
