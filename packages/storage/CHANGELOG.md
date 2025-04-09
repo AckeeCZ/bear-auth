@@ -1,5 +1,11 @@
 # @bear-auth/storage
 
+## 2.1.1
+
+### Patch Changes
+
+- 60f56d2: Update dependency.
+
 ## 2.1.0
 
 ### Minor Changes
