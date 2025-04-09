@@ -1,5 +1,11 @@
 # @bear-auth/storage
 
+## 2.1.3
+
+### Patch Changes
+
+- 4ebd003: Upgrade idb-store.
+
 ## 2.1.2
 
 ### Patch Changes

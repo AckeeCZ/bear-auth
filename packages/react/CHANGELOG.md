@@ -1,5 +1,13 @@
 # @bear-auth/react
 
+## 2.1.3
+
+### Patch Changes
+
+- 4ebd003: Upgrade idb-store.
+- Updated dependencies [4ebd003]
+    - @bear-auth/core@2.1.3
+
 ## 2.1.2
 
 ### Patch Changes
