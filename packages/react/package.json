@@ -20,8 +20,10 @@
         "cir-dep": "check-cir-deps ./src",
         "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
     },
+    "dependencies": {
+        "@bear-auth/core": "2.1.2"
+    },
     "devDependencies": {
-        "@bear-auth/core": "2.1.2",
         "@tooling/eslint": "workspace:*",
         "@tooling/madge": "workspace:*",
         "@tooling/typescript": "workspace:*",
