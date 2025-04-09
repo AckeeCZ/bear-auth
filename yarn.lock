@@ -257,9 +257,9 @@ __metadata:
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
     "@tooling/typescript": "workspace:*"
-    idb-stores: "npm:0.0.19"
+    idb-stores: "npm:0.0.21"
     typescript: "npm:5.7.2"
-    zod: "npm:3.23.8"
+    zod: "npm:3.24.2"
   peerDependencies:
     zod: ^3.23.8
   languageName: unknown
@@ -768,13 +768,13 @@ __metadata:
     eslint-plugin-react-hooks: "npm:5.1.0"
     eslint-plugin-react-refresh: "npm:0.4.16"
     globals: "npm:15.13.0"
-    idb-stores: "npm:0.0.19"
+    idb-stores: "npm:0.0.21"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
     typescript: "npm:5.7.2"
     typescript-eslint: "npm:8.18.0"
     vite: "npm:6.0.3"
-    zod: "npm:3.23.8"
+    zod: "npm:3.24.2"
   languageName: unknown
   linkType: soft
 
@@ -793,13 +793,13 @@ __metadata:
     eslint-plugin-react-hooks: "npm:5.1.0"
     eslint-plugin-react-refresh: "npm:0.4.16"
     globals: "npm:15.13.0"
-    idb-stores: "npm:0.0.19"
+    idb-stores: "npm:0.0.21"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
     typescript: "npm:5.7.2"
     typescript-eslint: "npm:8.18.0"
     vite: "npm:6.0.3"
-    zod: "npm:3.23.8"
+    zod: "npm:3.24.2"
   languageName: unknown
   linkType: soft
 
@@ -2926,15 +2926,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idb-stores@npm:0.0.19":
-  version: 0.0.19
-  resolution: "idb-stores@npm:0.0.19"
+"idb-stores@npm:0.0.21":
+  version: 0.0.21
+  resolution: "idb-stores@npm:0.0.21"
   dependencies:
     idb-keyval: "npm:6.2.1"
     loglevel: "npm:1.9.2"
   peerDependencies:
     zod: 3.x
-  checksum: 10c0/4d6dbd12f89475c38f20bc323bc2253d1c4fc081ee451d25aa2bb0e33aa235158e67b83bb416d3154259f0af2611041d680597c89e669893ed8b854387811ddb
+  checksum: 10c0/dec8961730f199138493da6ab11cf924b76a3baea31f3e41019647318e5825617ba661a75fa65a5d4ccd3918c5f9635ae421328d28604de9f69fba5f8dc344e9
   languageName: node
   linkType: hard
 
@@ -4960,9 +4960,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.23.8":
-  version: 3.23.8
-  resolution: "zod@npm:3.23.8"
-  checksum: 10c0/8f14c87d6b1b53c944c25ce7a28616896319d95bc46a9660fe441adc0ed0a81253b02b5abdaeffedbeb23bdd25a0bf1c29d2c12dd919aef6447652dd295e3e69
+"zod@npm:3.24.2":
+  version: 3.24.2
+  resolution: "zod@npm:3.24.2"
+  checksum: 10c0/c638c7220150847f13ad90635b3e7d0321b36cce36f3fc6050ed960689594c949c326dfe2c6fa87c14b126ee5d370ccdebd6efb304f41ef5557a4aaca2824565
   languageName: node
   linkType: hard

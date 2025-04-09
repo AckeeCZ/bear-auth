@@ -13,10 +13,10 @@
         "@bear-auth/core": "workspace:*",
         "@bear-auth/storage": "workspace:*",
         "@tanstack/react-query": "5.62.0",
-        "idb-stores": "0.0.19",
+        "idb-stores": "0.0.21",
         "react": "19.0.0",
         "react-dom": "19.0.0",
-        "zod": "3.23.8"
+        "zod": "3.24.2"
     },
     "devDependencies": {
         "@eslint/js": "9.17.0",
