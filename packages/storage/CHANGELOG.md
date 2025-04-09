@@ -1,5 +1,11 @@
 # @bear-auth/storage
 
+## 2.1.2
+
+### Patch Changes
+
+- ccd44b5: Update dependency.
+
 ## 2.1.1
 
 ### Patch Changes

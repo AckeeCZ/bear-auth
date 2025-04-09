@@ -1,6 +1,6 @@
 {
     "name": "@bear-auth/storage",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "type": "module",
     "sideEffects": false,
     "module": "./build/index.js",
