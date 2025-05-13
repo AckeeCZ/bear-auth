@@ -15,7 +15,8 @@ import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
 
 /**
  * - Attempts to retrieve the auth session from the storage.
- * - Refreshes the access token if it's expired and refresh token is available.
+ * - If refresh token isn't available but the access token is valid, it sets the session as authenticated.
+ * - Refreshes the access token if it's expired, refresh token and the refreshToken hook are available.
  * - Refetches the auth info if it's available.
  * - Persists the fresh session in the storage.
  * - Calls `onAuthStateChanged` callbacks.
@@ -33,11 +34,14 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
     await clearStorageOnStorageVersionUpdate(instanceId);
 
-    const peristedSession = await instance.storage?.get(instance.id);
+    const persistedSession = await instance.storage?.get(instance.id);
 
-    instance.logger.debug('[retrieveAuthSession]', { peristedSession });
+    instance.logger.debug('[retrieveAuthSession]', { persistedSession });
 
-    if (!peristedSession?.data || !peristedSession.data.expiration || !peristedSession.data.refreshToken) {
+    const unknownSession = persistedSession?.data;
+
+    // The session might not have a refresh token but it might be valid.
+    if (!unknownSession || isExpired(unknownSession.expiration)) {
         await instance.storage?.clear(instance.id);
 
         setUnauthenticatedSession(instance.state);
@@ -50,7 +54,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
     }
 
     try {
-        const authSession = peristedSession.data;
+        const authSession = unknownSession;
 
         instance.flags.autoRefreshAccessTokenEnabled = Boolean(authSession.expiration && authSession.refreshToken);
 
