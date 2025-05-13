@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 2.1.5
+
+### Patch Changes
+
+- 6ce8aba: ♻️ Extend auth session validity.
+- Updated dependencies [6ce8aba]
+    - @bear-auth/core@2.1.5
+
 ## 2.1.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 2.1.5
+
+### Patch Changes
+
+- 6ce8aba: ♻️ Extend auth session validity.
+
 ## 2.1.4
 
 ### Patch Changes
