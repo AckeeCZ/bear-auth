@@ -56,7 +56,7 @@ export function setFetchAuthInfoHook<
 
             instance.logger.debug('[fetchAuthInfo]', 'Auth data has been fetched:', authInfo);
 
-            return instance.state.session;
+            return getInstance<AuthInfo>(instanceId).state.session;
         } catch (error) {
             instance.logger.error(error);
 
@@ -67,9 +67,9 @@ export function setFetchAuthInfoHook<
             } else {
                 stopTokenAutoRefresh<AuthInfo>(instanceId);
 
-                setUnauthenticatedSession<AuthInfo>(instance.state);
+                setUnauthenticatedSession<AuthInfo>(instanceId);
 
-                await instance.storage?.clear(instance.id);
+                await instance.storage?.clear(instanceId);
 
                 await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 

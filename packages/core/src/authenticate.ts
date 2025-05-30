@@ -64,7 +64,7 @@ export async function authenticate<AuthInfo>(
         );
     }
 
-    setAuthenticatedSession<AuthInfo>(instance.state, {
+    setAuthenticatedSession<AuthInfo>(instanceId, {
         accessToken,
         expiration: getExpirationTimestampWithBuffer(expiration),
         refreshToken,
@@ -77,5 +77,5 @@ export async function authenticate<AuthInfo>(
 
     await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
-    return instance.state.session;
+    return getInstance<AuthInfo>(instanceId).state.session;
 }

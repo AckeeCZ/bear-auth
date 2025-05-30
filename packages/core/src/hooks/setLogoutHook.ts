@@ -37,7 +37,7 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
             throw new BearAuthError('bear-auth/not-authenticated', `Can't logout. No auth sesssion active.`);
         }
 
-        setSigningOutSession<AuthInfo>(instance.state);
+        setSigningOutSession<AuthInfo>(instanceId);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
@@ -62,9 +62,9 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
                 throw new BearAuthError('bear-auth/logout-failed', 'Failed to logout.', error);
             }
         } finally {
-            setUnauthenticatedSession<AuthInfo>(instance.state);
+            setUnauthenticatedSession<AuthInfo>(instanceId);
 
-            await instance.storage?.clear(instance.id);
+            await instance.storage?.clear(instanceId);
 
             await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
         }

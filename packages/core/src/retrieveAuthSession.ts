@@ -34,7 +34,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
     await clearStorageOnStorageVersionUpdate(instanceId);
 
-    const persistedSession = await instance.storage?.get(instance.id);
+    const persistedSession = await instance.storage?.get(instanceId);
 
     instance.logger.debug('[retrieveAuthSession]', { persistedSession });
 
@@ -42,15 +42,15 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
     // The session might not have a refresh token but it might be valid.
     if (!unknownSession || isExpired(unknownSession.expiration)) {
-        await instance.storage?.clear(instance.id);
+        await instance.storage?.clear(instanceId);
 
-        setUnauthenticatedSession(instance.state);
+        setUnauthenticatedSession(instanceId);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
         instance.logger.debug('[retrieveAuthSession]', 'No auth session retrieved.');
 
-        return instance.state.session;
+        return getInstance<AuthInfo>(instanceId).state.session;
     }
 
     try {
@@ -58,7 +58,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
         instance.flags.autoRefreshAccessTokenEnabled = Boolean(authSession.expiration && authSession.refreshToken);
 
-        setAuthenticatedSession(instance.state, authSession);
+        setAuthenticatedSession(instanceId, authSession);
 
         if (isExpired(authSession.expiration) && instance.hooks.refreshToken) {
             await instance.hooks.refreshToken(authSession as RefreshingSession<AuthInfo>['data']);
@@ -79,14 +79,14 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
 
         instance.logger.debug('[retrieveAuthSession]', 'Auth session successfully retrieved.');
 
-        return instance.state.session;
+        return getInstance<AuthInfo>(instanceId).state.session;
     } catch (error) {
         instance.logger.error(error);
 
         if (isBearAuthError(error)) {
             throw error;
         } else {
-            await destroy<AuthInfo>(instance.id);
+            await destroy<AuthInfo>(instanceId);
 
             throw new BearAuthError('bear-auth/retrieve-auth-session-failed', 'Failed to retrieve auth session', error);
         }

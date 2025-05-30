@@ -26,9 +26,9 @@ export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
     if (instance.hooks.logout) {
         await instance.hooks.logout();
     } else {
-        await instance.storage?.clear(instance.id);
+        await instance.storage?.clear(instanceId);
 
-        setUnauthenticatedSession(instance.state);
+        setUnauthenticatedSession(instanceId);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
     }

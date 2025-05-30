@@ -45,7 +45,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             );
         }
 
-        setRefreshingSession<AuthInfo>(instance.state);
+        setRefreshingSession<AuthInfo>(instanceId);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
@@ -63,7 +63,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             instance.logger.debug('[refreshToken]', 'Received refresh access token result:', result);
 
-            updateSessionAfterRefreshToken<AuthInfo>(instance.state, result);
+            updateSessionAfterRefreshToken<AuthInfo>(instanceId, result);
 
             if (!retrievedAuthSession) {
                 await persistAuthSession<AuthInfo>(instanceId);
@@ -75,7 +75,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
-            return instance.state.session;
+            return getInstance<AuthInfo>(instanceId).state.session;
         } catch (error) {
             instance.logger.error(error);
 
@@ -84,9 +84,9 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
                 return refreshToken(retrievedAuthSession, failureCount);
             } else {
-                setUnauthenticatedSession<AuthInfo>(instance.state);
+                setUnauthenticatedSession<AuthInfo>(instanceId);
 
-                await instance.storage?.clear(instance.id);
+                await instance.storage?.clear(instanceId);
 
                 await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
 
@@ -106,7 +106,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             return await refreshToken();
         }
 
-        return instance.state.session;
+        return getInstance<AuthInfo>(instanceId).state.session;
     };
 
     return triggerRefreshToken;
