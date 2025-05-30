@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 2.1.6
+
+### Patch Changes
+
+- 9acc842: Fix state management.
+- Updated dependencies [9acc842]
+    - @bear-auth/core@2.1.6
+
 ## 2.1.5
 
 ### Patch Changes

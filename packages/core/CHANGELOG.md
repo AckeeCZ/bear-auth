@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 2.1.6
+
+### Patch Changes
+
+- 9acc842: Fix state management.
+
 ## 2.1.5
 
 ### Patch Changes
