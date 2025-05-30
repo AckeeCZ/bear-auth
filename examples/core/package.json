@@ -12,23 +12,23 @@
     "dependencies": {
         "@bear-auth/core": "workspace:*",
         "@bear-auth/storage": "workspace:*",
-        "@tanstack/react-query": "5.72.1",
+        "@tanstack/react-query": "5.79.0",
         "idb-stores": "0.0.22",
         "react": "19.1.0",
         "react-dom": "19.1.0",
-        "zod": "3.24.2"
+        "zod": "3.25.42"
     },
     "devDependencies": {
-        "@eslint/js": "9.24.0",
-        "@types/react": "19.1.0",
-        "@types/react-dom": "19.1.2",
-        "@vitejs/plugin-react": "4.3.4",
-        "eslint": "9.24.0",
+        "@eslint/js": "9.27.0",
+        "@types/react": "19.1.6",
+        "@types/react-dom": "19.1.5",
+        "@vitejs/plugin-react": "4.5.0",
+        "eslint": "9.27.0",
         "eslint-plugin-react-hooks": "5.2.0",
-        "eslint-plugin-react-refresh": "0.4.19",
-        "globals": "16.0.0",
+        "eslint-plugin-react-refresh": "0.4.20",
+        "globals": "16.2.0",
         "typescript": "5.8.3",
-        "typescript-eslint": "8.29.1",
-        "vite": "6.2.5"
+        "typescript-eslint": "8.33.0",
+        "vite": "6.3.5"
     }
 }

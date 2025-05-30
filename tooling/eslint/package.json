@@ -10,11 +10,11 @@
         "./config": "./config.mjs"
     },
     "dependencies": {
-        "@eslint/js": "9.24.0",
-        "eslint": "9.24.0",
-        "eslint-config-prettier": "10.1.1",
+        "@eslint/js": "9.27.0",
+        "eslint": "9.27.0",
+        "eslint-config-prettier": "10.1.5",
         "typescript": "5.8.3",
-        "typescript-eslint": "8.29.1"
+        "typescript-eslint": "8.33.0"
     },
     "devDependencies": {
         "@tooling/staged": "workspace:*"

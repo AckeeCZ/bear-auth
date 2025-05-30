@@ -26,7 +26,7 @@
         "@tooling/madge": "workspace:*",
         "@tooling/typescript": "workspace:*",
         "react": "19.1.0",
-        "tsc-alias": "1.8.14",
+        "tsc-alias": "1.8.16",
         "typescript": "5.8.3"
     },
     "peerDependencies": {
