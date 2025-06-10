@@ -59,6 +59,8 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             const { session } = instance.state;
             const authSession = retrievedAuthSession ?? (session.data as AuthData<AuthInfo>);
 
+            instance.logger.debug('[refreshToken]', 'Using auth session:', authSession);
+
             const result = await handler(authSession);
 
             instance.logger.debug('[refreshToken]', 'Received refresh access token result:', result);

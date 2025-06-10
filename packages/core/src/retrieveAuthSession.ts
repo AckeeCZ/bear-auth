@@ -41,7 +41,7 @@ export async function retrieveAuthSession<AuthInfo>(instanceId: BearAuth<AuthInf
     const unknownSession = persistedSession?.data;
 
     // The session might not have a refresh token but it might be valid.
-    if (!unknownSession || isExpired(unknownSession.expiration)) {
+    if (!unknownSession || !unknownSession.expiration) {
         await instance.storage?.clear(instanceId);
 
         setUnauthenticatedSession(instanceId);

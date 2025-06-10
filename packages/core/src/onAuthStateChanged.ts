@@ -24,6 +24,12 @@ export function onAuthStateChanged<AuthInfo>(
 
     callback(instance.state.session);
 
+    instance.logger.debug(
+        '[onAuthStateChanged]',
+        'Callback called immediately with current session:',
+        instance.state.session,
+    );
+
     return function unsubscribe() {
         instance.logger.debug('[onAuthStateChanged]', 'Unsubscribing...', callback);
         instance.onAuthStateChanged.delete(callback);
@@ -33,6 +39,8 @@ export function onAuthStateChanged<AuthInfo>(
 export async function runOnAuthStateChangedCallbacks<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
     const instance = getInstance<AuthInfo>(instanceId);
     const tasks = Array.from(instance.onAuthStateChanged.values()).map(callback => callback(instance.state.session));
+
+    instance.logger.debug('[onAuthStateChanged]', 'All callbacks called with session:', instance.state.session);
 
     await Promise.allSettled(tasks);
 }
