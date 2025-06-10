@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 2.1.7
+
+### Patch Changes
+
+- a383752: Fix auth state retrieval.
+
 ## 2.1.6
 
 ### Patch Changes
