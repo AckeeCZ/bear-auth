@@ -2,10 +2,10 @@
     "name": "bear-auth",
     "version": "0.0.1",
     "author": "Jiří Čermák <jiri.cermak@ackee.cz>",
-    "packageManager": "yarn@4.5.3+sha256.dddc0b96ad2dca8d56a5302b56bf3cbf8210654474a6bf88877da61e866f3d46",
+    "packageManager": "yarn@4.9.2+sha256.ca4310f8ba997b4643a000ce512d9772e01c1485df35511114b325315960acb7",
     "private": true,
     "engines": {
-        "node": "20"
+        "node": "24"
     },
     "type": "module",
     "workspaces": [
