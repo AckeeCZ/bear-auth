@@ -13,6 +13,8 @@ Bear auth contains a set of methods for managing JWT tokens in single page appli
 - 🛜 **Network status detection**
     - To avoid refreshing access token while the app is offline.
     - By default it uses `navigator.onLine` flag and the `online` event but can be changed via the `setContinueWhenOnline` method.
+- 🌊 **Auth session propagation strategies**
+    - Synchronize an authentication session across multiple tabs.
 - 🏗️ **Highly customizable**
     - You can override almost all the default behaviour – storage, network, etc.
 - 💨 **Tree-shakeable & side-effect free**
