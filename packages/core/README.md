@@ -7,7 +7,7 @@ Bear auth contains a set of methods for managing JWT tokens in single page appli
 - 🪶 [**Ultra-light**](https://bundlephobia.com/package/@bear-auth/core)
 - ♻️ [**Auto access token refreshment**](https://github.com/AckeeCZ/bear-auth/blob/main/packages/core/docs/API.md#authenticate)
 - 🛜 [**Network status detection**](https://github.com/AckeeCZ/bear-auth/blob/main/packages/core/docs/API.md#setcontinuewhenonline)
-- 🌊 [**Auth session propagation strategies**](ttps://github.com/AckeeCZ/bear-auth/blob/main/packages/core/docs/API.md#setAuthSessionPropagation)
+- 🌊 [**Auth session propagation strategies**](https://github.com/AckeeCZ/bear-auth/blob/main/packages/core/docs/API.md#setAuthSessionPropagation)
 - 🏗️ **Highly customizable**
 - 💨 **Tree-shakeable & side-effect free**
 - 🙈 **Framework agnostic**
