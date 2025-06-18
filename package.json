@@ -31,13 +31,15 @@
         "prettier:check": "prettier --check .",
         "prettier:format": "prettier --write . --cache --cache-strategy=content --cache-location=.cache/prettier --ignore-path .gitignore --ignore-unknown --log-level=warn",
         "test": "vitest run --typecheck",
-        "test:ui": "vitest --ui --typecheck",
-        "test:watch": "vitest dev --typecheck",
-        "test:coverage": "vitest run --coverage --typecheck"
+        "test:dev": "vitest --ui --typecheck",
+        "test:coverage": "vitest run --coverage --typecheck",
+        "e2e": "playwright test",
+        "e2e:dev": "playwright test --ui",
+        "e2e:gen": "playwright codegen"
     },
     "devDependencies": {
         "@changesets/cli": "2.29.4",
-        "@vitest/browser": "3.2.3",
+        "@playwright/test": "1.53.0",
         "@vitest/coverage-v8": "3.2.3",
         "@vitest/ui": "3.2.3",
         "husky": "9.1.7",

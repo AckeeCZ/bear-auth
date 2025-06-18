@@ -17,19 +17,19 @@ export type StorageSchema<AuthInfo> = {
      * Version of `AuthInfo` schema. Increment this value when `AuthInfo` schema is updated, the storage will be cleared.
      */
     version: number;
-    set: (instanceId: string, data: PersistedData<AuthInfo>) => Promise<void>;
-    get: (instanceId: string) => Promise<PersistedData<AuthInfo> | undefined>;
-    remove: (instanceId: string) => Promise<void>;
-    clear: (instanceId: string) => Promise<void>;
+    set: (id: string, data: PersistedData<AuthInfo>) => Promise<void>;
+    get: (id: string) => Promise<PersistedData<AuthInfo> | undefined>;
+    remove: (id: string) => Promise<void>;
+    clear: (id: string) => Promise<void>;
 };
 
 /**
  * Set the custom storage to persist the auth session.
- * @param instanceId - return value of `create` method
+ * @param id - return value of `create` method
  * @param storage
  */
-export function setStorage<AuthInfo>(instanceId: BearAuth<AuthInfo>['id'], storage: StorageSchema<AuthInfo>) {
-    const instance = getInstance<AuthInfo>(instanceId);
+export function setStorage<AuthInfo>(id: BearAuth<AuthInfo>['id'], storage: StorageSchema<AuthInfo>) {
+    const instance = getInstance<AuthInfo>(id);
 
     instance.storage = storage;
 }
@@ -37,8 +37,8 @@ export function setStorage<AuthInfo>(instanceId: BearAuth<AuthInfo>['id'], stora
 /**
  * Once internal storage version is updated or storage schema version is updated, clear storage.
  */
-export async function clearStorageOnStorageVersionUpdate<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const { storage, storageVersion, logger } = getInstance<AuthInfo>(instanceId);
+export async function clearStorageOnStorageVersionUpdate<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const { storage, storageVersion, logger } = getInstance<AuthInfo>(id);
 
     if (!storage) {
         return;
@@ -46,14 +46,14 @@ export async function clearStorageOnStorageVersionUpdate<AuthInfo>(instanceId: B
 
     try {
         const currentVersion = storage.version + storageVersion;
-        const persistedData = await storage.get(instanceId);
+        const persistedData = await storage.get(id);
 
         if (persistedData && persistedData.version !== currentVersion) {
             logger.debug(
                 '[clearStorageOnStorageVersionUpdate]',
                 'Storage version has been updated. Clearing storage...',
             );
-            await storage.clear(instanceId);
+            await storage.clear(id);
         }
     } catch (error) {
         if (isBearAuthError(error) || !(error instanceof Error)) {
@@ -62,15 +62,15 @@ export async function clearStorageOnStorageVersionUpdate<AuthInfo>(instanceId: B
             logger.error(new BearAuthError('bear-auth/retrieve-auth-session-failed', error.message, error));
         }
 
-        await storage.clear(instanceId);
+        await storage.clear(id);
     }
 }
 
 /**
  * Attempt to use the storage to persist the auth session from `instance.state`.
  */
-export async function persistAuthSession<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(instanceId);
+export async function persistAuthSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const instance = getInstance<AuthInfo>(id);
 
     if (!instance.storage) {
         return false;
@@ -82,7 +82,7 @@ export async function persistAuthSession<AuthInfo>(instanceId: BearAuth<AuthInfo
         throw new BearAuthError('bear-auth/not-authenticated', `Can't persist auth session. No auth sesssion active.`);
     }
 
-    await instance.storage.set(instanceId, {
+    await instance.storage.set(id, {
         version: instance.storage.version + instance.storageVersion,
         data: session.data,
     });

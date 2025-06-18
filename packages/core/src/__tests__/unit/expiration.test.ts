@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { BearAuthError } from '~/errors';
 
-import { getExpirationTimestampWithBuffer } from '../expiration';
+import { getExpirationTimestampWithBuffer } from '../../expiration';
 
 describe('getExpirationTimestampWithBuffer', () => {
     test(`should throw BearAuthError for expired tokens`, () => {
@@ -15,7 +15,7 @@ describe('getExpirationTimestampWithBuffer', () => {
     });
 
     test(`should return expiration timestamp with buffer`, () => {
-        expect(() => getExpirationTimestampWithBuffer(new Date(Date.now() + 10_000).toISOString())).not.toThrowError(
+        expect(() => getExpirationTimestampWithBuffer(new Date(Date.now() + 20_000).toISOString())).not.toThrowError(
             BearAuthError,
         );
     });

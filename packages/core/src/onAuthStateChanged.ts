@@ -8,15 +8,15 @@ export type OnAuthStateChangedCallback<AuthInfo> = (
 
 /**
  * Register a callback to be called whenever the auth state changes.
- * @param instanceId - return value of `create` method
+ * @param id - return value of `create` method
  * @param callback - function to be called when the auth state changes
  * @returns a function to unsubscribe the callback
  */
 export function onAuthStateChanged<AuthInfo>(
-    instanceId: BearAuth<AuthInfo>['id'],
+    id: BearAuth<AuthInfo>['id'],
     callback: OnAuthStateChangedCallback<AuthInfo>,
 ) {
-    const instance = getInstance<AuthInfo>(instanceId);
+    const instance = getInstance<AuthInfo>(id);
 
     instance.logger.debug('[onAuthStateChanged]', 'Subscribing...', callback);
 
@@ -36,8 +36,8 @@ export function onAuthStateChanged<AuthInfo>(
     };
 }
 
-export async function runOnAuthStateChangedCallbacks<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(instanceId);
+export async function runOnAuthStateChangedCallbacks<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const instance = getInstance<AuthInfo>(id);
     const tasks = Array.from(instance.onAuthStateChanged.values()).map(callback => callback(instance.state.session));
 
     instance.logger.debug('[onAuthStateChanged]', 'All callbacks called with session:', instance.state.session);

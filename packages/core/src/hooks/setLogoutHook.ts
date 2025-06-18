@@ -17,34 +17,34 @@ export type LogoutHook<AuthInfo> = {
 /**
  * - Set a function to make API call to your app's backend and signs-out the user.
  * - It's always required.
- * @param instanceId - return value of `create` method
+ * @param id - return value of `create` method
  * @param handler - function to logout the user
  * @returns - trigger the logout process
  */
 export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = LogoutHook<AuthInfo>>(
-    instanceId: BearAuth<AuthInfo>['id'],
+    id: BearAuth<AuthInfo>['id'],
     handler: AuthHook['handler'],
     options?: {
         retry: Retry;
     },
 ): AuthHook['action'] {
     async function logout(failureCount = 0) {
-        const instance = getInstance<AuthInfo>(instanceId);
+        const instance = getInstance<AuthInfo>(id);
 
         const { session } = instance.state;
 
         if (session.status !== 'authenticated') {
-            throw new BearAuthError('bear-auth/not-authenticated', `Can't logout. No auth sesssion active.`);
+            return;
         }
 
-        setSigningOutSession<AuthInfo>(instanceId);
+        setSigningOutSession<AuthInfo>(id);
 
-        await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+        await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
         try {
             instance.logger.debug('[logout]', 'Sign-out...');
 
-            stopTokenAutoRefresh<AuthInfo>(instanceId);
+            stopTokenAutoRefresh<AuthInfo>(id);
 
             await instance.continueWhenOnline();
 
@@ -62,15 +62,15 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
                 throw new BearAuthError('bear-auth/logout-failed', 'Failed to logout.', error);
             }
         } finally {
-            setUnauthenticatedSession<AuthInfo>(instanceId);
+            setUnauthenticatedSession<AuthInfo>(id);
 
-            await instance.storage?.clear(instanceId);
+            await instance.storage?.clear(id);
 
-            await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+            await runOnAuthStateChangedCallbacks<AuthInfo>(id);
         }
     }
 
-    const instance = getInstance<AuthInfo>(instanceId);
+    const instance = getInstance<AuthInfo>(id);
 
     instance.hooks.logout = logout;
 

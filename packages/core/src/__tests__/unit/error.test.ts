@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test } from 'vitest';
 
 import { BearAuthError, isBearAuthError, isBearAuthErrorWithCodes } from '~/errors';
 
-import { instances } from '../instances';
+import { instances } from '../../instances';
 
 afterEach(() => {
     instances.clear();

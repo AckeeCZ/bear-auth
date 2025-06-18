@@ -58,20 +58,20 @@ export function createSession(): RetrievingSession {
     };
 }
 
-export function setRefreshingSession<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const state = getInstance<AuthInfo>(instanceId).state;
+export function setRefreshingSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const state = getInstance<AuthInfo>(id).state;
 
     state.session.status = 'refreshing';
 }
 
-export function setSigningOutSession<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const state = getInstance<AuthInfo>(instanceId).state;
+export function setSigningOutSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const state = getInstance<AuthInfo>(id).state;
 
     state.session.status = 'signing-out';
 }
 
-export function setUnauthenticatedSession<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const state = getInstance<AuthInfo>(instanceId).state;
+export function setUnauthenticatedSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const state = getInstance<AuthInfo>(id).state;
 
     state.session = {
         status: 'unauthenticated',
@@ -80,10 +80,10 @@ export function setUnauthenticatedSession<AuthInfo>(instanceId: BearAuth<AuthInf
 }
 
 export function setAuthenticatedSession<AuthInfo>(
-    instanceId: BearAuth<AuthInfo>['id'],
+    id: BearAuth<AuthInfo>['id'],
     { accessToken, expiration, refreshToken, authInfo }: AuthenticatedSession<AuthInfo>['data'],
 ) {
-    const state = getInstance<AuthInfo>(instanceId).state;
+    const state = getInstance<AuthInfo>(id).state;
 
     state.session = {
         status: 'authenticated',
@@ -97,12 +97,12 @@ export function setAuthenticatedSession<AuthInfo>(
 }
 
 export function updateSessionAfterRefreshToken<AuthInfo>(
-    instanceId: BearAuth<AuthInfo>['id'],
+    id: BearAuth<AuthInfo>['id'],
     { accessToken, refreshToken, expiration, authInfo: freshAuthInfo }: RefreshingSession<AuthInfo>['data'],
 ) {
-    const state = getInstance<AuthInfo>(instanceId).state;
+    const state = getInstance<AuthInfo>(id).state;
 
-    setAuthenticatedSession(instanceId, {
+    setAuthenticatedSession(id, {
         accessToken,
         refreshToken,
         expiration: getExpirationTimestampWithBuffer(expiration),
