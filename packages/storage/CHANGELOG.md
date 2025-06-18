@@ -1,5 +1,16 @@
 # @bear-auth/storage
 
+## 3.0.0
+
+### Major Changes
+
+- 56e8a1d: Implement auth session propagation feature.
+
+### Patch Changes
+
+- Updated dependencies [56e8a1d]
+    - @bear-auth/core@3.0.0
+
 ## 2.1.8
 
 ### Patch Changes

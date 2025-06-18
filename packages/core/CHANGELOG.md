@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.0
+
+### Major Changes
+
+- 56e8a1d: Implement auth session propagation feature.
+
 ## 2.1.8
 
 ### Patch Changes
