@@ -19,9 +19,13 @@
             "cache": true,
             "outputLogs": "errors-only"
         },
+        "//#e2e": {
+            "cache": true,
+            "outputLogs": "errors-only"
+        },
         "build": {
             "cache": true,
-            "dependsOn": ["cir-dep", "//#prettier:format", "lint", "//#test", "^build", "//#audit"],
+            "dependsOn": ["cir-dep", "//#prettier:format", "lint", "//#test", "^build", "//#audit", "//#e2e"],
             "outputs": ["build/**"]
         },
         "//#audit": {

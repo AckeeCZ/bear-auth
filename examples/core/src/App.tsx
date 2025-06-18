@@ -72,22 +72,29 @@ function App() {
                     gap: '8px',
                 }}
             >
-                <p>Status: {session.status}</p>
+                <p data-testid='auth-status'>Status: {session.status}</p>
 
                 <button
                     type='button'
                     onClick={() => signIn.mutateAsync()}
                     disabled={retrieveAuthSessionResult.isLoading}
+                    data-testid='authenticate-button'
                 >
                     Authenticate
                 </button>
 
-                <button type='button' onClick={() => logout()} disabled={retrieveAuthSessionResult.isLoading}>
+                <button
+                    type='button'
+                    onClick={() => logout()}
+                    disabled={retrieveAuthSessionResult.isLoading}
+                    data-testid='logout-button'
+                >
                     Logout
                 </button>
 
                 <button
                     type='button'
+                    data-testid='retrieve-auth-session-button'
                     onClick={async () => {
                         const accessToken = await getAccessTokenResult.mutateAsync();
 
