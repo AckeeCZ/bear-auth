@@ -1,4 +1,4 @@
-const errorCodes = [
+export const bearAuthErrorCodes = [
     'bear-auth/unique-instance',
     'bear-auth/not-implemented',
     'bear-auth/unknown-instance',
@@ -13,12 +13,12 @@ const errorCodes = [
     'bear-auth/log-level',
 ] as const;
 
-type ErrorCodes = typeof errorCodes;
+type ErrorCodes = typeof bearAuthErrorCodes;
 
-type ErrorCode = ErrorCodes[number];
+export type BearAuthErrorCode = ErrorCodes[number];
 
-export class BearAuthError<Code extends ErrorCode> extends Error {
-    code: ErrorCode;
+export class BearAuthError<Code extends BearAuthErrorCode> extends Error {
+    code: BearAuthErrorCode;
     originalError?: unknown;
 
     constructor(code: Code, message: string, error?: unknown) {
@@ -32,15 +32,15 @@ export class BearAuthError<Code extends ErrorCode> extends Error {
 /**
  * A TS guard function to recognize BearAuthError.
  */
-export const isBearAuthError = (error: unknown): error is BearAuthError<ErrorCode> =>
+export const isBearAuthError = (error: unknown): error is BearAuthError<BearAuthErrorCode> =>
     error instanceof BearAuthError && error.name === 'BearAuthError';
 
-const errorCodeValues = new Set(errorCodes);
+const errorCodeValues = new Set(bearAuthErrorCodes);
 
 /**
  * Specify BearAuthError with specific error codes you want to handle.
  */
-export const isBearAuthErrorWithCodes = <const Codes extends ErrorCode[]>(
+export const isBearAuthErrorWithCodes = <const Codes extends BearAuthErrorCode[]>(
     error: unknown,
     codes: Codes,
 ): error is BearAuthError<Codes[number]> => {

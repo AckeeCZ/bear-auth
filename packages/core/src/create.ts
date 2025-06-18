@@ -12,9 +12,10 @@ export type BearAuth<AuthInfo> = {
     id: string;
 
     /**
+     * It's null if the custom logger is set.
      * @default 'error'
      */
-    loglevel: LogLevel;
+    loglevel: LogLevel | null;
     logger: Logger;
 
     hooks: {
@@ -46,26 +47,26 @@ export interface CreateProps {
     /**
      * Choose a unique instance ID when creating a multiple BearAuth instances.
      */
-    instanceId?: string;
+    id?: string;
 }
 
 /**
  * Initialize BearAuth instance. Can't be called multiple times with the same instance ID (Call `destroy` first).
  * @returns a string reference to the created BearAuth instance.
  */
-export function create({ instanceId = 'bear_auth' }: CreateProps = {}) {
-    if (instances.has(instanceId)) {
+export function create({ id = 'bear_auth' }: CreateProps = {}) {
+    if (instances.has(id)) {
         throw new BearAuthError(
             'bear-auth/unique-instance',
-            `BearAuth with '${instanceId}' ID has been already created. Call 'await detroy(bearAuth: BearAuth)' first.`,
+            `BearAuth with '${id}' ID has been already created. Call 'await detroy(bearAuth: BearAuth)' first.`,
         );
     }
 
     const instance = {
-        id: instanceId,
+        id,
 
         loglevel: defaultLogLevel,
-        logger: createDefaultLogger(instanceId, defaultLogLevel),
+        logger: createDefaultLogger(id, defaultLogLevel),
 
         hooks: {
             refreshToken: null,
@@ -91,7 +92,7 @@ export function create({ instanceId = 'bear_auth' }: CreateProps = {}) {
         continueWhenOnline: defaultContinueWhenOnline,
     } as const satisfies BearAuth<unknown>;
 
-    instances.set(instanceId, instance);
+    instances.set(id, instance);
 
     return instance.id;
 }

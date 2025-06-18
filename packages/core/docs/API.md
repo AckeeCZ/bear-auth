@@ -10,14 +10,14 @@ Initializes a BearAuth instance. Cannot be called multiple times with the same i
 
 #### Arguments:
 
-- `instanceId?: string`: optional instance ID
+- `id?: string`: optional instance ID
 
 #### Example:
 
 ```typescript
 import { create } from '@bear-auth/core';
 
-const instanceId = create({ instanceId: 'myInstance' });
+const id = create({ id: 'myInstance' });
 ```
 
 ### `setFetchAuthInfoHook`
@@ -26,7 +26,7 @@ Configures a function to fetch auth info from an API, required when the `authent
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 - `handler: (authSession: AuthenticatedSession<AuthInfo>['data']) => Promise<AuthInfo>`: function to fetch the auth info
 
 #### Example:
@@ -55,7 +55,7 @@ Configures a function to refresh the access token via an API call, required when
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 - `handler: (authSession: RefreshingSession<AuthInfo>['data']) => Promise<RefreshingSession<AuthInfo>['data']>`: function to refresh the access token
 
 #### Example:
@@ -93,7 +93,7 @@ Sets a function to log out the user via an API call to the app's backend.
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 - `handler: (authSession: AuthenticatedSession<AuthInfo>['data']) => Promise<void>`: function to logout the user
 
 #### Example:
@@ -120,7 +120,7 @@ Registers a callback to be called whenever the auth state changes.
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 - `callback: (session: BearAuth<AuthInfo>['state']['session']) => Promise<void> | void`: function to be called when the auth state changes
 
 #### Example:
@@ -142,7 +142,7 @@ Destroys the BearAuth instance, logging out the user, clearing storage, and dele
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 
 #### Example:
 
@@ -159,7 +159,7 @@ await destroy('myInstance');
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 - `continueWhenOnline: () => Promise<void>`: function that returns a promise
 
 #### Example:
@@ -180,7 +180,7 @@ setContinueWhenOnline('myInstance', async () => {
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 - `storage: StorageSchema<AuthInfo>`: storage schema
 
 #### Example:
@@ -217,7 +217,7 @@ Attempts to retrieve the auth session from storage, refreshes tokens if needed, 
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 
 #### Example:
 
@@ -234,7 +234,7 @@ Once a user signs-in or signs-up, this method is called to pass the authenticati
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 - `props: AuthenticateProps<AuthInfo>`: authentication data
 
 #### Example:
@@ -263,7 +263,7 @@ await authenticate<AuthInfo>(bearAuthId, {
 
 #### Arguments:
 
-- `instanceId: string`: return value of `create` method
+- `id: string`: return value of `create` method
 - `options?: { forceRefresh?: boolean }`: options for token retrieval
 
 #### Example:

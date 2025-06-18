@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Non-Persistent Authentication Session Flows > should authenticate with access token, expiration, refresh token, and authInfo > unset-fetch-auth-info-hook 1`] = `[BearAuthError: The 'authInfo' property provided but the fetch authenticated data hook has not been set yet. Call setFetchAuthInfo(...) first.]`;
+
+exports[`Non-Persistent Authentication Session Flows > should authenticate with access token, expiration, refresh token, and authInfo > unset-refresh-token-hook 1`] = `[BearAuthError: The 'refreshToken' property provided but the refresh token hook has not been set yet. Call setRefreshTokenHook(...) first.]`;

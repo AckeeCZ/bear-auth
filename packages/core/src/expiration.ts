@@ -49,7 +49,7 @@ export function getExpirationTimestampWithBuffer(expiration: string | undefined 
     if (expiration && !isValid) {
         throw new BearAuthError(
             'bear-auth/invalid-expires-in',
-            `Expiration timestamp must be greater than '${new Date(Date.now() + MIN_EXPIRES_IN).toISOString()}', received: '${expiration}'.}`,
+            `Expiration timestamp must be greater than '${new Date(Date.now() + MIN_EXPIRES_IN).toISOString()}', received: '${expiration}'.`,
         );
     }
 

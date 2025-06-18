@@ -9,8 +9,8 @@ export type LogLevel = 'error' | 'debug' | 'info' | 'silent';
 
 export const defaultLogLevel: LogLevel = 'error';
 
-export function createDefaultLogger(instanceId: BearAuth<unknown>['id'], loglevel: LogLevel) {
-    const { error, debug, info, setLevel } = getLogger(instanceId);
+export function createDefaultLogger(id: BearAuth<unknown>['id'], loglevel: LogLevel) {
+    const { error, debug, info, setLevel } = getLogger(id);
 
     const defaultLogger = {
         error<Args extends unknown[]>(...args: Args) {
@@ -24,7 +24,7 @@ export function createDefaultLogger(instanceId: BearAuth<unknown>['id'], logleve
         },
     } as const;
 
-    setLevel(loglevel, true);
+    setLevel(loglevel);
 
     return defaultLogger;
 }
@@ -33,10 +33,10 @@ export type Logger = ReturnType<typeof createDefaultLogger>;
 
 /**
  * Customize the log level.
- * @param instanceId - return value of `create` method
+ * @param id - return value of `create` method
  */
-export function setLogLevel(instanceId: BearAuth<unknown>['id'], level: LogLevel) {
-    const instance = getInstance(instanceId);
+export function setLogLevel(id: BearAuth<unknown>['id'], level: LogLevel) {
+    const instance = getInstance(id);
 
     if (instance.flags.customLogger) {
         throw new BearAuthError('bear-auth/log-level', 'Cannot set log level when using custom logger.');
@@ -46,16 +46,16 @@ export function setLogLevel(instanceId: BearAuth<unknown>['id'], level: LogLevel
 
     instance.logger.debug('[setLogLevel]', 'Setting log level', level);
 
-    getLogger(instanceId).setLevel(level, true);
+    getLogger(id).setLevel(level);
 }
 
 /**
  * Override the default logger.
- * @param instanceId - return value of `create` method
+ * @param id - return value of `create` method
  * @param logger - custom logger
  */
-export function setLogger<L extends Logger>(instanceId: BearAuth<unknown>['id'], logger: L) {
-    const instance = getInstance(instanceId);
+export function setLogger<L extends Logger>(id: BearAuth<unknown>['id'], logger: L) {
+    const instance = getInstance(id);
 
     const { debug, info, error } = logger;
 
@@ -66,6 +66,7 @@ export function setLogger<L extends Logger>(instanceId: BearAuth<unknown>['id'],
     } as const;
 
     instance.flags.customLogger = true;
+    instance.loglevel = null;
 
     debug('setLogger', 'Custom logger is set. The setLogLevel method will not do anything.');
 }

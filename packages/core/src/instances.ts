@@ -3,13 +3,13 @@ import { BearAuthError } from './errors';
 
 export const instances = new Map<string, BearAuth<unknown>>();
 
-export function getInstance<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const instance = instances.get(instanceId);
+export function getInstance<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const instance = instances.get(id);
 
     if (!instance) {
         throw new BearAuthError(
             'bear-auth/unknown-instance',
-            `No BearAuth instance found for ${instanceId} ID. Call 'create(instanceId: string)' first.`,
+            `No BearAuth instance found for ${id} ID. Call 'create(id: string)' first.`,
         );
     }
 

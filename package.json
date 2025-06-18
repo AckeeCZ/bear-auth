@@ -2,10 +2,10 @@
     "name": "bear-auth",
     "version": "0.0.1",
     "author": "Jiří Čermák <jiri.cermak@ackee.cz>",
-    "packageManager": "yarn@4.5.3+sha256.dddc0b96ad2dca8d56a5302b56bf3cbf8210654474a6bf88877da61e866f3d46",
+    "packageManager": "yarn@4.9.2+sha256.ca4310f8ba997b4643a000ce512d9772e01c1485df35511114b325315960acb7",
     "private": true,
     "engines": {
-        "node": "20"
+        "node": "24"
     },
     "type": "module",
     "workspaces": [
@@ -29,11 +29,23 @@
         "release:publish": "yarn changeset publish",
         "prepare": "husky",
         "prettier:check": "prettier --check .",
-        "prettier:format": "prettier --write . --cache --cache-strategy=content --cache-location=.cache/prettier --ignore-path .gitignore --ignore-unknown --log-level=warn"
+        "prettier:format": "prettier --write . --cache --cache-strategy=content --cache-location=.cache/prettier --ignore-path .gitignore --ignore-unknown --log-level=warn",
+        "test": "vitest run --typecheck",
+        "test:dev": "vitest --ui --typecheck",
+        "test:coverage": "vitest run --coverage --typecheck",
+        "e2e": "playwright test",
+        "e2e:dev": "playwright test --ui",
+        "e2e:gen": "playwright codegen"
     },
     "devDependencies": {
         "@changesets/cli": "2.29.4",
-        "husky": "9.1.7"
+        "@playwright/test": "1.53.0",
+        "@vitest/coverage-v8": "3.2.3",
+        "@vitest/ui": "3.2.3",
+        "husky": "9.1.7",
+        "jsdom": "26.1.0",
+        "playwright": "1.53.0",
+        "vitest": "3.2.3"
     },
     "license": "GPL-3.0-only",
     "repository": {

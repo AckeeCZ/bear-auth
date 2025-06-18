@@ -1,7 +1,7 @@
 export * from './authenticate';
 export { create, type CreateProps } from './create';
 export { destroy } from './destroy';
-export { isBearAuthError, isBearAuthErrorWithCodes } from './errors';
+export { bearAuthErrorCodes, isBearAuthError, isBearAuthErrorWithCodes, type BearAuthErrorCode } from './errors';
 export { getExpirationTimestamp } from './expiration';
 export * from './getAccessToken';
 export * from './hooks/setFetchAuthInfoHook';

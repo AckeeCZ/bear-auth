@@ -13,12 +13,12 @@ export type FetchAuthInfoHook<AuthInfo> = {
     action: () => Promise<Session<AuthInfo>>;
 };
 
-type AuthData<AuthInfo> = AuthenticatedSession<AuthInfo>['data'];
+export type AuthData<AuthInfo> = AuthenticatedSession<AuthInfo>['data'];
 
 /**
  * - During configuration of BearAuth, set a function to fetch the auth info from your API.
  * - Required when the `authenticaion` method returns `authInfo`.
- * @param instanceId - return value of `create` method
+ * @param id - return value of `create` method
  * @param handler - function to fetch the auth info
  * @returns - function to refetch the auth info
  */
@@ -26,14 +26,14 @@ export function setFetchAuthInfoHook<
     AuthInfo,
     AuthHook extends FetchAuthInfoHook<AuthInfo> = FetchAuthInfoHook<AuthInfo>,
 >(
-    instanceId: BearAuth<AuthInfo>['id'],
+    id: BearAuth<AuthInfo>['id'],
     handler: AuthHook['handler'],
     options?: {
         retry: Retry;
     },
 ): AuthHook['action'] {
     async function fetchAuthInfo(retrievedAuthSession?: AuthData<AuthInfo>, failureCount = 0) {
-        const instance = getInstance<AuthInfo>(instanceId);
+        const instance = getInstance<AuthInfo>(id);
 
         const { session } = instance.state;
 
@@ -51,12 +51,12 @@ export function setFetchAuthInfoHook<
             updateAuthInfo<AuthInfo>(instance.state, authInfo);
 
             if (!retrievedAuthSession) {
-                await persistAuthSession<AuthInfo>(instanceId);
+                await persistAuthSession<AuthInfo>(id);
             }
 
             instance.logger.debug('[fetchAuthInfo]', 'Auth data has been fetched:', authInfo);
 
-            return getInstance<AuthInfo>(instanceId).state.session;
+            return getInstance<AuthInfo>(id).state.session;
         } catch (error) {
             instance.logger.error(error);
 
@@ -65,20 +65,20 @@ export function setFetchAuthInfoHook<
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
                 return fetchAuthInfo(retrievedAuthSession, failureCount);
             } else {
-                stopTokenAutoRefresh<AuthInfo>(instanceId);
+                stopTokenAutoRefresh<AuthInfo>(id);
 
-                setUnauthenticatedSession<AuthInfo>(instanceId);
+                setUnauthenticatedSession<AuthInfo>(id);
 
-                await instance.storage?.clear(instanceId);
+                await instance.storage?.clear(id);
 
-                await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+                await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
                 throw new BearAuthError('bear-auth/fetch-auth-data-failed', 'Failed to fetch auth data.', error);
             }
         }
     }
 
-    const instance = getInstance<AuthInfo>(instanceId);
+    const instance = getInstance<AuthInfo>(id);
 
     instance.hooks.fetchAuthInfo = fetchAuthInfo;
 

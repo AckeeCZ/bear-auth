@@ -6,8 +6,8 @@ export function isExpired(expiration: string | undefined | null) {
     return !expiration || Date.now() >= Date.parse(expiration);
 }
 
-export function startTokenAutoRefresh<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(instanceId);
+export function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const instance = getInstance<AuthInfo>(id);
 
     if (!instance.flags.autoRefreshAccessTokenEnabled) {
         instance.logger.debug(
@@ -30,8 +30,8 @@ export function startTokenAutoRefresh<AuthInfo>(instanceId: BearAuth<AuthInfo>['
     instance.refreshTokenTimeoutId = refreshTokenTimeoutId;
 }
 
-export function stopTokenAutoRefresh<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(instanceId);
+export function stopTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const instance = getInstance<AuthInfo>(id);
 
     if (instance.refreshTokenTimeoutId === null || !instance.flags.autoRefreshAccessTokenEnabled) {
         return;

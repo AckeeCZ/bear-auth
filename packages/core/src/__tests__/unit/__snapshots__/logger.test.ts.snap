@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`logger > should set custom logger > cannot set log level when using custom logger 1`] = `[BearAuthError: Cannot set log level when using custom logger.]`;

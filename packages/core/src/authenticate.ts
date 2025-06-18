@@ -36,14 +36,14 @@ export type AuthenticateProps<AuthInfo> = {
  * - `expiration` and `refreshToken` are optional, but if provided, the library will automatically refresh the access token when it expires.
  * - Don't forget to `setRefreshTokenHook` before calling this method if you want to use the refresh token.
  * - Similarly, don't forget to `setFetchAuthInfo` before calling this method if you want to use the `authInfo` property.
- * @param instanceId - return value of `create` method
+ * @param id - return value of `create` method
  * @param props - authentication data
  */
 export async function authenticate<AuthInfo>(
-    instanceId: BearAuth<AuthInfo>['id'],
+    id: BearAuth<AuthInfo>['id'],
     { accessToken, expiration = null, refreshToken = null, authInfo = null }: AuthenticateProps<AuthInfo>,
 ) {
-    const instance = getInstance<AuthInfo>(instanceId);
+    const instance = getInstance<AuthInfo>(id);
 
     const refreshTokenHookRequired = Boolean(refreshToken);
     const fetchAuthInfoHookRequired = Boolean(authInfo);
@@ -64,18 +64,18 @@ export async function authenticate<AuthInfo>(
         );
     }
 
-    setAuthenticatedSession<AuthInfo>(instanceId, {
+    setAuthenticatedSession<AuthInfo>(id, {
         accessToken,
         expiration: getExpirationTimestampWithBuffer(expiration),
         refreshToken,
         authInfo,
     });
 
-    await persistAuthSession<AuthInfo>(instanceId);
+    await persistAuthSession<AuthInfo>(id);
 
-    startTokenAutoRefresh<AuthInfo>(instanceId);
+    startTokenAutoRefresh<AuthInfo>(id);
 
-    await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+    await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
-    return getInstance<AuthInfo>(instanceId).state.session;
+    return getInstance<AuthInfo>(id).state.session;
 }

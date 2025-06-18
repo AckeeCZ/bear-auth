@@ -10,27 +10,27 @@ import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
  * - Tries to logout user.
  * - Clears the storage.
  * - Deletes the instance.
- * @param instanceId - return value of `create` method
+ * @param id - return value of `create` method
  */
-export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(instanceId);
+export async function destroy<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const instance = getInstance<AuthInfo>(id);
 
     if (!instance) {
         return;
     }
 
-    stopTokenAutoRefresh<AuthInfo>(instanceId);
+    stopTokenAutoRefresh<AuthInfo>(id);
 
     instance.logger.debug('[destroy]', 'Destroying auth session.');
 
     if (instance.hooks.logout) {
         await instance.hooks.logout();
     } else {
-        await instance.storage?.clear(instanceId);
+        await instance.storage?.clear(id);
 
-        setUnauthenticatedSession(instanceId);
+        setUnauthenticatedSession(id);
 
-        await runOnAuthStateChangedCallbacks<AuthInfo>(instanceId);
+        await runOnAuthStateChangedCallbacks<AuthInfo>(id);
     }
 
     const keys = Object.keys(instance) as (keyof BearAuth<AuthInfo>)[];
@@ -39,5 +39,5 @@ export async function destroy<AuthInfo>(instanceId: BearAuth<AuthInfo>['id']) {
         delete instance[key];
     }
 
-    instances.delete(instanceId);
+    instances.delete(id);
 }

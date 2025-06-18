@@ -24,10 +24,10 @@ export async function defaultContinueWhenOnline() {
  * If the network is offline, it waits for the network to come back online.
  */
 export function setContinueWhenOnline(
-    instanceId: BearAuth<unknown>['id'],
+    id: BearAuth<unknown>['id'],
     continueWhenOnline: typeof defaultContinueWhenOnline,
 ): void {
-    const instance = getInstance(instanceId);
+    const instance = getInstance(id);
 
     instance.continueWhenOnline = async () => {
         instance.logger.debug(
