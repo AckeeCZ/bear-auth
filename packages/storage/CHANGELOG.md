@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 2.1.8
+
+### Patch Changes
+
+- 7ddbd5f: Upgrade dependencies and fix getAccessToken.
+- Updated dependencies [7ddbd5f]
+    - @bear-auth/core@2.1.8
+
 ## 2.1.7
 
 ### Patch Changes
