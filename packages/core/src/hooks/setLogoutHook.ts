@@ -42,7 +42,7 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
         try {
-            instance.logger.debug('[logout]', 'Sign-out...');
+            instance.logger.debug('[logout]', 'Signing-out...');
 
             stopTokenAutoRefresh<AuthInfo>(id);
 

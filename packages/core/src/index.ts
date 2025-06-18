@@ -1,4 +1,8 @@
 export * from './authenticate';
+export {
+    setAuthSessionPropagation,
+    type AuthSessionPropagationType,
+} from './authSessionPropagation/authSessionPropagation';
 export { create, type CreateProps } from './create';
 export { destroy } from './destroy';
 export { bearAuthErrorCodes, isBearAuthError, isBearAuthErrorWithCodes, type BearAuthErrorCode } from './errors';

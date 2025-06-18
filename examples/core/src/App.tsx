@@ -8,6 +8,7 @@ import {
     onAuthStateChanged,
     retrieveAuthSession,
     Session,
+    setAuthSessionPropagation,
 } from '@bear-auth/core';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
@@ -23,6 +24,8 @@ function App() {
     const retrieveAuthSessionResult = useQuery({
         queryKey: ['retrieveAuthSession'],
         queryFn: async () => {
+            setAuthSessionPropagation(bearAuthId, 'lazy');
+
             onAuthStateChanged<AuthInfo>(bearAuthId, async session => {
                 console.log('onAuthStateChanged', session.status);
                 setSession(session);

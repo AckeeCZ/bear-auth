@@ -23,6 +23,8 @@ export async function destroy<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
 
     instance.logger.debug('[destroy]', 'Destroying auth session.');
 
+    instance.authSessionPropagation?.cleanUp();
+
     if (instance.hooks.logout) {
         await instance.hooks.logout();
     } else {

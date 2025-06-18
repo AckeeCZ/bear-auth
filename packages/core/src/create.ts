@@ -3,6 +3,10 @@ import { createDefaultLogger, defaultLogLevel, type Logger, type LogLevel } from
 import type { StorageSchema } from '~/storage';
 import { createInitialState, type State } from '~/store/state';
 
+import {
+    setDefaultAuthSessionPropagation,
+    type AuthSessionPropagationType,
+} from './authSessionPropagation/authSessionPropagation';
 import { instances } from './instances';
 import { defaultContinueWhenOnline } from './network';
 import type { OnAuthStateChangedCallback } from './onAuthStateChanged';
@@ -41,6 +45,11 @@ export type BearAuth<AuthInfo> = {
     refreshTokenTimeoutId: null | (number | NodeJS.Timeout);
 
     continueWhenOnline: () => Promise<void>;
+
+    authSessionPropagation: {
+        type: Exclude<AuthSessionPropagationType, 'none'>;
+        cleanUp: () => void;
+    } | null;
 };
 
 export interface CreateProps {
@@ -90,9 +99,13 @@ export function create({ id = 'bear_auth' }: CreateProps = {}) {
         refreshTokenTimeoutId: null,
 
         continueWhenOnline: defaultContinueWhenOnline,
+
+        authSessionPropagation: null,
     } as const satisfies BearAuth<unknown>;
 
     instances.set(id, instance);
+
+    setDefaultAuthSessionPropagation(id);
 
     return instance.id;
 }

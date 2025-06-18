@@ -205,6 +205,35 @@ setStorage('myInstance', {
 });
 ```
 
+### `setAuthSessionPropagation`
+
+Let's consider a user opens your app in two different tabs.<br/>
+How should the authentication session be handled in this case?<br/>
+Choose one of the following auth session propagation strategies:
+
+1. `lazy` – The auth session is synchronized on a tab focus through persisted storage (e.g. IndexedDB or `localStorage`) shared by all clients.
+2. `sync` - The auth session is synchronized immediately across all clients using the BroadcastChannel API.
+3. `none` - The auth session is not updated in different clients (tabs) unless the page is hard-reloaded or the user logs in again.
+
+Default value is determined based on enviroment and supported APIs. So defalut value is:
+
+1. `sync` if the `globalThis.BroadcastChannel` is available
+2. `lazy` if the `globalThis.document.visibilityState` is available
+3. `none` if none of the web APIs above are avaiable.
+
+#### Arguments:
+
+- `id: string`: return value of `create` method
+- `type: AuthSessionPropagationType`: authentication session propagation strategy
+
+#### Example:
+
+```ts
+import { setAuthSessionPropagation } from '@bear-auth/core';
+
+setAuthSessionPropagation('myInstanceId', 'sync');
+```
+
 ---
 
 ## Runtime methods

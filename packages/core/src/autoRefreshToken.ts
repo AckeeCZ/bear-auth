@@ -17,6 +17,8 @@ export function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
         return instance;
     }
 
+    stopTokenAutoRefresh(id);
+
     const { expiration } = instance.state.session.data!;
 
     const expiresIn = isExpired(expiration) ? 0 : Date.parse(expiration!) - Date.now();

@@ -102,9 +102,12 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
     instance.hooks.refreshToken = refreshToken;
 
     const triggerRefreshToken: AuthHook['action'] = async options => {
-        const instance = getInstance<AuthInfo>(id);
+        const { state } = getInstance<AuthInfo>(id);
 
-        if (options?.forceRefresh || isExpired(instance.state.session.data?.expiration)) {
+        if (
+            options?.forceRefresh ||
+            (isExpired(state.session.data?.expiration) && state.session.status !== 'refreshing')
+        ) {
             return await refreshToken();
         }
 

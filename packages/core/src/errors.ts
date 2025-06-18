@@ -11,6 +11,9 @@ export const bearAuthErrorCodes = [
     'bear-auth/retrieve-auth-session-failed',
     'bear-auth/invalid-expires-in',
     'bear-auth/log-level',
+    'bear-auth/auth-session-storage-propagation',
+    'bear-auth/update-auth-session-failed',
+    'bear-auth/auth-session-broadcast',
 ] as const;
 
 type ErrorCodes = typeof bearAuthErrorCodes;
