@@ -5,6 +5,7 @@
     "sideEffects": false,
     "module": "./build/index.js",
     "types": "./build/index.d.ts",
+    "main": "./build-cjs/index.js",
     "exports": {
         ".": {
             "import": {
@@ -43,7 +44,8 @@
         "access": "public"
     },
     "files": [
-        "build"
+        "build",
+        "build-cjs"
     ],
     "license": "GPL-3.0-only",
     "repository": {

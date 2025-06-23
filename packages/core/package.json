@@ -42,7 +42,8 @@
         "access": "public"
     },
     "files": [
-        "build"
+        "build",
+        "build-cjs"
     ],
     "license": "GPL-3.0-only",
     "repository": {
