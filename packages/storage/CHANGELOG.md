@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 3.0.2
+
+### Patch Changes
+
+- fc8c908: Add CJS support.
+- Updated dependencies [fc8c908]
+    - @bear-auth/core@3.0.2
+
 ## 3.0.1
 
 ### Patch Changes
