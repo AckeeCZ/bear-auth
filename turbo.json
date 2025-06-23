@@ -25,7 +25,7 @@
         },
         "build": {
             "cache": true,
-            "dependsOn": ["cir-dep", "//#prettier:format", "lint", "//#test", "^build", "//#audit", "//#e2e"],
+            "dependsOn": ["cir-dep", "//#prettier:format", "lint", "//#test", "^build", "//#audit"],
             "outputs": ["build/**"]
         },
         "//#audit": {

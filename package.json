@@ -33,7 +33,7 @@
         "test": "vitest run --typecheck",
         "test:dev": "vitest --ui --typecheck",
         "test:coverage": "vitest run --coverage --typecheck",
-        "e2e": "playwright test",
+        "e2e": "playwright test --reporter=line",
         "e2e:dev": "playwright test --ui",
         "e2e:gen": "playwright codegen"
     },

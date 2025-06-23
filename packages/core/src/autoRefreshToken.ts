@@ -14,7 +14,7 @@ export function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
             '[startTokenAutoRefresh]',
             `Auto token refresh is disabled. 'authenticate' method must return a 'expiration' and 'refreshToken'.`,
         );
-        return instance;
+        return;
     }
 
     stopTokenAutoRefresh(id);

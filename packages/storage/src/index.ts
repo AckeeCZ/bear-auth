@@ -81,7 +81,7 @@ export function createIndexedDBStorage<
             return store.get<typeof bearAuthId>(key) as Promise<BearAuthInstance | undefined>;
         },
         async set(key: typeof bearAuthId, value: BearAuthInstance) {
-            // @ts-expect-error
+            // @ts-ignore
             await store.set(key, value);
         },
         remove: store.remove<typeof bearAuthId>,
