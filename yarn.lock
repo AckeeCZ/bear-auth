@@ -385,7 +385,7 @@ __metadata:
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
     "@tooling/typescript": "workspace:*"
-    idb-stores: "npm:0.0.22"
+    idb-stores: "npm:0.0.23"
     typescript: "npm:5.8.3"
     zod: "npm:3.25.42"
   peerDependencies:
@@ -971,7 +971,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:5.2.0"
     eslint-plugin-react-refresh: "npm:0.4.20"
     globals: "npm:16.2.0"
-    idb-stores: "npm:0.0.22"
+    idb-stores: "npm:0.0.23"
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
     typescript: "npm:5.8.3"
@@ -996,7 +996,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:5.2.0"
     eslint-plugin-react-refresh: "npm:0.4.20"
     globals: "npm:16.2.0"
-    idb-stores: "npm:0.0.22"
+    idb-stores: "npm:0.0.23"
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
     typescript: "npm:5.8.3"
@@ -3737,15 +3737,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idb-stores@npm:0.0.22":
-  version: 0.0.22
-  resolution: "idb-stores@npm:0.0.22"
+"idb-stores@npm:0.0.23":
+  version: 0.0.23
+  resolution: "idb-stores@npm:0.0.23"
   dependencies:
     idb-keyval: "npm:6.2.1"
     loglevel: "npm:1.9.2"
   peerDependencies:
     zod: 3.x
-  checksum: 10c0/0c77e131af574c04af1de67a6875da359c7be401e281d54053063ffa365ce03b74c35e2c40e2a6ab3e4f663087e70aea8ff32a6687b586d111321292d4763083
+  checksum: 10c0/c551435a7e59ef68de71262e55071933870e3487ba45f0a12feeab40c17aa2070a433c8358f67c7895495a5ff1ac9d4b316c6a4ed1a78a3eef43f9f8c1b13a64
   languageName: node
   linkType: hard
 

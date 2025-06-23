@@ -1,15 +1,16 @@
 {
-    "extends": "@tooling/typescript/tsconfig.json",
+    "extends": "@tooling/typescript/tsconfig.cjs.json",
     "compilerOptions": {
-        "outDir": "build",
         "tsBuildInfoFile": ".cache/tsconfig.tsbuildinfo",
         "rootDir": "./src",
+        "outDir": "./build-cjs",
+        "jsx": "react-jsx",
         "baseUrl": ".",
         "paths": {
             "~/*": ["src/*"]
         },
         "strictFunctionTypes": true
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts"],
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
     "exclude": ["**/__tests__/**"]
 }

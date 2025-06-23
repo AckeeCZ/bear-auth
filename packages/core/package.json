@@ -5,17 +5,24 @@
     "sideEffects": false,
     "module": "./build/index.js",
     "types": "./build/index.d.ts",
+    "main": "./build-cjs/index.js",
     "exports": {
         ".": {
             "import": {
                 "types": "./build/index.d.ts",
                 "default": "./build/index.js"
+            },
+            "require": {
+                "types": "./build-cjs/index.d.ts",
+                "default": "./build-cjs/index.js"
             }
         }
     },
     "scripts": {
         "clean": "rm -rf dist .cache",
-        "build": "tsc && tsc-alias",
+        "build:es": "tsc && tsc-alias",
+        "build:cjs": "tsc -p tsconfig.cjs.json && tsc-alias -p tsconfig.cjs.json",
+        "build": "yarn build:es && yarn build:cjs",
         "dev": "tsc -w & tsc-alias -w",
         "cir-dep": "check-cir-deps ./src",
         "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts",
