@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.1
+
+### Patch Changes
+
+- e3c4395: Add CJS support.
+
 ## 3.0.0
 
 ### Major Changes
