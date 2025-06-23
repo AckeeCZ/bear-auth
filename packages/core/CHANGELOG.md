@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.3
+
+### Patch Changes
+
+- 87a7e8b: Fix CJS export.
+
 ## 3.0.2
 
 ### Patch Changes

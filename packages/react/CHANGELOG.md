@@ -1,5 +1,13 @@
 # @bear-auth/react
 
+## 3.0.3
+
+### Patch Changes
+
+- 87a7e8b: Fix CJS export.
+- Updated dependencies [87a7e8b]
+    - @bear-auth/core@3.0.3
+
 ## 3.0.2
 
 ### Patch Changes

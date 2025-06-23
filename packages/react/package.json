@@ -1,6 +1,6 @@
 {
     "name": "@bear-auth/react",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "type": "module",
     "sideEffects": false,
     "module": "./build/index.js",
@@ -36,7 +36,7 @@
         "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
     },
     "devDependencies": {
-        "@bear-auth/core": "3.0.2",
+        "@bear-auth/core": "3.0.3",
         "@tooling/eslint": "workspace:*",
         "@tooling/madge": "workspace:*",
         "@tooling/typescript": "workspace:*",
@@ -45,7 +45,7 @@
         "typescript": "5.8.3"
     },
     "peerDependencies": {
-        "@bear-auth/core": "3.0.2",
+        "@bear-auth/core": "3.0.3",
         "react": "^18 || ^19"
     },
     "publishConfig": {
