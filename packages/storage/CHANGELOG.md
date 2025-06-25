@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 3.0.5
+
+### Patch Changes
+
+- b760c40: Update session broadcast channel name.
+- Updated dependencies [b760c40]
+    - @bear-auth/core@3.0.5
+
 ## 3.0.4
 
 ### Patch Changes

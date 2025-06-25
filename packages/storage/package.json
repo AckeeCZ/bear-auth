@@ -1,6 +1,6 @@
 {
     "name": "@bear-auth/storage",
-    "version": "3.0.4",
+    "version": "3.0.5",
     "type": "module",
     "sideEffects": false,
     "module": "./build/index.js",
@@ -38,7 +38,7 @@
         "zod": "3.25.42"
     },
     "peerDependencies": {
-        "@bear-auth/core": "3.0.4",
+        "@bear-auth/core": "3.0.5",
         "zod": "^3.23.8"
     },
     "publishConfig": {
