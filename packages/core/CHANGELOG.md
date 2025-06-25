@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.4
+
+### Patch Changes
+
+- 3759a82: Switch from Bundler to NodeNext module resolution.
+
 ## 3.0.3
 
 ### Patch Changes
