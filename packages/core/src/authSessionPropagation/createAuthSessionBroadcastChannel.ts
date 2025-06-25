@@ -1,5 +1,3 @@
-// @ts-ignore
-import pkg from '../../package.json';
 import { authenticate } from '../authenticate.ts';
 import type { BearAuth } from '../create.ts';
 import { BearAuthError, isBearAuthError } from '../errors.ts';
@@ -30,7 +28,7 @@ export function createAuthSessionBroadcastChannel(id: BearAuth<unknown>['id']) {
 
     // Choose random channel name to avoid conflicts across origin.
     // Choose the current package version and instance id to avoid conflicts within Bear Auth.
-    const channelName = `${pkg.name}@${pkg.version}_${id}_z7fQlNm+ujmESjbuHrnfrtx2WVvSLPlrQfyJaK7pmxQuxRa6q2xCHHP7`;
+    const channelName = `${id}_z7fQlNm+ujmESjbuHrnfrtx2WVvSLPlrQfyJaK7pmxQuxRa6q2xCHHP7`;
     const channel = new BroadcastChannel(channelName);
     const clientId = getRandomId(30);
 
