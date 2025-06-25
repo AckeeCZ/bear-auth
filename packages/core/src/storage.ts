@@ -1,8 +1,7 @@
-import { type BearAuth } from '~/create';
-import { BearAuthError, isBearAuthError } from '~/errors';
-
-import { getInstance } from './instances';
-import type { SessionData } from './store/session';
+import { type BearAuth } from './create.ts';
+import { BearAuthError, isBearAuthError } from './errors.ts';
+import { getInstance } from './instances.ts';
+import type { SessionData } from './store/session.ts';
 
 export type PersistedData<AuthInfo> = {
     version: number;

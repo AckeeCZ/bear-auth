@@ -1,8 +1,7 @@
-import type { BearAuth } from '~/create';
-import { getInstance } from '~/instances';
-
-import { createAuthSessionBroadcastChannel } from './createAuthSessionBroadcastChannel';
-import { updateAuthSessionOnTabChange } from './updateAuthSessionOnTabChange';
+import type { BearAuth } from '../create.ts';
+import { getInstance } from '../instances.ts';
+import { createAuthSessionBroadcastChannel } from './createAuthSessionBroadcastChannel.ts';
+import { updateAuthSessionOnTabChange } from './updateAuthSessionOnTabChange.ts';
 
 export type AuthSessionPropagationType = 'lazy' | 'sync' | 'none';
 

@@ -1,8 +1,7 @@
 import { afterEach, describe, expect, test } from 'vitest';
 
-import { BearAuthError, isBearAuthError, isBearAuthErrorWithCodes } from '~/errors';
-
-import { instances } from '../../instances';
+import { BearAuthError, isBearAuthError, isBearAuthErrorWithCodes } from '../../errors.ts';
+import { instances } from '../../instances.ts';
 
 afterEach(() => {
     instances.clear();

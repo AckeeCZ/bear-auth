@@ -8,7 +8,7 @@ import {
     type setRefreshTokenHook,
 } from '@bear-auth/core';
 
-import { AuthSessionContext, BearAuthProviderContext } from './context';
+import { AuthSessionContext, BearAuthProviderContext } from './context/index.ts';
 
 export interface BearAuthProviderProps<AuthInfo> {
     /**

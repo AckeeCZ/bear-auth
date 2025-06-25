@@ -1,3 +1,3 @@
-export * from './BearAuthProvider';
-export * from './hooks/useBearAuth';
-export * from './hooks/useBearAuthSession';
+export * from './BearAuthProvider.ts';
+export * from './hooks/useBearAuth.ts';
+export * from './hooks/useBearAuthSession.ts';

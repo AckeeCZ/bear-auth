@@ -6,9 +6,6 @@
         "outDir": "./build-cjs",
         "jsx": "react-jsx",
         "baseUrl": ".",
-        "paths": {
-            "~/*": ["src/*"]
-        },
         "strictFunctionTypes": true
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],

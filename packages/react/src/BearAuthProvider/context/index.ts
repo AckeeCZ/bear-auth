@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import type { Session } from '@bear-auth/core';
 
-import type { Actions } from '../BearAuthProvider';
+import type { Actions } from '../BearAuthProvider.ts';
 
 export type BearAuthContextType<AuthInfo> = {
     id: string;

@@ -26,7 +26,7 @@
         "build": {
             "cache": true,
             "dependsOn": ["cir-dep", "//#prettier:format", "lint", "//#test", "^build", "//#audit"],
-            "outputs": ["build/**", "build-cjs/**"]
+            "outputs": ["build/**", "build-cjs/**", "dist/**"]
         },
         "//#audit": {
             "dependsOn": [],

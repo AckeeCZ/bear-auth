@@ -1,17 +1,16 @@
-import { isExpired, startTokenAutoRefresh } from '~/autoRefreshToken';
-import { type BearAuth } from '~/create';
-import { destroy } from '~/destroy';
-import { BearAuthError, isBearAuthError } from '~/errors';
-import { clearStorageOnStorageVersionUpdate, persistAuthSession } from '~/storage';
+import { isExpired, startTokenAutoRefresh } from './autoRefreshToken.ts';
+import { type BearAuth } from './create.ts';
+import { destroy } from './destroy.ts';
+import { BearAuthError, isBearAuthError } from './errors.ts';
+import { getInstance } from './instances.ts';
+import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged.ts';
+import { clearStorageOnStorageVersionUpdate, persistAuthSession } from './storage.ts';
 import {
     setAuthenticatedSession,
     setUnauthenticatedSession,
     type AuthenticatedSession,
     type RefreshingSession,
-} from '~/store/session';
-
-import { getInstance } from './instances';
-import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
+} from './store/session.ts';
 
 /**
  * - Attempts to retrieve the auth session from the storage.

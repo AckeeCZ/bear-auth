@@ -1,6 +1,5 @@
-import { type BearAuth } from '~/create';
-
-import { getInstance } from './instances';
+import { type BearAuth } from './create.ts';
+import { getInstance } from './instances.ts';
 
 export function isExpired(expiration: string | undefined | null) {
     return !expiration || Date.now() >= Date.parse(expiration);

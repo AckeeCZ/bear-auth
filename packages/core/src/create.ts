@@ -1,16 +1,15 @@
-import { BearAuthError } from '~/errors';
-import { createDefaultLogger, defaultLogLevel, type Logger, type LogLevel } from '~/logger';
-import type { StorageSchema } from '~/storage';
-import { createInitialState, type State } from '~/store/state';
-
 import {
     setDefaultAuthSessionPropagation,
     type AuthSessionPropagationType,
-} from './authSessionPropagation/authSessionPropagation';
-import { instances } from './instances';
-import { defaultContinueWhenOnline } from './network';
-import type { OnAuthStateChangedCallback } from './onAuthStateChanged';
-import type { AuthenticatedSession, RefreshingSession, Session } from './store/session';
+} from './authSessionPropagation/authSessionPropagation.ts';
+import { BearAuthError } from './errors.ts';
+import { instances } from './instances.ts';
+import { createDefaultLogger, defaultLogLevel, type Logger, type LogLevel } from './logger.ts';
+import { defaultContinueWhenOnline } from './network.ts';
+import type { OnAuthStateChangedCallback } from './onAuthStateChanged.ts';
+import type { StorageSchema } from './storage.ts';
+import type { AuthenticatedSession, RefreshingSession, Session } from './store/session.ts';
+import { createInitialState, type State } from './store/state.ts';
 
 export type BearAuth<AuthInfo> = {
     id: string;

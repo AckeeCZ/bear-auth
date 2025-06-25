@@ -385,7 +385,7 @@ __metadata:
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
     "@tooling/typescript": "workspace:*"
-    idb-stores: "npm:0.0.23"
+    idb-stores: "npm:0.0.24"
     typescript: "npm:5.8.3"
     zod: "npm:3.25.42"
   peerDependencies:
@@ -971,7 +971,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:5.2.0"
     eslint-plugin-react-refresh: "npm:0.4.20"
     globals: "npm:16.2.0"
-    idb-stores: "npm:0.0.23"
+    idb-stores: "npm:0.0.24"
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
     typescript: "npm:5.8.3"
@@ -996,7 +996,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:5.2.0"
     eslint-plugin-react-refresh: "npm:0.4.20"
     globals: "npm:16.2.0"
-    idb-stores: "npm:0.0.23"
+    idb-stores: "npm:0.0.24"
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
     typescript: "npm:5.8.3"
@@ -3730,22 +3730,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idb-keyval@npm:6.2.1":
-  version: 6.2.1
-  resolution: "idb-keyval@npm:6.2.1"
-  checksum: 10c0/9f0c83703a365e00bd0b4ed6380ce509a06dedfc6ec39b2ba5740085069fd2f2ff5c14ba19356488e3612a2f9c49985971982d836460a982a5d0b4019eeba48a
+"idb-keyval@npm:6.2.2":
+  version: 6.2.2
+  resolution: "idb-keyval@npm:6.2.2"
+  checksum: 10c0/b52f0d2937cc2ec9f1da536b0b5c0875af3043ca210714beaffead4ec1f44f2ad322220305fd024596203855224d9e3523aed83e971dfb62ddc21b5b1721aeef
   languageName: node
   linkType: hard
 
-"idb-stores@npm:0.0.23":
-  version: 0.0.23
-  resolution: "idb-stores@npm:0.0.23"
+"idb-stores@npm:0.0.24":
+  version: 0.0.24
+  resolution: "idb-stores@npm:0.0.24"
   dependencies:
-    idb-keyval: "npm:6.2.1"
+    idb-keyval: "npm:6.2.2"
     loglevel: "npm:1.9.2"
   peerDependencies:
     zod: 3.x
-  checksum: 10c0/c551435a7e59ef68de71262e55071933870e3487ba45f0a12feeab40c17aa2070a433c8358f67c7895495a5ff1ac9d4b316c6a4ed1a78a3eef43f9f8c1b13a64
+  checksum: 10c0/a07ac94da2ee57c6d14ba33ef67e5ad37ff387495b01a3c8db60068844ab2fd68bccca0a24927c5ef2162dd8c13095881c58e285e5dbfd675f587c5d7e8f2e62
   languageName: node
   linkType: hard
 

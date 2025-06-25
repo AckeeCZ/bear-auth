@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { BearAuthProviderContext, type BearAuthContextType } from '../context';
+import { BearAuthProviderContext, type BearAuthContextType } from '../context/index.ts';
 
 export function useBearAuth<AuthInfo>() {
     const ctx = useContext(BearAuthProviderContext);

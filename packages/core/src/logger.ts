@@ -1,9 +1,8 @@
 import { getLogger } from 'loglevel';
 
-import { type BearAuth } from '~/create';
-
-import { BearAuthError } from './errors';
-import { getInstance } from './instances';
+import { type BearAuth } from './create.ts';
+import { BearAuthError } from './errors.ts';
+import { getInstance } from './instances.ts';
 
 export type LogLevel = 'error' | 'debug' | 'info' | 'silent';
 

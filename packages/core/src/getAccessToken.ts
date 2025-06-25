@@ -1,8 +1,7 @@
-import { isExpired } from '~/autoRefreshToken';
-import { type BearAuth } from '~/create';
-
-import { getInstance } from './instances';
-import { onAuthStateChanged } from './onAuthStateChanged';
+import { isExpired } from './autoRefreshToken.ts';
+import { type BearAuth } from './create.ts';
+import { getInstance } from './instances.ts';
+import { onAuthStateChanged } from './onAuthStateChanged.ts';
 
 async function onResolveAuthState(id: BearAuth<unknown>['id']) {
     let unsubscribe = () => {};

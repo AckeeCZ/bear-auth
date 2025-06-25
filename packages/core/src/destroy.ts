@@ -1,9 +1,8 @@
-import { stopTokenAutoRefresh } from '~/autoRefreshToken';
-import { type BearAuth } from '~/create';
-import { setUnauthenticatedSession } from '~/store/session';
-
-import { getInstance, instances } from './instances';
-import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
+import { stopTokenAutoRefresh } from './autoRefreshToken.ts';
+import { type BearAuth } from './create.ts';
+import { getInstance, instances } from './instances.ts';
+import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged.ts';
+import { setUnauthenticatedSession } from './store/session.ts';
 
 /**
  * Destroys the BearAuth instance.

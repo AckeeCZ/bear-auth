@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import type { Session } from '@bear-auth/core';
 
-import { AuthSessionContext } from '../context';
+import { AuthSessionContext } from '../context/index.ts';
 
 export function useBearAuthSession<AuthInfo>() {
     const ctx = useContext(AuthSessionContext);

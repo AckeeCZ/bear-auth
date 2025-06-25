@@ -1,16 +1,16 @@
 import { describe, expect, test, vi } from 'vitest';
 
-import { authenticate } from '~/authenticate';
-import { create } from '~/create';
-import { destroy } from '~/destroy';
-import { BearAuthError } from '~/errors';
-import { getExpirationTimestampWithBuffer } from '~/expiration';
-import { getAccessToken } from '~/getAccessToken';
-import { setFetchAuthInfoHook } from '~/hooks/setFetchAuthInfoHook';
-import { setLogoutHook } from '~/hooks/setLogoutHook';
-import { setRefreshTokenHook } from '~/hooks/setRefreshTokenHook';
-import { instances } from '~/instances';
-import type { Session } from '~/store/session';
+import { authenticate } from '../../authenticate.ts';
+import { create } from '../../create.ts';
+import { destroy } from '../../destroy.ts';
+import { BearAuthError } from '../../errors.ts';
+import { getExpirationTimestampWithBuffer } from '../../expiration.ts';
+import { getAccessToken } from '../../getAccessToken.ts';
+import { setFetchAuthInfoHook } from '../../hooks/setFetchAuthInfoHook.ts';
+import { setLogoutHook } from '../../hooks/setLogoutHook.ts';
+import { setRefreshTokenHook } from '../../hooks/setRefreshTokenHook.ts';
+import { instances } from '../../instances.ts';
+import type { Session } from '../../store/session.ts';
 
 describe('Non-Persistent Authentication Session Flows', () => {
     test('should authenticate only with an access token', async () => {

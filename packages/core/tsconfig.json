@@ -5,9 +5,6 @@
         "tsBuildInfoFile": ".cache/tsconfig.tsbuildinfo",
         "rootDir": "./src",
         "baseUrl": ".",
-        "paths": {
-            "~/*": ["src/*"]
-        },
         "strictFunctionTypes": true
     },
     "include": ["src/**/*.ts", "src/**/*.d.ts"],

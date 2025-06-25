@@ -1,11 +1,10 @@
-import { stopTokenAutoRefresh } from '~/autoRefreshToken';
-import { type BearAuth } from '~/create';
-import { BearAuthError } from '~/errors';
-import { getInstance } from '~/instances';
-import { runOnAuthStateChangedCallbacks } from '~/onAuthStateChanged';
-import { setSigningOutSession, setUnauthenticatedSession, type AuthenticatedSession } from '~/store/session';
-
-import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry';
+import { stopTokenAutoRefresh } from '../autoRefreshToken.ts';
+import { type BearAuth } from '../create.ts';
+import { BearAuthError } from '../errors.ts';
+import { getInstance } from '../instances.ts';
+import { runOnAuthStateChangedCallbacks } from '../onAuthStateChanged.ts';
+import { setSigningOutSession, setUnauthenticatedSession, type AuthenticatedSession } from '../store/session.ts';
+import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry.ts';
 
 type AuthData<AuthInfo> = AuthenticatedSession<AuthInfo>['data'];
 

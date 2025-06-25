@@ -1,12 +1,11 @@
-import { startTokenAutoRefresh } from '~/autoRefreshToken';
-import { type BearAuth } from '~/create';
-import { BearAuthError } from '~/errors';
-import { persistAuthSession } from '~/storage';
-import { setAuthenticatedSession } from '~/store/session';
-
-import { getExpirationTimestampWithBuffer } from './expiration';
-import { getInstance } from './instances';
-import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged';
+import { startTokenAutoRefresh } from './autoRefreshToken.ts';
+import { type BearAuth } from './create.ts';
+import { BearAuthError } from './errors.ts';
+import { getExpirationTimestampWithBuffer } from './expiration.ts';
+import { getInstance } from './instances.ts';
+import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged.ts';
+import { persistAuthSession } from './storage.ts';
+import { setAuthenticatedSession } from './store/session.ts';
 
 export type AuthenticateProps<AuthInfo> = {
     /**

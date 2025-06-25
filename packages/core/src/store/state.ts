@@ -1,4 +1,4 @@
-import { createSession, type Session } from './session';
+import { createSession, type Session } from './session.ts';
 
 export type State<AuthInfo> = {
     session: Session<AuthInfo>;

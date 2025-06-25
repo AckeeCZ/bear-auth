@@ -26,7 +26,8 @@
         "dev": "tsc -w",
         "cir-dep": "check-cir-deps ./src",
         "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts",
-        "types-check": "tsc --noEmit"
+        "types-check": "tsc --noEmit",
+        "prepare": "yarn build"
     },
     "devDependencies": {
         "@bear-auth/core": "workspace:*",
@@ -57,6 +58,6 @@
         "url": "https://github.com/AckeeCZ/bear-auth/issues"
     },
     "dependencies": {
-        "idb-stores": "0.0.23"
+        "idb-stores": "0.0.24"
     }
 }

@@ -1,9 +1,8 @@
 import { afterEach, describe, expect, test } from 'vitest';
 
-import { BearAuthError } from '~/errors';
-
-import { create } from '../../create';
-import { instances } from '../../instances';
+import { create } from '../../create.ts';
+import { BearAuthError } from '../../errors.ts';
+import { instances } from '../../instances.ts';
 
 afterEach(() => {
     instances.clear();

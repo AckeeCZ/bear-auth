@@ -1,15 +1,14 @@
 import { describe, expect, test, vi } from 'vitest';
 
-import { create } from '~/create';
-import { destroy } from '~/destroy';
-import { getExpirationTimestampWithBuffer } from '~/expiration';
-import type { AuthData } from '~/hooks/setFetchAuthInfoHook';
-import { setRefreshTokenHook } from '~/hooks/setRefreshTokenHook';
-import { retrieveAuthSession } from '~/retrieveAuthSession';
-import { setStorage, type PersistedData } from '~/storage';
-import type { Session } from '~/store/session';
-
-import { getTestInstanceId } from '../utils';
+import { create } from '../../create.ts';
+import { destroy } from '../../destroy.ts';
+import { getExpirationTimestampWithBuffer } from '../../expiration.ts';
+import type { AuthData } from '../../hooks/setFetchAuthInfoHook.ts';
+import { setRefreshTokenHook } from '../../hooks/setRefreshTokenHook.ts';
+import { retrieveAuthSession } from '../../retrieveAuthSession.ts';
+import { setStorage, type PersistedData } from '../../storage.ts';
+import type { Session } from '../../store/session.ts';
+import { getTestInstanceId } from '../utils/index.ts';
 
 function createMockedStorage<AuthInfo>(id: string, persistedData: PersistedData<AuthInfo>, version: number = 1) {
     // Emulate a persisted session

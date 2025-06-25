@@ -1,8 +1,8 @@
-import type { BearAuth } from '~/create';
-import { BearAuthError, isBearAuthError } from '~/errors';
-import { getInstance } from '~/instances';
-import { retrieveAuthSession } from '~/retrieveAuthSession';
-import { getFingerprint } from '~/utils/hash';
+import type { BearAuth } from '../create.ts';
+import { BearAuthError, isBearAuthError } from '../errors.ts';
+import { getInstance } from '../instances.ts';
+import { retrieveAuthSession } from '../retrieveAuthSession.ts';
+import { getFingerprint } from '../utils/hash.ts';
 
 export function updateAuthSessionOnTabChange(id: BearAuth<unknown>['id']) {
     if (!('document' in globalThis) || !('visibilityState' in document)) {

@@ -1,1 +1,1 @@
-export * from './BearAuthProvider';
+export * from './BearAuthProvider/index.ts';

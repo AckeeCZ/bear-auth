@@ -1,9 +1,9 @@
 import { describe, expect, test, vi } from 'vitest';
 
-import { create } from '~/create';
-import { destroy } from '~/destroy';
-import { instances } from '~/instances';
-import { defaultLogLevel, setLogger, setLogLevel, type Logger } from '~/logger';
+import { create } from '../../create.ts';
+import { destroy } from '../../destroy.ts';
+import { instances } from '../../instances.ts';
+import { defaultLogLevel, setLogger, setLogLevel, type Logger } from '../../logger.ts';
 
 describe('logger', () => {
     test('should set log level', async () => {

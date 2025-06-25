@@ -1,8 +1,7 @@
-import type { BearAuth } from '~/create';
-import { getExpirationTimestampWithBuffer } from '~/expiration';
-import { getInstance } from '~/instances';
-
-import type { State } from './state';
+import type { BearAuth } from '../create.ts';
+import { getExpirationTimestampWithBuffer } from '../expiration.ts';
+import { getInstance } from '../instances.ts';
+import type { State } from './state.ts';
 
 export type RetrievingSession = {
     status: 'retrieving';

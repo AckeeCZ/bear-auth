@@ -1,10 +1,9 @@
 import { afterEach, describe, expect, test } from 'vitest';
 
-import { destroy } from '~/destroy';
-import { BearAuthError } from '~/errors';
-
-import { create } from '../../create';
-import { instances } from '../../instances';
+import { create } from '../../create.ts';
+import { destroy } from '../../destroy.ts';
+import { BearAuthError } from '../../errors.ts';
+import { instances } from '../../instances.ts';
 
 afterEach(() => {
     instances.clear();

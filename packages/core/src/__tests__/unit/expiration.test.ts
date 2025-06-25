@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
-import { BearAuthError } from '~/errors';
-
-import { getExpirationTimestampWithBuffer } from '../../expiration';
+import { BearAuthError } from '../../errors.ts';
+import { getExpirationTimestampWithBuffer } from '../../expiration.ts';
 
 describe('getExpirationTimestampWithBuffer', () => {
     test(`should throw BearAuthError for expired tokens`, () => {

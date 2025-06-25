@@ -1,22 +1,22 @@
-export * from './authenticate';
+export * from './authenticate.ts';
 export {
     setAuthSessionPropagation,
     type AuthSessionPropagationType,
-} from './authSessionPropagation/authSessionPropagation';
-export { create, type CreateProps } from './create';
-export { destroy } from './destroy';
-export { bearAuthErrorCodes, isBearAuthError, isBearAuthErrorWithCodes, type BearAuthErrorCode } from './errors';
-export { getExpirationTimestamp } from './expiration';
-export * from './getAccessToken';
-export * from './hooks/setFetchAuthInfoHook';
-export * from './hooks/setLogoutHook';
-export * from './hooks/setRefreshTokenHook';
-export { getCreatedBearAuths } from './instances';
-export * from './logger';
-export { setContinueWhenOnline } from './network';
-export { onAuthStateChanged, type OnAuthStateChangedCallback } from './onAuthStateChanged';
-export * from './retrieveAuthSession';
-export { setStorage, type PersistedData, type StorageSchema } from './storage';
+} from './authSessionPropagation/authSessionPropagation.ts';
+export { create, type CreateProps } from './create.ts';
+export { destroy } from './destroy.ts';
+export { bearAuthErrorCodes, isBearAuthError, isBearAuthErrorWithCodes, type BearAuthErrorCode } from './errors.ts';
+export { getExpirationTimestamp } from './expiration.ts';
+export * from './getAccessToken.ts';
+export * from './hooks/setFetchAuthInfoHook.ts';
+export * from './hooks/setLogoutHook.ts';
+export * from './hooks/setRefreshTokenHook.ts';
+export { getCreatedBearAuths } from './instances.ts';
+export * from './logger.ts';
+export { setContinueWhenOnline } from './network.ts';
+export { onAuthStateChanged, type OnAuthStateChangedCallback } from './onAuthStateChanged.ts';
+export * from './retrieveAuthSession.ts';
+export { setStorage, type PersistedData, type StorageSchema } from './storage.ts';
 export {
     type AuthenticatedSession,
     type RefreshingSession,
@@ -25,4 +25,4 @@ export {
     type SessionData,
     type SigningOutSession,
     type UnauthenticatedSession,
-} from './store/session';
+} from './store/session.ts';

@@ -1,5 +1,5 @@
-import { type BearAuth } from './create';
-import { getInstance } from './instances';
+import { type BearAuth } from './create.ts';
+import { getInstance } from './instances.ts';
 
 type NetworkStatus = 'online' | 'offline';
 

@@ -25,7 +25,8 @@
         "build": "yarn build:es && yarn build:cjs",
         "dev": "tsc -w & tsc-alias -w",
         "cir-dep": "check-cir-deps ./src",
-        "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts"
+        "lint": "eslint-lint --config eslint.config.mjs ./src/**/*.ts",
+        "prepare": "yarn build"
     },
     "devDependencies": {
         "@bear-auth/core": "3.0.3",

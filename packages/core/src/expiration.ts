@@ -1,4 +1,4 @@
-import { BearAuthError } from './errors';
+import { BearAuthError } from './errors.ts';
 
 /**
  * Convert the `expiresIn` value in ms to a ISO timestamp representing the expiration time.

@@ -1,5 +1,5 @@
-import type { BearAuth } from './create';
-import { BearAuthError } from './errors';
+import type { BearAuth } from './create.ts';
+import { BearAuthError } from './errors.ts';
 
 export const instances = new Map<string, BearAuth<unknown>>();
 
