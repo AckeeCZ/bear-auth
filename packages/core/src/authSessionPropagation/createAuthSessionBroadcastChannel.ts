@@ -1,12 +1,14 @@
-import { name, version } from '~/../package.json';
-import { authenticate } from '~/authenticate';
-import type { BearAuth } from '~/create';
-import { BearAuthError, isBearAuthError } from '~/errors';
-import { setLogoutHook } from '~/hooks/setLogoutHook';
-import { getInstance } from '~/instances';
-import { onAuthStateChanged } from '~/onAuthStateChanged';
-import type { Session } from '~/store/session';
-import { getFingerprint } from '~/utils/hash';
+// @ts-ignore
+import pkg from '../../package.json';
+import { authenticate } from '../authenticate.ts';
+import type { BearAuth } from '../create.ts';
+import { BearAuthError, isBearAuthError } from '../errors.ts';
+import { setLogoutHook } from '../hooks/setLogoutHook.ts';
+import { getInstance } from '../instances.ts';
+import { onAuthStateChanged } from '../onAuthStateChanged.ts';
+import type { Session } from '../store/session.ts';
+import { getFingerprint } from '../utils/hash.ts';
+import { getRandomId } from '../utils/random.ts';
 
 type AuthSessionChange = {
     type: 'AUTH_SESSION_CHANGE';
@@ -28,9 +30,9 @@ export function createAuthSessionBroadcastChannel(id: BearAuth<unknown>['id']) {
 
     // Choose random channel name to avoid conflicts across origin.
     // Choose the current package version and instance id to avoid conflicts within Bear Auth.
-    const channelName = `${name}@${version}_${id}_z7fQlNm+ujmESjbuHrnfrtx2WVvSLPlrQfyJaK7pmxQuxRa6q2xCHHP7`;
+    const channelName = `${pkg.name}@${pkg.version}_${id}_z7fQlNm+ujmESjbuHrnfrtx2WVvSLPlrQfyJaK7pmxQuxRa6q2xCHHP7`;
     const channel = new BroadcastChannel(channelName);
-    const clientId = crypto.randomUUID();
+    const clientId = getRandomId(30);
 
     async function messageHandler(event: MessageEvent) {
         if (event.source === globalThis.window || location.origin !== event.origin || !event.isTrusted || !event.data) {
