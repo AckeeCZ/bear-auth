@@ -2,7 +2,7 @@ import {
     create,
     getExpirationTimestamp,
     setFetchAuthInfoHook,
-    setLogLevel,
+    setLogger,
     setLogoutHook,
     setRefreshTokenHook,
     setStorage,
@@ -30,7 +30,7 @@ export type AuthInfo = z.infer<typeof authInfo>;
 
 const bearAuthId = create();
 
-setLogLevel(bearAuthId, 'debug');
+setLogger(bearAuthId, console);
 
 const storage = createIndexedDBStorage({
     bearAuthId,

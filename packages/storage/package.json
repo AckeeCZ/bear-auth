@@ -16,14 +16,6 @@
                 "types": "./build-cjs/index.d.ts",
                 "default": "./build-cjs/index.js"
             }
-        },
-        "./cjs": {
-            "types": "./build-cjs/index.d.ts",
-            "default": "./build-cjs/index.js"
-        },
-        "./ecm": {
-            "types": "./build/index.d.ts",
-            "default": "./build/index.js"
         }
     },
     "scripts": {
