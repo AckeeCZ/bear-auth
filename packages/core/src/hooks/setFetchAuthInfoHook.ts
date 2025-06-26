@@ -52,7 +52,7 @@ export function setFetchAuthInfoHook<
 
             const authInfo = await handler(authSession);
 
-            updateAuthInfo<AuthInfo>(instance.state, authInfo);
+            updateAuthInfo<AuthInfo>(id, authInfo);
 
             if (!retrievedAuthSession) {
                 await persistAuthSession<AuthInfo>(id);

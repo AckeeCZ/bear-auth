@@ -1,7 +1,7 @@
 import type { BearAuth } from '../create.ts';
+import { BearAuthError } from '../errors.ts';
 import { getExpirationTimestampWithBuffer } from '../expiration.ts';
 import { getInstance } from '../instances.ts';
-import type { State } from './state.ts';
 
 export type RetrievingSession = {
     status: 'retrieving';
@@ -109,8 +109,16 @@ export function updateSessionAfterRefreshToken<AuthInfo>(
     });
 }
 
-export function updateAuthInfo<AuthInfo>(state: State<AuthInfo>, authInfo: AuthInfo) {
-    state.session.data!.authInfo = authInfo;
+export function updateAuthInfo<AuthInfo>(id: BearAuth<AuthInfo>['id'], authInfo: AuthInfo) {
+    const { state, logger } = getInstance<AuthInfo>(id);
+
+    if (state.session.data) {
+        state.session.data.authInfo = authInfo;
+    } else {
+        const error = new BearAuthError('bear-auth/update-auth-session-failed', 'Session is not authenticated.');
+        logger.error(error, state.session);
+        throw error;
+    }
 }
 
 export type Session<AuthInfo> =
