@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.6
+
+### Patch Changes
+
+- f73206e: 🔧 Refactor updateAuthInfo to handle unauthenticated session.
+
 ## 3.0.5
 
 ### Patch Changes

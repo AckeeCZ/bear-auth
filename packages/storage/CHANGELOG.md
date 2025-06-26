@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 3.0.6
+
+### Patch Changes
+
+- f73206e: 🔧 Refactor updateAuthInfo to handle unauthenticated session.
+- Updated dependencies [f73206e]
+    - @bear-auth/core@3.0.6
+
 ## 3.0.5
 
 ### Patch Changes
