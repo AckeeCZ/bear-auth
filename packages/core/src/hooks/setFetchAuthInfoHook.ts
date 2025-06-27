@@ -4,12 +4,7 @@ import { BearAuthError } from '../errors.ts';
 import { getInstance } from '../instances.ts';
 import { runOnAuthStateChangedCallbacks } from '../onAuthStateChanged.ts';
 import { persistAuthSession } from '../storage.ts';
-import {
-    setUnauthenticatedSession,
-    updateAuthInfo,
-    type AuthenticatedSession,
-    type Session,
-} from '../store/session.ts';
+import { setUnauthenticatedSession, type AuthenticatedSession, type Session } from '../store/session.ts';
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry.ts';
 
 export type FetchAuthInfoHook<AuthInfo> = {
@@ -46,13 +41,16 @@ export function setFetchAuthInfoHook<
         }
 
         try {
-            instance.logger.debug('[fetchAuthInfo]', 'Fetching auth data...');
-
             const authSession = retrievedAuthSession ?? (session.data as AuthData<AuthInfo>);
+
+            instance.logger.debug('[fetchAuthInfo]', 'Fetching auth data...', authSession);
 
             const authInfo = await handler(authSession);
 
-            updateAuthInfo<AuthInfo>(id, authInfo);
+            session.data = {
+                ...authSession,
+                authInfo,
+            };
 
             if (!retrievedAuthSession) {
                 await persistAuthSession<AuthInfo>(id);
