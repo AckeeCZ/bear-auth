@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.7
+
+### Patch Changes
+
+- e858f00: Bugfix in setFetchAuthInfoHook.
+
 ## 3.0.6
 
 ### Patch Changes
