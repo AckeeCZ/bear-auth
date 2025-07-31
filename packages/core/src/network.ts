@@ -25,16 +25,13 @@ export async function defaultContinueWhenOnline() {
  */
 export function setContinueWhenOnline(
     id: BearAuth<unknown>['id'],
-    continueWhenOnline: typeof defaultContinueWhenOnline,
+    continueWhenOnline: BearAuth<unknown>['continueWhenOnline'],
 ): void {
     const instance = getInstance(id);
 
-    instance.continueWhenOnline = async () => {
-        instance.logger.debug(
-            '[resolveWhenOnline]',
-            'Will continue only if the network is online or wait once it is online again...',
-        );
-        await continueWhenOnline();
-        instance.logger.debug('[resolveWhenOnline]', 'Network is online.');
+    instance.continueWhenOnline = async taskName => {
+        instance.logger.debug('[resolveWhenOnline]', `${taskName} task will proceed if the network is online...`);
+        await continueWhenOnline(taskName);
+        instance.logger.debug('[resolveWhenOnline]', `${taskName} task will proceed, network is online. 🟢`);
     };
 }

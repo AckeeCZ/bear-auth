@@ -43,7 +43,13 @@ export type BearAuth<AuthInfo> = {
 
     refreshTokenTimeoutId: null | (number | NodeJS.Timeout);
 
-    continueWhenOnline: () => Promise<void>;
+    /**
+     * @param taskName - The name of the task that is being executed.
+     * @returns A promise that resolves when the network is online.
+     */
+    continueWhenOnline: (
+        taskName: 'retrieveAuthSession' | 'logout' | 'refreshToken' | 'fetchAuthInfo',
+    ) => Promise<void>;
 
     authSessionPropagation: {
         type: Exclude<AuthSessionPropagationType, 'none'>;

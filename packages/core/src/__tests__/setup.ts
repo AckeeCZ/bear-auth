@@ -5,6 +5,5 @@ vi.mock('../network.ts', async importOriginal => {
     return {
         ...original,
         defaultContinueWhenOnline: vi.fn().mockResolvedValue(undefined),
-        setContinueWhenOnline: vi.fn(),
     };
 });

@@ -10,6 +10,7 @@ import { setFetchAuthInfoHook } from '../../hooks/setFetchAuthInfoHook.ts';
 import { setLogoutHook } from '../../hooks/setLogoutHook.ts';
 import { setRefreshTokenHook } from '../../hooks/setRefreshTokenHook.ts';
 import { instances } from '../../instances.ts';
+import { setContinueWhenOnline } from '../../network.ts';
 import type { Session } from '../../store/session.ts';
 
 describe('Non-Persistent Authentication Session Flows', () => {
@@ -21,6 +22,9 @@ describe('Non-Persistent Authentication Session Flows', () => {
 
         const logoutHandler = vi.fn();
         const logout = setLogoutHook(id, logoutHandler);
+
+        const continueWhenOnline = vi.fn();
+        setContinueWhenOnline(id, continueWhenOnline);
 
         const result = await authenticate(id, { accessToken });
 
@@ -50,12 +54,21 @@ describe('Non-Persistent Authentication Session Flows', () => {
 
         expect(await getAccessToken(id)).toBeNull();
 
-        expect(logoutHandler).toBeCalledTimes(1);
+        expect(logoutHandler).toHaveBeenCalledTimes(1);
+        expect(logoutHandler).toHaveBeenCalledWith({
+            accessToken,
+            authInfo: null,
+            refreshToken: null,
+            expiration: null,
+        });
 
         expect(instances.get(id)?.state.session).toEqual({
             status: 'unauthenticated',
             data: null,
         } satisfies Session<unknown>);
+
+        expect(continueWhenOnline).toHaveBeenCalledTimes(1);
+        expect(continueWhenOnline).toHaveBeenCalledWith('logout');
 
         await destroy(id);
     });
@@ -104,6 +117,9 @@ describe('Non-Persistent Authentication Session Flows', () => {
 
         const logoutHandler = vi.fn();
         const logout = setLogoutHook(id, logoutHandler);
+
+        const continueWhenOnline = vi.fn();
+        setContinueWhenOnline(id, continueWhenOnline);
 
         const refreshTokenHandler = vi.fn(async () => {
             return {
@@ -160,12 +176,18 @@ describe('Non-Persistent Authentication Session Flows', () => {
             },
         } satisfies typeof forcedRefreshResult);
 
+        expect(continueWhenOnline).toHaveBeenCalledTimes(1);
+        expect(continueWhenOnline).toHaveBeenCalledWith('refreshToken');
+
         expect(await getAccessToken(id)).toBe(freshAccessToken);
 
         await logout();
 
         expect(logoutHandler).toBeCalledTimes(1);
         expect(await getAccessToken(id)).toBeNull();
+
+        expect(continueWhenOnline).toHaveBeenCalledTimes(2);
+        expect(continueWhenOnline).toHaveBeenCalledWith('logout');
 
         await destroy(id);
     });
@@ -195,6 +217,9 @@ describe('Non-Persistent Authentication Session Flows', () => {
     test('should authenticate with access token, expiration, refresh token, and authInfo', async () => {
         const id = 'bear-auth-browser-test-5';
         create({ id });
+
+        const continueWhenOnline = vi.fn();
+        setContinueWhenOnline(id, continueWhenOnline);
 
         const accessToken = 'test-access-token';
         const expiration = new Date(Date.now() + 3600 * 1000).toISOString(); // 1 hour from now
@@ -249,6 +274,9 @@ describe('Non-Persistent Authentication Session Flows', () => {
         } satisfies Session<unknown>);
 
         expect(authInfoHandler).toBeCalledTimes(1);
+
+        expect(continueWhenOnline).toHaveBeenCalledTimes(1);
+        expect(continueWhenOnline).toHaveBeenCalledWith('fetchAuthInfo');
 
         expect(await getAccessToken(id, { forceRefresh: true })).toBe(freshAccessToken);
 

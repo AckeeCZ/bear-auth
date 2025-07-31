@@ -53,7 +53,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
         try {
             instance.logger.debug('[refreshToken]', 'Refreshing access token...');
 
-            await instance.continueWhenOnline();
+            await instance.continueWhenOnline('refreshToken');
 
             const { session } = instance.state;
             const authSession = retrievedAuthSession ?? (session.data as AuthData<AuthInfo>);
@@ -103,6 +103,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
     const triggerRefreshToken: AuthHook['action'] = async options => {
         const { state } = getInstance<AuthInfo>(id);
 
+        // FIXME: if status is refreshing, return promise of currently refreshing task
         if (
             options?.forceRefresh ||
             (isExpired(state.session.data?.expiration) && state.session.status !== 'refreshing')

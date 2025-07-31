@@ -5,6 +5,7 @@ import { destroy } from '../../destroy.ts';
 import { getExpirationTimestampWithBuffer } from '../../expiration.ts';
 import type { AuthData } from '../../hooks/setFetchAuthInfoHook.ts';
 import { setRefreshTokenHook } from '../../hooks/setRefreshTokenHook.ts';
+import { setContinueWhenOnline } from '../../network.ts';
 import { retrieveAuthSession } from '../../retrieveAuthSession.ts';
 import { setStorage, type PersistedData } from '../../storage.ts';
 import type { Session } from '../../store/session.ts';
@@ -58,6 +59,9 @@ describe('Persistent Authentication Session Flows', () => {
 
         setStorage(id, storage);
 
+        const continueWhenOnline = vi.fn();
+        setContinueWhenOnline(id, continueWhenOnline);
+
         expect(await retrieveAuthSession(id)).toEqual({
             status: 'authenticated',
             data: sessionData,
@@ -76,6 +80,9 @@ describe('Persistent Authentication Session Flows', () => {
         } satisfies Session<unknown>);
 
         expect(newStorage.clear).toHaveBeenCalled();
+
+        expect(continueWhenOnline).toHaveBeenCalledTimes(2);
+        expect(continueWhenOnline).toHaveBeenCalledWith('retrieveAuthSession');
 
         await destroy(id);
     });

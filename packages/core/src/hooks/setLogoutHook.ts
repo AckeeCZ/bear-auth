@@ -45,7 +45,7 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
 
             stopTokenAutoRefresh<AuthInfo>(id);
 
-            await instance.continueWhenOnline();
+            await instance.continueWhenOnline('logout');
 
             await handler(session.data);
 

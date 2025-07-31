@@ -29,7 +29,7 @@ export async function retrieveAuthSession<AuthInfo>(id: BearAuth<AuthInfo>['id']
 
     instance.logger.debug('[retrieveAuthSession]', 'Retrieving auth session...');
 
-    await instance.continueWhenOnline();
+    await instance.continueWhenOnline('retrieveAuthSession');
 
     await clearStorageOnStorageVersionUpdate(id);
 

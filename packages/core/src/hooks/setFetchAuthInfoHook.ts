@@ -45,6 +45,8 @@ export function setFetchAuthInfoHook<
 
             instance.logger.debug('[fetchAuthInfo]', 'Fetching auth data...', authSession);
 
+            await instance.continueWhenOnline('fetchAuthInfo');
+
             const authInfo = await handler(authSession);
 
             session.data = {
