@@ -1,9 +1,8 @@
 import { type BearAuth } from './create.ts';
 import { getInstance } from './instances.ts';
+import type { Session } from './store/session.ts';
 
-export type OnAuthStateChangedCallback<AuthInfo> = (
-    session: BearAuth<AuthInfo>['state']['session'],
-) => Promise<void> | void;
+export type OnAuthStateChangedCallback<AuthInfo> = (session: Session<AuthInfo>) => Promise<void> | void;
 
 /**
  * Register a callback to be called whenever the auth state changes.
@@ -15,31 +14,39 @@ export function onAuthStateChanged<AuthInfo>(
     id: BearAuth<AuthInfo>['id'],
     callback: OnAuthStateChangedCallback<AuthInfo>,
 ) {
-    const instance = getInstance<AuthInfo>(id);
+    const { logger, onAuthStateChanged, store } = getInstance<AuthInfo>(id);
 
-    instance.logger.debug('[onAuthStateChanged]', 'Subscribing...', callback);
+    logger.debug('[onAuthStateChanged]', 'Subscribing...', callback);
 
-    instance.onAuthStateChanged.add(callback);
+    onAuthStateChanged.callbacks.add(callback);
 
-    callback(instance.state.session);
+    const session = store.getSession();
 
-    instance.logger.debug(
-        '[onAuthStateChanged]',
-        'Callback called immediately with current session:',
-        instance.state.session,
-    );
+    callback(session);
+
+    logger.debug('[onAuthStateChanged]', 'Callback called immediately with current session:', session);
 
     return function unsubscribe() {
-        instance.logger.debug('[onAuthStateChanged]', 'Unsubscribing...', callback);
-        instance.onAuthStateChanged.delete(callback);
+        logger.debug('[onAuthStateChanged]', 'Unsubscribing...', callback);
+        onAuthStateChanged.callbacks.delete(callback);
     };
 }
 
 export async function runOnAuthStateChangedCallbacks<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(id);
-    const tasks = Array.from(instance.onAuthStateChanged.values()).map(callback => callback(instance.state.session));
+    const { onAuthStateChanged, store, logger } = getInstance<AuthInfo>(id);
+    const prevSession = onAuthStateChanged.prevSession;
+    const session = store.getSession();
 
-    instance.logger.debug('[onAuthStateChanged]', 'All callbacks called with session:', instance.state.session);
+    if (prevSession?.status === session.status && JSON.stringify(prevSession.data) === JSON.stringify(session.data)) {
+        logger.debug('[onAuthStateChanged]', 'Session is the same. Skipping...');
+        return;
+    }
+
+    const tasks = Array.from(onAuthStateChanged.callbacks.values()).map(callback => callback(session));
+
+    logger.debug('[onAuthStateChanged]', 'All callbacks called with session:', session);
 
     await Promise.allSettled(tasks);
+
+    onAuthStateChanged.prevSession = session;
 }

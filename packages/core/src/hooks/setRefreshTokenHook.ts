@@ -35,36 +35,35 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
     },
 ): AuthHook['action'] {
     async function refreshToken(retrievedAuthSession?: AuthData<AuthInfo>, failureCount = 0) {
-        const instance = getInstance<AuthInfo>(id);
+        const { store, logger, continueWhenOnline, storage } = getInstance<AuthInfo>(id);
 
-        if (!retrievedAuthSession && instance.state.session.status !== 'authenticated') {
+        if (!retrievedAuthSession && store.getSession().status !== 'authenticated') {
             throw new BearAuthError(
                 'bear-auth/not-authenticated',
                 `Can't refresh access token. No auth sesssion active.`,
             );
         }
 
-        setRefreshingSession<AuthInfo>(id);
+        await store.setSession(setRefreshingSession);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
         stopTokenAutoRefresh<AuthInfo>(id);
 
         try {
-            instance.logger.debug('[refreshToken]', 'Refreshing access token...');
+            logger.debug('[refreshToken]', 'Refreshing access token...');
 
-            await instance.continueWhenOnline('refreshToken');
+            await continueWhenOnline('refreshToken');
 
-            const { session } = instance.state;
-            const authSession = retrievedAuthSession ?? (session.data as AuthData<AuthInfo>);
+            const authSession = retrievedAuthSession ?? (store.getSession().data as AuthData<AuthInfo>);
 
-            instance.logger.debug('[refreshToken]', 'Using auth session:', authSession);
+            logger.debug('[refreshToken]', 'Using auth session:', authSession);
 
             const result = await handler(authSession);
 
-            instance.logger.debug('[refreshToken]', 'Received refresh access token result:', result);
+            logger.debug('[refreshToken]', 'Received refresh access token result:', result);
 
-            updateSessionAfterRefreshToken<AuthInfo>(id, result);
+            await store.setSession(session => updateSessionAfterRefreshToken(session, result));
 
             if (!retrievedAuthSession) {
                 await persistAuthSession<AuthInfo>(id);
@@ -72,22 +71,22 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             startTokenAutoRefresh<AuthInfo>(id);
 
-            instance.logger.debug('[refreshToken]', 'Access token has been successfully refreshed.');
+            logger.debug('[refreshToken]', 'Access token has been successfully refreshed.');
 
             await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
-            return getInstance<AuthInfo>(id).state.session;
+            return store.getSession();
         } catch (error) {
-            instance.logger.error(error);
+            logger.error(error);
 
             failureCount++;
 
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
                 return refreshToken(retrievedAuthSession, failureCount);
             } else {
-                setUnauthenticatedSession<AuthInfo>(id);
+                await store.setSession(setUnauthenticatedSession);
 
-                await instance.storage?.clear(id);
+                await storage?.clear(id);
 
                 await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
@@ -101,17 +100,16 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
     instance.hooks.refreshToken = refreshToken;
 
     const triggerRefreshToken: AuthHook['action'] = async options => {
-        const { state } = getInstance<AuthInfo>(id);
+        const { store } = getInstance<AuthInfo>(id);
+
+        const session = store.getSession();
 
         // FIXME: if status is refreshing, return promise of currently refreshing task
-        if (
-            options?.forceRefresh ||
-            (isExpired(state.session.data?.expiration) && state.session.status !== 'refreshing')
-        ) {
+        if (options?.forceRefresh || (isExpired(session.data?.expiration) && session.status !== 'refreshing')) {
             return await refreshToken();
         }
 
-        return getInstance<AuthInfo>(id).state.session;
+        return store.getSession();
     };
 
     return triggerRefreshToken;

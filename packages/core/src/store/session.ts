@@ -1,13 +1,12 @@
-import type { BearAuth } from '../create.ts';
 import { getExpirationTimestampWithBuffer } from '../expiration.ts';
-import { getInstance } from '../instances.ts';
+import type { State } from './store.ts';
 
-export type RetrievingSession = {
+export type RetrievingSession = Readonly<{
     status: 'retrieving';
     data: null;
-};
+}>;
 
-export type RefreshingSession<AuthInfo> = {
+export type RefreshingSession<AuthInfo> = Readonly<{
     status: 'refreshing';
     data: {
         accessToken: string;
@@ -15,9 +14,9 @@ export type RefreshingSession<AuthInfo> = {
         refreshToken: string;
         authInfo?: AuthInfo | null;
     };
-};
+}>;
 
-export type SigningOutSession<AuthInfo> = {
+export type SigningOutSession<AuthInfo> = Readonly<{
     status: 'signing-out';
     data: {
         accessToken: string;
@@ -25,14 +24,14 @@ export type SigningOutSession<AuthInfo> = {
         refreshToken: string | null;
         authInfo?: AuthInfo | null;
     };
-};
+}>;
 
-export type UnauthenticatedSession = {
+export type UnauthenticatedSession = Readonly<{
     status: 'unauthenticated';
     data: null;
-};
+}>;
 
-export type AuthenticatedSession<AuthInfo> = {
+export type AuthenticatedSession<AuthInfo> = Readonly<{
     status: 'authenticated';
     data: {
         accessToken: string;
@@ -47,43 +46,45 @@ export type AuthenticatedSession<AuthInfo> = {
          */
         authInfo?: AuthInfo | null;
     };
-};
+}>;
 
-export function createSession(): RetrievingSession {
+export function createSession(): Readonly<RetrievingSession> {
     return {
         status: 'retrieving',
         data: null,
     };
 }
 
-export function setRefreshingSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const state = getInstance<AuthInfo>(id).state;
-
-    state.session.status = 'refreshing';
+export function setRefreshingSession<AuthInfo>(session: State<AuthInfo>['session']): RefreshingSession<AuthInfo> {
+    return {
+        status: 'refreshing',
+        // @ts-expect-error
+        data: session.data,
+    } as const;
 }
 
-export function setSigningOutSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const state = getInstance<AuthInfo>(id).state;
-
-    state.session.status = 'signing-out';
+export function setSigningOutSession<AuthInfo>(session: State<AuthInfo>['session']): SigningOutSession<AuthInfo> {
+    return {
+        status: 'signing-out',
+        // @ts-expect-error
+        data: session.data,
+    } as const;
 }
 
-export function setUnauthenticatedSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const state = getInstance<AuthInfo>(id).state;
-
-    state.session = {
+export function setUnauthenticatedSession(): UnauthenticatedSession {
+    return {
         status: 'unauthenticated',
         data: null,
-    } satisfies UnauthenticatedSession;
+    } as const;
 }
 
-export function setAuthenticatedSession<AuthInfo>(
-    id: BearAuth<AuthInfo>['id'],
-    { accessToken, expiration, refreshToken, authInfo }: AuthenticatedSession<AuthInfo>['data'],
-) {
-    const state = getInstance<AuthInfo>(id).state;
-
-    state.session = {
+export function setAuthenticatedSession<AuthInfo>({
+    accessToken,
+    expiration,
+    refreshToken,
+    authInfo,
+}: AuthenticatedSession<AuthInfo>['data']): AuthenticatedSession<AuthInfo> {
+    return {
         status: 'authenticated',
         data: {
             accessToken,
@@ -91,20 +92,18 @@ export function setAuthenticatedSession<AuthInfo>(
             refreshToken,
             authInfo,
         },
-    };
+    } as const;
 }
 
 export function updateSessionAfterRefreshToken<AuthInfo>(
-    id: BearAuth<AuthInfo>['id'],
+    session: State<AuthInfo>['session'],
     { accessToken, refreshToken, expiration, authInfo: freshAuthInfo }: RefreshingSession<AuthInfo>['data'],
-) {
-    const state = getInstance<AuthInfo>(id).state;
-
-    setAuthenticatedSession(id, {
+): AuthenticatedSession<AuthInfo> {
+    return setAuthenticatedSession({
         accessToken,
         refreshToken,
         expiration: getExpirationTimestampWithBuffer(expiration),
-        authInfo: freshAuthInfo ?? state.session.data!.authInfo,
+        authInfo: freshAuthInfo ?? session.data!.authInfo,
     });
 }
 
@@ -115,4 +114,4 @@ export type Session<AuthInfo> =
     | AuthenticatedSession<AuthInfo>
     | UnauthenticatedSession;
 
-export type SessionData<AuthInfo> = Session<AuthInfo>['data'];
+export type SessionData<AuthInfo> = Readonly<Session<AuthInfo>['data']>;

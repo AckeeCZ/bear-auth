@@ -4,7 +4,12 @@ import { BearAuthError } from '../errors.ts';
 import { getInstance } from '../instances.ts';
 import { runOnAuthStateChangedCallbacks } from '../onAuthStateChanged.ts';
 import { persistAuthSession } from '../storage.ts';
-import { setUnauthenticatedSession, type AuthenticatedSession, type Session } from '../store/session.ts';
+import {
+    setAuthenticatedSession,
+    setUnauthenticatedSession,
+    type AuthenticatedSession,
+    type Session,
+} from '../store/session.ts';
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry.ts';
 
 export type FetchAuthInfoHook<AuthInfo> = {
@@ -32,37 +37,37 @@ export function setFetchAuthInfoHook<
     },
 ): AuthHook['action'] {
     async function fetchAuthInfo(retrievedAuthSession?: AuthData<AuthInfo>, failureCount = 0) {
-        const instance = getInstance<AuthInfo>(id);
+        const { logger, store, storage, continueWhenOnline } = getInstance<AuthInfo>(id);
 
-        const { session } = instance.state;
-
-        if (!retrievedAuthSession && session.status !== 'authenticated') {
+        if (!retrievedAuthSession && store.getSession().status !== 'authenticated') {
             throw new BearAuthError('bear-auth/not-authenticated', `Can't fetch auth data. No auth sesssion active.`);
         }
 
         try {
-            const authSession = retrievedAuthSession ?? (session.data as AuthData<AuthInfo>);
+            const authSession = retrievedAuthSession ?? (store.getSession().data as AuthData<AuthInfo>);
 
-            instance.logger.debug('[fetchAuthInfo]', 'Fetching auth data...', authSession);
+            logger.debug('[fetchAuthInfo]', 'Fetching auth data...', authSession);
 
-            await instance.continueWhenOnline('fetchAuthInfo');
+            await continueWhenOnline('fetchAuthInfo');
 
             const authInfo = await handler(authSession);
 
-            session.data = {
-                ...authSession,
-                authInfo,
-            };
+            await store.setSession(() =>
+                setAuthenticatedSession({
+                    ...authSession,
+                    authInfo,
+                }),
+            );
 
             if (!retrievedAuthSession) {
                 await persistAuthSession<AuthInfo>(id);
             }
 
-            instance.logger.debug('[fetchAuthInfo]', 'Auth data has been fetched:', authInfo);
+            logger.debug('[fetchAuthInfo]', 'Auth data has been fetched:', authInfo);
 
-            return getInstance<AuthInfo>(id).state.session;
+            return store.getSession();
         } catch (error) {
-            instance.logger.error(error);
+            logger.error(error);
 
             failureCount++;
 
@@ -71,9 +76,9 @@ export function setFetchAuthInfoHook<
             } else {
                 stopTokenAutoRefresh<AuthInfo>(id);
 
-                setUnauthenticatedSession<AuthInfo>(id);
+                await store.setSession(setUnauthenticatedSession);
 
-                await instance.storage?.clear(id);
+                await storage?.clear(id);
 
                 await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
@@ -82,9 +87,7 @@ export function setFetchAuthInfoHook<
         }
     }
 
-    const instance = getInstance<AuthInfo>(id);
-
-    instance.hooks.fetchAuthInfo = fetchAuthInfo;
+    getInstance<AuthInfo>(id).hooks.fetchAuthInfo = fetchAuthInfo;
 
     async function refreshAuthInfo() {
         return await fetchAuthInfo();

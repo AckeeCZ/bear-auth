@@ -31,7 +31,7 @@
         "prettier:check": "prettier --check .",
         "prettier:format": "prettier --write . --cache --cache-strategy=content --cache-location=.cache/prettier --ignore-path .gitignore --ignore-unknown --log-level=warn",
         "test": "vitest run --typecheck",
-        "test:dev": "vitest --ui --typecheck",
+        "test:dev": "vitest dev --typecheck",
         "test:coverage": "vitest run --coverage --typecheck",
         "e2e": "playwright test --reporter=line",
         "e2e:dev": "playwright test --ui",

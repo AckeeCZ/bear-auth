@@ -20,19 +20,23 @@ export async function destroy<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
 
     stopTokenAutoRefresh<AuthInfo>(id);
 
-    instance.logger.debug('[destroy]', 'Destroying auth session.');
+    const { logger, authSessionPropagation, hooks, storage, store } = instance;
 
-    instance.authSessionPropagation?.cleanUp();
+    logger.debug('[destroy]', 'Destroying auth session.');
 
-    if (instance.hooks.logout) {
-        await instance.hooks.logout();
+    authSessionPropagation?.cleanUp();
+
+    if (hooks.logout) {
+        await hooks.logout();
     } else {
-        await instance.storage?.clear(id);
+        await storage?.clear(id);
 
-        setUnauthenticatedSession(id);
+        await store.setSession(setUnauthenticatedSession);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
     }
+
+    instance.onAuthStateChanged.callbacks.clear();
 
     const keys = Object.keys(instance) as (keyof BearAuth<AuthInfo>)[];
 

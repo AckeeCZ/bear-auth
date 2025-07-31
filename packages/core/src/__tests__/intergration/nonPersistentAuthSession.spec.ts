@@ -38,7 +38,7 @@ describe('Non-Persistent Authentication Session Flows', () => {
             },
         } satisfies typeof result);
 
-        expect(instances.get(id)?.state.session).toEqual({
+        expect(instances.get(id)?.store.getSession()).toEqual({
             status: 'authenticated',
             data: {
                 accessToken,
@@ -62,7 +62,7 @@ describe('Non-Persistent Authentication Session Flows', () => {
             expiration: null,
         });
 
-        expect(instances.get(id)?.state.session).toEqual({
+        expect(instances.get(id)?.store.getSession()).toEqual({
             status: 'unauthenticated',
             data: null,
         } satisfies Session<unknown>);
@@ -206,7 +206,7 @@ describe('Non-Persistent Authentication Session Flows', () => {
             }),
         ).rejects.toThrowError(BearAuthError<'bear-auth/invalid-expires-in'>);
 
-        expect(instances.get(id)?.state.session).toEqual({
+        expect(instances.get(id)?.store.getSession()).toEqual({
             status: 'retrieving',
             data: null,
         } satisfies Session<unknown>);

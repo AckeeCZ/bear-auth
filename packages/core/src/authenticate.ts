@@ -42,33 +42,35 @@ export async function authenticate<AuthInfo>(
     id: BearAuth<AuthInfo>['id'],
     { accessToken, expiration = null, refreshToken = null, authInfo = null }: AuthenticateProps<AuthInfo>,
 ) {
-    const instance = getInstance<AuthInfo>(id);
+    const { hooks, store } = getInstance<AuthInfo>(id);
 
     const refreshTokenHookRequired = Boolean(refreshToken);
     const fetchAuthInfoHookRequired = Boolean(authInfo);
 
-    instance.flags.autoRefreshAccessTokenEnabled = Boolean(refreshTokenHookRequired && expiration);
+    getInstance<AuthInfo>(id).flags.autoRefreshAccessTokenEnabled = Boolean(refreshTokenHookRequired && expiration);
 
-    if (refreshTokenHookRequired && !instance.hooks.refreshToken) {
+    if (refreshTokenHookRequired && !hooks.refreshToken) {
         throw new BearAuthError(
             'bear-auth/unset-hook',
             `The 'refreshToken' property provided but the refresh token hook has not been set yet. Call setRefreshTokenHook(...) first.`,
         );
     }
 
-    if (fetchAuthInfoHookRequired && !instance.hooks.fetchAuthInfo) {
+    if (fetchAuthInfoHookRequired && !hooks.fetchAuthInfo) {
         throw new BearAuthError(
             'bear-auth/unset-hook',
             `The 'authInfo' property provided but the fetch authenticated data hook has not been set yet. Call setFetchAuthInfo(...) first.`,
         );
     }
 
-    setAuthenticatedSession<AuthInfo>(id, {
-        accessToken,
-        expiration: getExpirationTimestampWithBuffer(expiration),
-        refreshToken,
-        authInfo,
-    });
+    await store.setSession(() =>
+        setAuthenticatedSession({
+            accessToken,
+            expiration: getExpirationTimestampWithBuffer(expiration),
+            refreshToken,
+            authInfo,
+        }),
+    );
 
     await persistAuthSession<AuthInfo>(id);
 
@@ -76,5 +78,5 @@ export async function authenticate<AuthInfo>(
 
     await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
-    return getInstance<AuthInfo>(id).state.session;
+    return store.getSession();
 }

@@ -6,10 +6,10 @@ export function isExpired(expiration: string | undefined | null) {
 }
 
 export function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(id);
+    const { flags, logger, hooks, store } = getInstance<AuthInfo>(id);
 
-    if (!instance.flags.autoRefreshAccessTokenEnabled) {
-        instance.logger.debug(
+    if (!flags.autoRefreshAccessTokenEnabled) {
+        logger.debug(
             '[startTokenAutoRefresh]',
             `Auto token refresh is disabled. 'authenticate' method must return a 'expiration' and 'refreshToken'.`,
         );
@@ -18,28 +18,27 @@ export function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
 
     stopTokenAutoRefresh(id);
 
-    const { expiration } = instance.state.session.data!;
+    const { expiration } = store.getSession().data!;
 
     const expiresIn = isExpired(expiration) ? 0 : Date.parse(expiration!) - Date.now();
 
-    instance.logger.debug('[startTokenAutoRefresh]', `Token will be refreshed in ${expiresIn / 1000}s`);
+    logger.debug('[startTokenAutoRefresh]', `Token will be refreshed in ${expiresIn / 1000}s`);
 
-    const refreshTokenTimeoutId = globalThis.setTimeout(() => {
-        instance.hooks.refreshToken!();
+    getInstance<AuthInfo>(id).refreshTokenTimeoutId = globalThis.setTimeout(() => {
+        hooks.refreshToken!();
     }, expiresIn);
-
-    instance.refreshTokenTimeoutId = refreshTokenTimeoutId;
 }
 
 export function stopTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(id);
+    const { refreshTokenTimeoutId, flags, logger } = getInstance<AuthInfo>(id);
 
-    if (instance.refreshTokenTimeoutId === null || !instance.flags.autoRefreshAccessTokenEnabled) {
+    if (refreshTokenTimeoutId === null || !flags.autoRefreshAccessTokenEnabled) {
         return;
     }
 
-    instance.logger.debug('[stopTokenAutoRefresh]', 'Stopping auto token refresh...');
+    logger.debug('[stopTokenAutoRefresh]', 'Stopping auto token refresh...');
 
-    clearTimeout(instance.refreshTokenTimeoutId);
-    instance.refreshTokenTimeoutId = null;
+    clearTimeout(refreshTokenTimeoutId);
+
+    getInstance<AuthInfo>(id).refreshTokenTimeoutId = null;
 }

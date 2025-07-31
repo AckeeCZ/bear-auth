@@ -25,63 +25,67 @@ import {
  * @returns - Session object
  */
 export async function retrieveAuthSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(id);
+    const { store, storage, continueWhenOnline, logger, hooks } = getInstance<AuthInfo>(id);
 
-    instance.logger.debug('[retrieveAuthSession]', 'Retrieving auth session...');
+    logger.debug('[retrieveAuthSession]', 'Retrieving auth session...');
 
-    await instance.continueWhenOnline('retrieveAuthSession');
+    await continueWhenOnline('retrieveAuthSession');
 
     await clearStorageOnStorageVersionUpdate(id);
 
-    const persistedSession = await instance.storage?.get(id);
+    const persistedSession = await storage?.get(id);
 
-    instance.logger.debug('[retrieveAuthSession]', { persistedSession });
+    logger.debug('[retrieveAuthSession]', { persistedSession });
 
     const unknownSession = persistedSession?.data;
 
     // The session might not have a refresh token but it might be valid.
     if (!unknownSession || !unknownSession.expiration) {
-        await instance.storage?.clear(id);
+        await storage?.clear(id);
 
-        setUnauthenticatedSession(id);
+        await store.setSession(setUnauthenticatedSession);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
-        instance.logger.debug('[retrieveAuthSession]', 'No auth session retrieved.');
+        logger.debug('[retrieveAuthSession]', 'No auth session retrieved.');
 
-        return getInstance<AuthInfo>(id).state.session;
+        return store.getSession();
     }
 
     try {
         const authSession = unknownSession;
 
-        instance.flags.autoRefreshAccessTokenEnabled = Boolean(authSession.expiration && authSession.refreshToken);
+        getInstance(id).flags.autoRefreshAccessTokenEnabled = Boolean(
+            authSession.expiration && authSession.refreshToken,
+        );
 
-        setAuthenticatedSession(id, authSession);
+        await store.setSession(() => setAuthenticatedSession(authSession));
 
-        if (isExpired(authSession.expiration)) {
-            if (instance.hooks.refreshToken) {
-                await instance.hooks.refreshToken(authSession as RefreshingSession<AuthInfo>['data']);
+        const session = store.getSession();
+
+        if (isExpired(session.data?.expiration)) {
+            if (hooks.refreshToken) {
+                await hooks.refreshToken(session.data as RefreshingSession<AuthInfo>['data']);
             }
         } else {
             startTokenAutoRefresh(id);
         }
 
-        if (authSession.authInfo && instance.hooks.fetchAuthInfo) {
-            const session = getInstance<AuthInfo>(id).state.session.data! as AuthenticatedSession<AuthInfo>['data'];
+        if (authSession.authInfo && hooks.fetchAuthInfo) {
+            const session = store.getSession().data! as AuthenticatedSession<AuthInfo>['data'];
 
-            await instance.hooks.fetchAuthInfo?.(session);
+            await hooks.fetchAuthInfo?.(session);
         }
 
         await persistAuthSession<AuthInfo>(id);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
-        instance.logger.debug('[retrieveAuthSession]', 'Auth session successfully retrieved.');
+        logger.debug('[retrieveAuthSession]', 'Auth session successfully retrieved.');
 
-        return getInstance<AuthInfo>(id).state.session;
+        return store.getSession();
     } catch (error) {
-        instance.logger.error(error);
+        logger.error(error);
 
         if (isBearAuthError(error)) {
             throw error;

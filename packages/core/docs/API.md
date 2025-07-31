@@ -167,8 +167,9 @@ await destroy('myInstance');
 ```typescript
 import { setContinueWhenOnline } from '@bear-auth/core';
 
-setContinueWhenOnline('myInstance', async () => {
-    // Logic to continue when online
+setContinueWhenOnline('myInstance', async taskName => {
+    // Set custom code to tell the Bear Auth when the app is online and can proceed with given task.
+    // Optionally, you can decide based on the `taskName` ('logout', 'refreshToken', etc.)
 });
 ```
 

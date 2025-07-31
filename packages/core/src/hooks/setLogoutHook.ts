@@ -3,7 +3,12 @@ import { type BearAuth } from '../create.ts';
 import { BearAuthError } from '../errors.ts';
 import { getInstance } from '../instances.ts';
 import { runOnAuthStateChangedCallbacks } from '../onAuthStateChanged.ts';
-import { setSigningOutSession, setUnauthenticatedSession, type AuthenticatedSession } from '../store/session.ts';
+import {
+    setSigningOutSession,
+    setUnauthenticatedSession,
+    type AuthenticatedSession,
+    type SigningOutSession,
+} from '../store/session.ts';
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry.ts';
 
 type AuthData<AuthInfo> = AuthenticatedSession<AuthInfo>['data'];
@@ -28,30 +33,28 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
     },
 ): AuthHook['action'] {
     async function logout(failureCount = 0) {
-        const instance = getInstance<AuthInfo>(id);
+        const { continueWhenOnline, logger, store, storage } = getInstance<AuthInfo>(id);
 
-        const { session } = instance.state;
-
-        if (session.status !== 'authenticated') {
+        if (store.getSession().status !== 'authenticated') {
             return;
         }
 
-        setSigningOutSession<AuthInfo>(id);
+        await store.setSession(setSigningOutSession);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
         try {
-            instance.logger.debug('[logout]', 'Signing-out...');
+            logger.debug('[logout]', 'Signing-out...');
 
             stopTokenAutoRefresh<AuthInfo>(id);
 
-            await instance.continueWhenOnline('logout');
+            await continueWhenOnline('logout');
 
-            await handler(session.data);
+            await handler(store.getSession().data as SigningOutSession<AuthInfo>['data']);
 
-            instance.logger.debug('[logout]', 'Signed out.');
+            logger.debug('[logout]', 'Signed out.');
         } catch (error) {
-            instance.logger.error(error);
+            logger.error(error);
 
             failureCount++;
 
@@ -61,9 +64,9 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
                 throw new BearAuthError('bear-auth/logout-failed', 'Failed to logout.', error);
             }
         } finally {
-            setUnauthenticatedSession<AuthInfo>(id);
+            await store.setSession(setUnauthenticatedSession);
 
-            await instance.storage?.clear(id);
+            await storage?.clear(id);
 
             await runOnAuthStateChangedCallbacks<AuthInfo>(id);
         }

@@ -42,10 +42,10 @@ export function createAuthSessionBroadcastChannel(id: BearAuth<unknown>['id']) {
         if (type !== 'AUTH_SESSION_CHANGE' || event.data.clientId === clientId) {
             return;
         }
-        const { logger } = getInstance(id);
+        const { logger, store } = getInstance(id);
 
         try {
-            const instanceSession = getInstance(id).state.session;
+            const instanceSession = store.getSession();
 
             const sourceSessionHash = await getFingerprint(instanceSession);
             const targetSessionHash = await getFingerprint(session);

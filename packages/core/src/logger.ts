@@ -35,15 +35,15 @@ export type Logger = ReturnType<typeof createDefaultLogger>;
  * @param id - return value of `create` method
  */
 export function setLogLevel(id: BearAuth<unknown>['id'], level: LogLevel) {
-    const instance = getInstance(id);
+    const { flags, logger } = getInstance(id);
 
-    if (instance.flags.customLogger) {
+    if (flags.customLogger) {
         throw new BearAuthError('bear-auth/log-level', 'Cannot set log level when using custom logger.');
     }
 
-    instance.loglevel = level;
+    getInstance(id).loglevel = level;
 
-    instance.logger.debug('[setLogLevel]', 'Setting log level', level);
+    logger.debug('[setLogLevel]', 'Setting log level', level);
 
     getLogger(id).setLevel(level);
 }

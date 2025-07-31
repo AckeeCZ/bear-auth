@@ -28,13 +28,13 @@ export function updateAuthSessionOnTabChange(id: BearAuth<unknown>['id']) {
             return;
         }
 
-        const { logger, storage, state } = getInstance(id);
+        const { logger, storage, store } = getInstance(id);
 
         try {
             const persistedData = await storage!.get(id);
 
             const persistedSessionHash = await getFingerprint(persistedData?.data);
-            const currentSessionHash = await getFingerprint(state.session.data);
+            const currentSessionHash = await getFingerprint(store.getSession().data);
 
             if (persistedSessionHash === currentSessionHash) {
                 logger.debug(
@@ -49,7 +49,7 @@ export function updateAuthSessionOnTabChange(id: BearAuth<unknown>['id']) {
                 `Persisted session differs from current session. Retrieving session...`,
                 {
                     persistedSession: { value: persistedData?.data, hash: persistedSessionHash },
-                    currentSession: { value: state.session, hash: currentSessionHash },
+                    currentSession: { value: store.getSession().data, hash: currentSessionHash },
                 },
             );
 

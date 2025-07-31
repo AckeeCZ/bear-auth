@@ -30,21 +30,21 @@ export async function getAccessToken(
     id: BearAuth<unknown>['id'],
     { forceRefresh = false }: { forceRefresh?: boolean } = {},
 ) {
-    const { logger, state, hooks } = getInstance(id);
+    const { logger, store, hooks } = getInstance(id);
 
-    if (state.session.status === 'signing-out') {
+    if (store.getSession().status === 'signing-out') {
         logger.debug('[getAccessToken]', 'Just signing-out. Access token is not available anymore.');
         return null;
     }
 
-    if (state.session.status === 'refreshing' || state.session.status === 'retrieving') {
-        logger.debug('[getAccessToken]', `Waiting for '${state.session.status}' status to resolve...`);
+    if (store.getSession().status === 'refreshing' || store.getSession().status === 'retrieving') {
+        logger.debug('[getAccessToken]', `Waiting for '${store.getSession().status}' status to resolve...`);
         await onResolveAuthState(id);
     }
 
-    const { status, data } = getInstance(id).state.session;
+    const { status, data } = store.getSession();
 
-    logger.debug('[getAccessToken]', 'Session status:', state.session);
+    logger.debug('[getAccessToken]', 'Session status:', store.getSession());
 
     if (status === 'unauthenticated') {
         return null;
@@ -72,10 +72,10 @@ export async function getAccessToken(
 
             await hooks.refreshToken();
 
-            logger.debug('[getAccessToken]', 'Access token refreshed.', getInstance(id).state.session);
+            logger.debug('[getAccessToken]', 'Access token refreshed.', store.getSession());
         }
 
-        const accessToken = getInstance(id).state.session.data?.accessToken;
+        const accessToken = store.getSession().data?.accessToken ?? null;
 
         logger.debug('[getAccessToken]', 'Returning access token:', accessToken);
 

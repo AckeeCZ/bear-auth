@@ -69,20 +69,20 @@ export async function clearStorageOnStorageVersionUpdate<AuthInfo>(id: BearAuth<
  * Attempt to use the storage to persist the auth session from `instance.state`.
  */
 export async function persistAuthSession<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const instance = getInstance<AuthInfo>(id);
+    const { storage, store, storageVersion } = getInstance<AuthInfo>(id);
 
-    if (!instance.storage) {
+    if (!storage) {
         return false;
     }
 
-    const session = instance.state.session;
+    const session = store.getSession();
 
     if (session.status !== 'authenticated') {
         throw new BearAuthError('bear-auth/not-authenticated', `Can't persist auth session. No auth sesssion active.`);
     }
 
-    await instance.storage.set(id, {
-        version: instance.storage.version + instance.storageVersion,
+    await storage.set(id, {
+        version: storage.version + storageVersion,
         data: session.data,
     });
 

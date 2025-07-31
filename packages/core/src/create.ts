@@ -9,7 +9,7 @@ import { defaultContinueWhenOnline } from './network.ts';
 import type { OnAuthStateChangedCallback } from './onAuthStateChanged.ts';
 import type { StorageSchema } from './storage.ts';
 import type { AuthenticatedSession, RefreshingSession, Session } from './store/session.ts';
-import { createInitialState, type State } from './store/state.ts';
+import { createStore } from './store/store.ts';
 
 export type BearAuth<AuthInfo> = {
     id: string;
@@ -26,7 +26,7 @@ export type BearAuth<AuthInfo> = {
         fetchAuthInfo: null | ((authSession?: AuthenticatedSession<AuthInfo>['data']) => Promise<Session<AuthInfo>>);
         logout: null | (() => Promise<void>);
     };
-    state: State<AuthInfo>;
+    store: ReturnType<typeof createStore<AuthInfo>>;
     flags: {
         autoRefreshAccessTokenEnabled: boolean;
         customLogger: boolean;
@@ -39,7 +39,10 @@ export type BearAuth<AuthInfo> = {
      */
     storageVersion: 1;
 
-    onAuthStateChanged: Set<OnAuthStateChangedCallback<AuthInfo>>;
+    onAuthStateChanged: {
+        prevSession: Session<AuthInfo> | null;
+        callbacks: Set<OnAuthStateChangedCallback<AuthInfo>>;
+    };
 
     refreshTokenTimeoutId: null | (number | NodeJS.Timeout);
 
@@ -88,7 +91,7 @@ export function create({ id = 'bear_auth' }: CreateProps = {}) {
             logout: null,
         },
 
-        state: createInitialState<unknown>(),
+        store: createStore<unknown>(),
 
         flags: {
             autoRefreshAccessTokenEnabled: false,
@@ -99,7 +102,10 @@ export function create({ id = 'bear_auth' }: CreateProps = {}) {
 
         storageVersion: 1,
 
-        onAuthStateChanged: new Set<OnAuthStateChangedCallback<unknown>>(),
+        onAuthStateChanged: {
+            prevSession: null,
+            callbacks: new Set<OnAuthStateChangedCallback<unknown>>(),
+        },
 
         refreshTokenTimeoutId: null,
 
