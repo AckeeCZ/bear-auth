@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 3.0.8
+
+### Patch Changes
+
+- e0e02b1: Bugs fixing and minor improvements.
+- Updated dependencies [e0e02b1]
+    - @bear-auth/core@3.0.8
+
 ## 3.0.7
 
 ### Patch Changes
