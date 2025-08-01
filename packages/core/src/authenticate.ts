@@ -6,6 +6,7 @@ import { getInstance } from './instances.ts';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged.ts';
 import { persistAuthSession } from './storage.ts';
 import { setAuthenticatedSession } from './store/session.ts';
+import { registerTask } from './tasks.ts';
 
 export type AuthenticateProps<AuthInfo> = {
     /**
@@ -29,16 +30,7 @@ export type AuthenticateProps<AuthInfo> = {
     refreshToken?: string | null;
 };
 
-/**
- * Once user signs-in / signs-up, this method is called to pass the authentication data to the library.
- * - Only `accessToken` is required to be returned.
- * - `expiration` and `refreshToken` are optional, but if provided, the library will automatically refresh the access token when it expires.
- * - Don't forget to `setRefreshTokenHook` before calling this method if you want to use the refresh token.
- * - Similarly, don't forget to `setFetchAuthInfo` before calling this method if you want to use the `authInfo` property.
- * @param id - return value of `create` method
- * @param props - authentication data
- */
-export async function authenticate<AuthInfo>(
+export async function authenticateInner<AuthInfo>(
     id: BearAuth<AuthInfo>['id'],
     { accessToken, expiration = null, refreshToken = null, authInfo = null }: AuthenticateProps<AuthInfo>,
 ) {
@@ -79,4 +71,21 @@ export async function authenticate<AuthInfo>(
     await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
     return store.getSession();
+}
+
+/**
+ * Once user signs-in / signs-up, this method is called to pass the authentication data to the library.
+ * - Only `accessToken` is required to be returned.
+ * - `expiration` and `refreshToken` are optional, but if provided, the library will automatically refresh the access token when it expires.
+ * - Don't forget to `setRefreshTokenHook` before calling this method if you want to use the refresh token.
+ * - Similarly, don't forget to `setFetchAuthInfo` before calling this method if you want to use the `authInfo` property.
+ * @param id - return value of `create` method
+ * @param props - authentication data
+ */
+export function authenticate<AuthInfo>(id: BearAuth<AuthInfo>['id'], props: AuthenticateProps<AuthInfo>) {
+    return registerTask<AuthInfo, 'authenticate', typeof authenticateInner<AuthInfo>>(
+        id,
+        'authenticate',
+        authenticateInner,
+    )(id, props);
 }

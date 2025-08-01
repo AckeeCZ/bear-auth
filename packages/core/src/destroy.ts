@@ -3,6 +3,7 @@ import { type BearAuth } from './create.ts';
 import { getInstance, instances } from './instances.ts';
 import { runOnAuthStateChangedCallbacks } from './onAuthStateChanged.ts';
 import { setUnauthenticatedSession } from './store/session.ts';
+import { allTasksSettled, deleteInstanceTasks } from './tasks.ts';
 
 /**
  * Destroys the BearAuth instance.
@@ -37,6 +38,9 @@ export async function destroy<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
     }
 
     instance.onAuthStateChanged.callbacks.clear();
+
+    await allTasksSettled(id);
+    deleteInstanceTasks(id);
 
     const keys = Object.keys(instance) as (keyof BearAuth<AuthInfo>)[];
 

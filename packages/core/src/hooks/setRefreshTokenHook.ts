@@ -11,6 +11,7 @@ import {
     type RefreshingSession,
     type Session,
 } from '../store/session.ts';
+import { registerTask } from '../tasks.ts';
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry.ts';
 
 type AuthData<AuthInfo> = RefreshingSession<AuthInfo>['data'];
@@ -65,9 +66,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             await store.setSession(session => updateSessionAfterRefreshToken(session, result));
 
-            if (!retrievedAuthSession) {
-                await persistAuthSession<AuthInfo>(id);
-            }
+            await persistAuthSession<AuthInfo>(id);
 
             startTokenAutoRefresh<AuthInfo>(id);
 
@@ -95,16 +94,13 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
         }
     }
 
-    const instance = getInstance<AuthInfo>(id);
-
-    instance.hooks.refreshToken = refreshToken;
+    getInstance<AuthInfo>(id).hooks.refreshToken = refreshToken;
 
     const triggerRefreshToken: AuthHook['action'] = async options => {
         const { store } = getInstance<AuthInfo>(id);
 
         const session = store.getSession();
 
-        // FIXME: if status is refreshing, return promise of currently refreshing task
         if (options?.forceRefresh || (isExpired(session.data?.expiration) && session.status !== 'refreshing')) {
             return await refreshToken();
         }
@@ -112,5 +108,9 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
         return store.getSession();
     };
 
-    return triggerRefreshToken;
+    return registerTask<AuthInfo, 'triggerRefreshToken', AuthHook['action']>(
+        id,
+        'triggerRefreshToken',
+        triggerRefreshToken,
+    );
 }

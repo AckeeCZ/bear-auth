@@ -10,6 +10,7 @@ import {
     type AuthenticatedSession,
     type Session,
 } from '../store/session.ts';
+import { registerTask } from '../tasks.ts';
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry.ts';
 
 export type FetchAuthInfoHook<AuthInfo> = {
@@ -59,9 +60,7 @@ export function setFetchAuthInfoHook<
                 }),
             );
 
-            if (!retrievedAuthSession) {
-                await persistAuthSession<AuthInfo>(id);
-            }
+            await persistAuthSession<AuthInfo>(id);
 
             logger.debug('[fetchAuthInfo]', 'Auth data has been fetched:', authInfo);
 
@@ -93,5 +92,5 @@ export function setFetchAuthInfoHook<
         return await fetchAuthInfo();
     }
 
-    return refreshAuthInfo;
+    return registerTask<AuthInfo, 'fetchAuthInfo', AuthHook['action']>(id, 'fetchAuthInfo', refreshAuthInfo);
 }

@@ -199,12 +199,12 @@ describe('Non-Persistent Authentication Session Flows', () => {
         const accessToken = 'test-access-token';
         const expiration = new Date(Date.now() - 3600 * 1000).toISOString(); // 1 hour in the past
 
-        await expect(
+        await expect(() =>
             authenticate(id, {
                 accessToken,
                 expiration,
             }),
-        ).rejects.toThrowError(BearAuthError<'bear-auth/invalid-expires-in'>);
+        ).rejects.toThrow(BearAuthError<'bear-auth/invalid-expires-in'>);
 
         expect(instances.get(id)?.store.getSession()).toEqual({
             status: 'retrieving',

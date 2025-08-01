@@ -9,6 +9,7 @@ import {
     type AuthenticatedSession,
     type SigningOutSession,
 } from '../store/session.ts';
+import { registerTask } from '../tasks.ts';
 import { MAX_RETRY_COUNT, resolveRetry, type Retry } from './utils/retry.ts';
 
 type AuthData<AuthInfo> = AuthenticatedSession<AuthInfo>['data'];
@@ -72,9 +73,7 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
         }
     }
 
-    const instance = getInstance<AuthInfo>(id);
+    getInstance<AuthInfo>(id).hooks.logout = logout;
 
-    instance.hooks.logout = logout;
-
-    return logout;
+    return registerTask<AuthInfo, 'logout', AuthHook['action']>(id, 'logout', logout);
 }

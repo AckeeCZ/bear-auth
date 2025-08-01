@@ -2,6 +2,7 @@ import { isExpired } from './autoRefreshToken.ts';
 import { type BearAuth } from './create.ts';
 import { getInstance } from './instances.ts';
 import { onAuthStateChanged } from './onAuthStateChanged.ts';
+import { registerTask } from './tasks.ts';
 
 async function onResolveAuthState(id: BearAuth<unknown>['id']) {
     let unsubscribe = () => {};
@@ -17,18 +18,13 @@ async function onResolveAuthState(id: BearAuth<unknown>['id']) {
     unsubscribe();
 }
 
-/**
- * Get the access token:
- * 1. If session is `refreshing` or `retrieving`, wait for it to resolve.
- * 2. If session is `unauthenticated` or 'signing-out`, return null.
- * 3. If session is `authenticated`, check if the token is expired.
- * 4. If token is expired and refresh token is available, refresh the token.
- * 5. Return the access token.
- * @param id - return value of `create` method
- */
-export async function getAccessToken(
+type GetAccessTokenProps = {
+    forceRefresh?: boolean;
+};
+
+export async function getAccessTokenInner(
     id: BearAuth<unknown>['id'],
-    { forceRefresh = false }: { forceRefresh?: boolean } = {},
+    { forceRefresh = false }: GetAccessTokenProps = {},
 ) {
     const { logger, store, hooks } = getInstance(id);
 
@@ -85,4 +81,21 @@ export async function getAccessToken(
     logger.debug('[getAccessToken]', 'Session status is not recognized. Returning null.');
 
     return null;
+}
+
+/**
+ * Get the access token:
+ * 1. If session is `refreshing` or `retrieving`, wait for it to resolve.
+ * 2. If session is `unauthenticated` or 'signing-out`, return null.
+ * 3. If session is `authenticated`, check if the token is expired.
+ * 4. If token is expired and refresh token is available, refresh the token.
+ * 5. Return the access token.
+ * @param id - return value of `create` method
+ */
+export function getAccessToken(id: BearAuth<unknown>['id'], props?: GetAccessTokenProps) {
+    return registerTask<unknown, 'getAccessToken', typeof getAccessTokenInner>(
+        id,
+        'getAccessToken',
+        getAccessTokenInner,
+    )(id, props);
 }
