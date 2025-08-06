@@ -1,5 +1,13 @@
 # @bear-auth/react
 
+## 3.0.10
+
+### Patch Changes
+
+- 3e24f1c: Extend setAlarmManager.
+- Updated dependencies [3e24f1c]
+    - @bear-auth/core@3.0.10
+
 ## 3.0.9
 
 ### Patch Changes

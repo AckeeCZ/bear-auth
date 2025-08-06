@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.10
+
+### Patch Changes
+
+- 3e24f1c: Extend setAlarmManager.
+
 ## 3.0.9
 
 ### Patch Changes
