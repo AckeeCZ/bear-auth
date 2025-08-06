@@ -57,7 +57,7 @@ export async function retrieveAuthSessionInner<AuthInfo>(id: BearAuth<AuthInfo>[
                 await hooks.refreshToken(session.data as RefreshingSession<AuthInfo>['data']);
             }
         } else {
-            startTokenAutoRefresh(id);
+            await startTokenAutoRefresh(id);
         }
 
         if (authSession.authInfo && hooks.fetchAuthInfo) {

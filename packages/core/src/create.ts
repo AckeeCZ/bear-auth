@@ -1,3 +1,4 @@
+import { createDefaultAlarmManager, type AlarmManager } from './alarmManager.ts';
 import {
     setDefaultAuthSessionPropagation,
     type AuthSessionPropagationType,
@@ -44,7 +45,7 @@ export type BearAuth<AuthInfo> = {
         callbacks: Set<OnAuthStateChangedCallback<AuthInfo>>;
     };
 
-    refreshTokenTimeoutId: null | (number | NodeJS.Timeout);
+    refreshTokenTimeoutId: null | number | string;
 
     /**
      * @param taskName - The name of the task that is being executed.
@@ -58,6 +59,8 @@ export type BearAuth<AuthInfo> = {
         type: Exclude<AuthSessionPropagationType, 'none'>;
         cleanUp: () => void;
     } | null;
+
+    alarmManager: AlarmManager;
 };
 
 export interface CreateProps {
@@ -112,6 +115,8 @@ export function create({ id = 'bear_auth' }: CreateProps = {}) {
         continueWhenOnline: defaultContinueWhenOnline,
 
         authSessionPropagation: null,
+
+        alarmManager: createDefaultAlarmManager(),
     } as const satisfies BearAuth<unknown>;
 
     instances.set(id, instance);

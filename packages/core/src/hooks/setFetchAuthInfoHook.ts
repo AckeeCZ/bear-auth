@@ -73,7 +73,7 @@ export function setFetchAuthInfoHook<
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
                 return fetchAuthInfo(retrievedAuthSession, failureCount);
             } else {
-                stopTokenAutoRefresh<AuthInfo>(id);
+                await stopTokenAutoRefresh<AuthInfo>(id);
 
                 await store.setSession(setUnauthenticatedSession);
 

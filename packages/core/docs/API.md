@@ -235,6 +235,23 @@ import { setAuthSessionPropagation } from '@bear-auth/core';
 setAuthSessionPropagation('myInstanceId', 'sync');
 ```
 
+### `setAlarmManager`
+
+Optionally, you can override the defaults `setTimeout` / `clearTimeout` methods to implement a custom timer, such as:
+
+```ts
+import { setAlarmManager } from '@bear-auth/core';
+
+setAlarmManager('myInstanceId', {
+    async createAlarm(callback, delay) {
+        // create alarm, return alarm ID
+    },
+    async clearAlarm(id) {
+        // clear alarm
+    },
+});
+```
+
 ---
 
 ## Runtime methods

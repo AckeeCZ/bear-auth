@@ -49,7 +49,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
-        stopTokenAutoRefresh<AuthInfo>(id);
+        await stopTokenAutoRefresh<AuthInfo>(id);
 
         try {
             logger.debug('[refreshToken]', 'Refreshing access token...');
@@ -68,7 +68,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             await persistAuthSession<AuthInfo>(id);
 
-            startTokenAutoRefresh<AuthInfo>(id);
+            await startTokenAutoRefresh<AuthInfo>(id);
 
             logger.debug('[refreshToken]', 'Access token has been successfully refreshed.');
 

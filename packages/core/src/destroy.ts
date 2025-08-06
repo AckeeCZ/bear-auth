@@ -19,7 +19,7 @@ export async function destroy<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
         return;
     }
 
-    stopTokenAutoRefresh<AuthInfo>(id);
+    await stopTokenAutoRefresh<AuthInfo>(id);
 
     const { logger, authSessionPropagation, hooks, storage, store } = instance;
 
