@@ -246,7 +246,7 @@ setAlarmManager('myInstanceId', {
     async createAlarm(callback, delay) {
         // create alarm, return alarm ID
     },
-    async clearAlarm(id) {
+    async clearAlarm(id, callback) {
         // clear alarm
     },
 });

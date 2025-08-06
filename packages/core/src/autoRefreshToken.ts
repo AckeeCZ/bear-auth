@@ -24,21 +24,26 @@ export async function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id
 
     logger.debug('[startTokenAutoRefresh]', `Token will be refreshed in ${expiresIn / 1000}s`);
 
-    getInstance<AuthInfo>(id).refreshTokenTimeoutId = await alarmManager.createAlarm(async () => {
+    async function onAlarm() {
         await hooks.refreshToken!();
-    }, expiresIn);
+    }
+
+    getInstance<AuthInfo>(id).refreshTokenTimeout = {
+        id: await alarmManager.createAlarm(onAlarm, expiresIn),
+        callback: onAlarm,
+    };
 }
 
 export async function stopTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const { refreshTokenTimeoutId, flags, logger, alarmManager } = getInstance<AuthInfo>(id);
+    const { refreshTokenTimeout, flags, logger, alarmManager } = getInstance<AuthInfo>(id);
 
-    if (refreshTokenTimeoutId === null || !flags.autoRefreshAccessTokenEnabled) {
+    if (refreshTokenTimeout === null || !flags.autoRefreshAccessTokenEnabled) {
         return;
     }
 
     logger.debug('[stopTokenAutoRefresh]', 'Stopping auto token refresh...');
 
-    await alarmManager.clearAlarm(refreshTokenTimeoutId);
+    await alarmManager.clearAlarm(refreshTokenTimeout.id, refreshTokenTimeout.callback);
 
-    getInstance<AuthInfo>(id).refreshTokenTimeoutId = null;
+    getInstance<AuthInfo>(id).refreshTokenTimeout = null;
 }
