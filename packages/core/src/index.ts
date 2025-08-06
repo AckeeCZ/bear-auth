@@ -1,3 +1,4 @@
+export { setAlarmManager, type AlarmId, type AlarmManager } from './alarmManager.ts';
 export * from './authenticate.ts';
 export {
     setAuthSessionPropagation,

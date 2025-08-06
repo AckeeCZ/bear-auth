@@ -47,7 +47,7 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
         try {
             logger.debug('[logout]', 'Signing-out...');
 
-            stopTokenAutoRefresh<AuthInfo>(id);
+            await stopTokenAutoRefresh<AuthInfo>(id);
 
             await continueWhenOnline('logout');
 

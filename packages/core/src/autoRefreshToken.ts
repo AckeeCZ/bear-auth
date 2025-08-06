@@ -5,8 +5,8 @@ export function isExpired(expiration: string | undefined | null) {
     return !expiration || Date.now() >= Date.parse(expiration);
 }
 
-export function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const { flags, logger, hooks, store } = getInstance<AuthInfo>(id);
+export async function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const { flags, logger, hooks, store, alarmManager } = getInstance<AuthInfo>(id);
 
     if (!flags.autoRefreshAccessTokenEnabled) {
         logger.debug(
@@ -16,7 +16,7 @@ export function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
         return;
     }
 
-    stopTokenAutoRefresh(id);
+    await stopTokenAutoRefresh(id);
 
     const { expiration } = store.getSession().data!;
 
@@ -24,13 +24,13 @@ export function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
 
     logger.debug('[startTokenAutoRefresh]', `Token will be refreshed in ${expiresIn / 1000}s`);
 
-    getInstance<AuthInfo>(id).refreshTokenTimeoutId = globalThis.setTimeout(() => {
-        hooks.refreshToken!();
+    getInstance<AuthInfo>(id).refreshTokenTimeoutId = await alarmManager.createAlarm(async () => {
+        await hooks.refreshToken!();
     }, expiresIn);
 }
 
-export function stopTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
-    const { refreshTokenTimeoutId, flags, logger } = getInstance<AuthInfo>(id);
+export async function stopTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
+    const { refreshTokenTimeoutId, flags, logger, alarmManager } = getInstance<AuthInfo>(id);
 
     if (refreshTokenTimeoutId === null || !flags.autoRefreshAccessTokenEnabled) {
         return;
@@ -38,7 +38,7 @@ export function stopTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
 
     logger.debug('[stopTokenAutoRefresh]', 'Stopping auto token refresh...');
 
-    clearTimeout(refreshTokenTimeoutId);
+    await alarmManager.clearAlarm(refreshTokenTimeoutId);
 
     getInstance<AuthInfo>(id).refreshTokenTimeoutId = null;
 }
