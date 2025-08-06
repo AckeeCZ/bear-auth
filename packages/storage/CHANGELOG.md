@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 3.0.9
+
+### Patch Changes
+
+- b41e893: Add support for custom timer. Now it's possible via setAlarmManager method override the default setTimeout/clearTimeout methods.
+- Updated dependencies [b41e893]
+    - @bear-auth/core@3.0.9
+
 ## 3.0.8
 
 ### Patch Changes
