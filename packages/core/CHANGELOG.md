@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.12
+
+### Patch Changes
+
+- fae66fc: Make possible to control the auto refresh token process by pausing / resuming it.
+
 ## 3.0.11
 
 ### Patch Changes
