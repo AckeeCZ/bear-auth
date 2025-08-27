@@ -1,3 +1,4 @@
+import { startTokenAutoRefresh, stopTokenAutoRefresh } from './autoRefreshToken.ts';
 import type { BearAuth } from './create.ts';
 import { getInstance } from './instances.js';
 
@@ -28,6 +29,22 @@ export function setAlarmManager(id: BearAuth<unknown>['id'], alarmManager: Alarm
     logger.debug('[setAlarmManager]', 'Setting custom alarm manager...');
 
     getInstance(id).alarmManager = alarmManager;
+
+    return {
+        /**
+         * Pause the auto refresh token.
+         */
+        async pause() {
+            await stopTokenAutoRefresh(id);
+        },
+
+        /**
+         * Resume the auto refresh token.
+         */
+        async resume() {
+            await startTokenAutoRefresh(id);
+        },
+    };
 }
 
 export function createDefaultAlarmManager(): AlarmManager {

@@ -242,13 +242,22 @@ Optionally, you can override the defaults `setTimeout` / `clearTimeout` methods 
 ```ts
 import { setAlarmManager } from '@bear-auth/core';
 
-setAlarmManager('myInstanceId', {
+const controlAutoRefreshTokenProcess = setAlarmManager('myInstanceId', {
     async createAlarm(callback, delay) {
         // create alarm, return alarm ID
     },
     async clearAlarm(id, callback) {
         // clear alarm
     },
+});
+
+// For example, you can pause / resume the auto refresh token process on network change
+yourMethodForHandlingNetworkChange(async isOnline => {
+    if (isOnline) {
+        await controlAutoRefreshTokenProcess.resume();
+    } else {
+        await controlAutoRefreshTokenProcess.pause();
+    }
 });
 ```
 

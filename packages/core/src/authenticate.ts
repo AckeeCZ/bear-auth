@@ -66,7 +66,7 @@ export async function authenticateInner<AuthInfo>(
 
     await persistAuthSession<AuthInfo>(id);
 
-    await startTokenAutoRefresh<AuthInfo>(id);
+    await startTokenAutoRefresh(id);
 
     await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 

@@ -68,7 +68,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             await persistAuthSession<AuthInfo>(id);
 
-            await startTokenAutoRefresh<AuthInfo>(id);
+            await startTokenAutoRefresh(id);
 
             logger.debug('[refreshToken]', 'Access token has been successfully refreshed.');
 

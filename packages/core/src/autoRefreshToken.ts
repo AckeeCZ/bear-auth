@@ -28,10 +28,14 @@ export async function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id
         await hooks.refreshToken!();
     }
 
-    getInstance<AuthInfo>(id).refreshTokenTimeout = {
-        id: await alarmManager.createAlarm(onAlarm, expiresIn),
-        callback: onAlarm,
-    };
+    if (expiresIn <= 0) {
+        await onAlarm();
+    } else {
+        getInstance<AuthInfo>(id).refreshTokenTimeout = {
+            id: await alarmManager.createAlarm(onAlarm, expiresIn),
+            callback: onAlarm,
+        };
+    }
 }
 
 export async function stopTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id']) {
