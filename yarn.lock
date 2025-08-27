@@ -347,7 +347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bear-auth/core@npm:3.0.11, @bear-auth/core@workspace:*, @bear-auth/core@workspace:packages/core":
+"@bear-auth/core@npm:3.0.12, @bear-auth/core@workspace:*, @bear-auth/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@bear-auth/core@workspace:packages/core"
   dependencies:
@@ -364,7 +364,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@bear-auth/react@workspace:packages/react"
   dependencies:
-    "@bear-auth/core": "npm:3.0.11"
+    "@bear-auth/core": "npm:3.0.12"
     "@tooling/eslint": "workspace:*"
     "@tooling/madge": "workspace:*"
     "@tooling/typescript": "workspace:*"
@@ -372,7 +372,7 @@ __metadata:
     tsc-alias: "npm:1.8.16"
     typescript: "npm:5.8.3"
   peerDependencies:
-    "@bear-auth/core": 3.0.11
+    "@bear-auth/core": 3.0.12
     react: ^18 || ^19
   languageName: unknown
   linkType: soft
@@ -389,7 +389,7 @@ __metadata:
     typescript: "npm:5.8.3"
     zod: "npm:3.25.42"
   peerDependencies:
-    "@bear-auth/core": 3.0.11
+    "@bear-auth/core": 3.0.12
     zod: ^3.23.8
   languageName: unknown
   linkType: soft
