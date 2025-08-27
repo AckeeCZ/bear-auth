@@ -1,5 +1,13 @@
 # @bear-auth/storage
 
+## 3.0.11
+
+### Patch Changes
+
+- 39c3ec6: Make sure network is online before hooks start.
+- Updated dependencies [39c3ec6]
+    - @bear-auth/core@3.0.11
+
 ## 3.0.10
 
 ### Patch Changes

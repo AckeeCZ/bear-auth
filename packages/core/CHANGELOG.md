@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.11
+
+### Patch Changes
+
+- 39c3ec6: Make sure network is online before hooks start.
+
 ## 3.0.10
 
 ### Patch Changes
