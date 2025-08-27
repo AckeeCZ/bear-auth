@@ -38,6 +38,10 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
     async function refreshToken(retrievedAuthSession?: AuthData<AuthInfo>, failureCount = 0) {
         const { store, logger, continueWhenOnline, storage } = getInstance<AuthInfo>(id);
 
+        logger.debug('[refreshToken]', 'Refreshing access token...');
+
+        await continueWhenOnline('refreshToken');
+
         if (!retrievedAuthSession && store.getSession().status !== 'authenticated') {
             throw new BearAuthError(
                 'bear-auth/not-authenticated',
@@ -52,10 +56,6 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
         await stopTokenAutoRefresh<AuthInfo>(id);
 
         try {
-            logger.debug('[refreshToken]', 'Refreshing access token...');
-
-            await continueWhenOnline('refreshToken');
-
             const authSession = retrievedAuthSession ?? (store.getSession().data as AuthData<AuthInfo>);
 
             logger.debug('[refreshToken]', 'Using auth session:', authSession);

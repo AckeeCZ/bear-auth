@@ -40,6 +40,8 @@ export function setFetchAuthInfoHook<
     async function fetchAuthInfo(retrievedAuthSession?: AuthData<AuthInfo>, failureCount = 0) {
         const { logger, store, storage, continueWhenOnline } = getInstance<AuthInfo>(id);
 
+        await continueWhenOnline('fetchAuthInfo');
+
         if (!retrievedAuthSession && store.getSession().status !== 'authenticated') {
             throw new BearAuthError('bear-auth/not-authenticated', `Can't fetch auth data. No auth sesssion active.`);
         }
@@ -48,8 +50,6 @@ export function setFetchAuthInfoHook<
             const authSession = retrievedAuthSession ?? (store.getSession().data as AuthData<AuthInfo>);
 
             logger.debug('[fetchAuthInfo]', 'Fetching auth data...', authSession);
-
-            await continueWhenOnline('fetchAuthInfo');
 
             const authInfo = await handler(authSession);
 

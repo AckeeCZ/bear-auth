@@ -36,6 +36,8 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
     async function logout(failureCount = 0) {
         const { continueWhenOnline, logger, store, storage } = getInstance<AuthInfo>(id);
 
+        await continueWhenOnline('logout');
+
         if (store.getSession().status !== 'authenticated') {
             return;
         }
@@ -48,8 +50,6 @@ export function setLogoutHook<AuthInfo, AuthHook extends LogoutHook<AuthInfo> = 
             logger.debug('[logout]', 'Signing-out...');
 
             await stopTokenAutoRefresh<AuthInfo>(id);
-
-            await continueWhenOnline('logout');
 
             await handler(store.getSession().data as SigningOutSession<AuthInfo>['data']);
 
