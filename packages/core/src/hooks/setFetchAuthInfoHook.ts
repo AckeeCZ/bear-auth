@@ -60,7 +60,7 @@ export function setFetchAuthInfoHook<
                 }),
             );
 
-            await persistAuthSession<AuthInfo>(id);
+            await persistAuthSession<AuthInfo>(id, store.getSession().data);
 
             logger.debug('[fetchAuthInfo]', 'Auth data has been fetched:', authInfo);
 

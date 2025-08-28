@@ -2,7 +2,7 @@ import { isExpired, startTokenAutoRefresh, stopTokenAutoRefresh } from '../autoR
 import { type BearAuth } from '../create.ts';
 import { BearAuthError } from '../errors.ts';
 import { getInstance } from '../instances.ts';
-import { runOnAuthStateChangedCallbacks } from '../onAuthStateChanged.ts';
+import { onAuthStateChanged, runOnAuthStateChangedCallbacks } from '../onAuthStateChanged.ts';
 import { persistAuthSession } from '../storage.ts';
 import {
     setRefreshingSession,
@@ -66,7 +66,7 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
             await store.setSession(session => updateSessionAfterRefreshToken(session, result));
 
-            await persistAuthSession<AuthInfo>(id);
+            await persistAuthSession<AuthInfo>(id, store.getSession().data);
 
             await startTokenAutoRefresh(id);
 
@@ -101,7 +101,20 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
         const session = store.getSession();
 
-        if (options?.forceRefresh || (isExpired(session.data?.expiration) && session.status !== 'refreshing')) {
+        if (session.status === 'refreshing') {
+            await new Promise(resolve => {
+                const unsubscribe = onAuthStateChanged(id, session => {
+                    if (session.status === 'authenticated') {
+                        unsubscribe();
+                        resolve(null);
+                    }
+                });
+            });
+
+            return store.getSession();
+        }
+
+        if (options?.forceRefresh || isExpired(session.data?.expiration)) {
             return await refreshToken();
         }
 

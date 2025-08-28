@@ -64,7 +64,7 @@ export async function authenticateInner<AuthInfo>(
         }),
     );
 
-    await persistAuthSession<AuthInfo>(id);
+    await persistAuthSession<AuthInfo>(id, store.getSession().data);
 
     await startTokenAutoRefresh(id);
 

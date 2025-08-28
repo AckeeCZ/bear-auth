@@ -52,6 +52,12 @@ describe('Persistent Authentication Session Flows', () => {
             expiration: new Date(Date.now() + 3600 * 1000).toISOString(), // 1 hour from now
         };
 
+        const refreshedSessionData = {
+            accessToken: 'new-access-token',
+            refreshToken: 'test-refresh-token',
+            expiration: new Date(Date.now() + 3600 * 1000).toISOString(), // 1 hour from now
+        };
+
         const storage = createMockedStorage<AuthInfo>(id, {
             data: sessionData,
             version: 2,
@@ -61,6 +67,8 @@ describe('Persistent Authentication Session Flows', () => {
 
         const continueWhenOnline = vi.fn();
         setContinueWhenOnline(id, continueWhenOnline);
+
+        setRefreshTokenHook(id, async () => refreshedSessionData);
 
         expect(await retrieveAuthSession(id)).toEqual({
             status: 'authenticated',

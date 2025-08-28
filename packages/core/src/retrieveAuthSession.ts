@@ -48,25 +48,34 @@ export async function retrieveAuthSessionInner<AuthInfo>(id: BearAuth<AuthInfo>[
             authSession.expiration && authSession.refreshToken,
         );
 
-        await store.setSession(() => setAuthenticatedSession(authSession));
+        if (authSession.refreshToken && !hooks.refreshToken) {
+            throw new BearAuthError(
+                'bear-auth/unset-hook',
+                `The 'refreshToken' property provided but the refresh token hook has not been set yet. Call setRefreshTokenHook(...) first.`,
+            );
+        }
 
-        const session = store.getSession();
-
-        if (isExpired(session.data?.expiration)) {
-            if (hooks.refreshToken) {
-                await hooks.refreshToken(session.data as RefreshingSession<AuthInfo>['data']);
-            }
-        } else {
-            await startTokenAutoRefresh(id);
+        if (isExpired(authSession?.expiration) && hooks.refreshToken) {
+            await hooks.refreshToken(authSession as RefreshingSession<AuthInfo>['data']);
         }
 
         if (authSession.authInfo && hooks.fetchAuthInfo) {
-            const session = store.getSession().data! as AuthenticatedSession<AuthInfo>['data'];
-
-            await hooks.fetchAuthInfo?.(session);
+            await hooks.fetchAuthInfo?.({
+                ...authSession,
+                ...store.getSession().data,
+            });
         }
 
-        await persistAuthSession<AuthInfo>(id);
+        const resolvedAuthSession = {
+            ...authSession,
+            ...store.getSession().data,
+        } satisfies AuthenticatedSession<AuthInfo>['data'];
+
+        await persistAuthSession<AuthInfo>(id, resolvedAuthSession);
+
+        store.setSession(() => setAuthenticatedSession(resolvedAuthSession));
+
+        await startTokenAutoRefresh(id);
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 

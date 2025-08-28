@@ -18,7 +18,13 @@ export async function startTokenAutoRefresh<AuthInfo>(id: BearAuth<AuthInfo>['id
 
     await stopTokenAutoRefresh(id);
 
-    const { expiration } = store.getSession().data!;
+    const session = store.getSession();
+
+    if (session.status === 'refreshing') {
+        return;
+    }
+
+    const expiration = session.data?.expiration;
 
     const expiresIn = isExpired(expiration) ? 0 : Date.parse(expiration!) - Date.now();
 

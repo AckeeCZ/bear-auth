@@ -103,7 +103,7 @@ export function updateSessionAfterRefreshToken<AuthInfo>(
         accessToken,
         refreshToken,
         expiration: getExpirationTimestampWithBuffer(expiration),
-        authInfo: freshAuthInfo ?? session.data!.authInfo,
+        authInfo: freshAuthInfo ?? session.data?.authInfo ?? null,
     });
 }
 
