@@ -1,5 +1,11 @@
 # @bear-auth/core
 
+## 3.0.13
+
+### Patch Changes
+
+- 91d9fb6: Fix access token refreshment on session retrieval.
+
 ## 3.0.12
 
 ### Patch Changes
