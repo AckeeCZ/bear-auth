@@ -1,11 +1,13 @@
 import { describe, expect, test, vi } from 'vitest';
 
+import { authenticate } from '../../authenticate.ts';
 import { create } from '../../create.ts';
 import { destroy } from '../../destroy.ts';
 import { getExpirationTimestampWithBuffer } from '../../expiration.ts';
-import type { AuthData } from '../../hooks/setFetchAuthInfoHook.ts';
+import { setFetchAuthInfoHook, type AuthData } from '../../hooks/setFetchAuthInfoHook.ts';
 import { setRefreshTokenHook } from '../../hooks/setRefreshTokenHook.ts';
 import { setContinueWhenOnline } from '../../network.ts';
+import { onAuthStateChanged } from '../../onAuthStateChanged.ts';
 import { retrieveAuthSession } from '../../retrieveAuthSession.ts';
 import { setStorage, type PersistedData } from '../../storage.ts';
 import type { Session } from '../../store/session.ts';
@@ -134,6 +136,164 @@ describe('Persistent Authentication Session Flows', () => {
         } satisfies Session<AuthInfo>);
 
         expect(refreshTokenHandler).toHaveBeenCalledTimes(1);
+
+        await destroy(id);
+    });
+});
+
+describe('Auth info across access token refreshes', () => {
+    const authInfo = { userId: 'user123' };
+    type AuthInfo = typeof authInfo;
+
+    const hourFromNow = () => new Date(Date.now() + 3600 * 1000).toISOString();
+    const hourAgo = () => new Date(Date.now() - 3600 * 1000).toISOString();
+
+    const freshTokens = () => ({
+        accessToken: 'new-access-token',
+        refreshToken: 'test-refresh-token',
+        expiration: hourFromNow(),
+    });
+
+    function setUpExpiredPersistedSession(persistedAuthInfo: AuthInfo | null = authInfo) {
+        const id = create({ id: getTestInstanceId() });
+
+        const storage = createMockedStorage<AuthInfo>(id, {
+            data: {
+                accessToken: 'test-access-token',
+                refreshToken: 'test-refresh-token',
+                expiration: hourAgo(),
+                authInfo: persistedAuthInfo,
+            },
+            version: 2,
+        });
+        setStorage(id, storage);
+
+        return { id, storage };
+    }
+
+    test('should keep the persisted authInfo in storage while auth info is refetched after a refresh during retrieval', async () => {
+        const { id, storage } = setUpExpiredPersistedSession();
+
+        setRefreshTokenHook<AuthInfo>(id, async () => freshTokens());
+
+        let resolveAuthInfo: (value: AuthInfo) => void = () => {};
+        const fetchAuthInfoHandler = vi.fn(() => new Promise<AuthInfo>(resolve => (resolveAuthInfo = resolve)));
+        setFetchAuthInfoHook<AuthInfo>(id, fetchAuthInfoHandler);
+
+        const retrieval = retrieveAuthSession(id);
+
+        await vi.waitFor(() => expect(fetchAuthInfoHandler).toHaveBeenCalledTimes(1));
+
+        // The tab may be closed right now, before the auth info request completes.
+        expect((await storage.get(id))?.data?.authInfo).toEqual(authInfo);
+
+        resolveAuthInfo(authInfo);
+
+        expect((await retrieval).data?.authInfo).toEqual(authInfo);
+
+        await destroy(id);
+    });
+
+    test('should notify subscribers with the persisted authInfo when refreshing during retrieval', async () => {
+        const { id } = setUpExpiredPersistedSession();
+
+        setRefreshTokenHook<AuthInfo>(id, async () => freshTokens());
+        setFetchAuthInfoHook<AuthInfo>(id, async () => authInfo);
+
+        const sessions: Session<AuthInfo>[] = [];
+        onAuthStateChanged<AuthInfo>(id, session => {
+            sessions.push(session);
+        });
+
+        await retrieveAuthSession(id);
+
+        const notifiedSessions = sessions.filter(session => session.status !== 'retrieving');
+
+        expect(notifiedSessions.map(session => session.status)).toContain('refreshing');
+        expect(notifiedSessions.every(session => session.data?.authInfo?.userId === authInfo.userId)).toBe(true);
+
+        await destroy(id);
+    });
+
+    test('should prefer authInfo returned by the refresh token handler', async () => {
+        const { id } = setUpExpiredPersistedSession();
+
+        const freshAuthInfo = { userId: 'fresh-user' };
+        setRefreshTokenHook<AuthInfo>(id, async () => ({ ...freshTokens(), authInfo: freshAuthInfo }));
+
+        expect((await retrieveAuthSession(id)).data?.authInfo).toEqual(freshAuthInfo);
+
+        await destroy(id);
+    });
+
+    test('should fetch auth info during retrieval when the persisted session has none', async () => {
+        const { id, storage } = setUpExpiredPersistedSession(null);
+
+        setRefreshTokenHook<AuthInfo>(id, async () => freshTokens());
+
+        const fetchAuthInfoHandler = vi.fn(async () => authInfo);
+        setFetchAuthInfoHook<AuthInfo>(id, fetchAuthInfoHandler);
+
+        expect((await retrieveAuthSession(id)).data?.authInfo).toEqual(authInfo);
+        expect(fetchAuthInfoHandler).toHaveBeenCalledTimes(1);
+        expect((await storage.get(id))?.data?.authInfo).toEqual(authInfo);
+
+        await destroy(id);
+    });
+
+    test('should retrieve a session without auth info when the fetch auth info hook is not set', async () => {
+        const { id } = setUpExpiredPersistedSession(null);
+
+        setRefreshTokenHook<AuthInfo>(id, async () => freshTokens());
+
+        const session = await retrieveAuthSession(id);
+
+        expect(session.status).toBe('authenticated');
+        expect(session.data?.authInfo).toBeNull();
+
+        await destroy(id);
+    });
+
+    test('should keep authInfo when refreshing the access token of an active session', async () => {
+        const id = create({ id: getTestInstanceId() });
+
+        setFetchAuthInfoHook<AuthInfo>(id, async () => authInfo);
+        const refresh = setRefreshTokenHook<AuthInfo>(id, async () => freshTokens());
+
+        await authenticate<AuthInfo>(id, {
+            accessToken: 'test-access-token',
+            refreshToken: 'test-refresh-token',
+            expiration: hourFromNow(),
+            authInfo,
+        });
+
+        const session = await refresh({ forceRefresh: true });
+
+        expect(session.data?.accessToken).toBe('new-access-token');
+        expect(session.data?.authInfo).toEqual(authInfo);
+
+        await destroy(id);
+    });
+
+    test('should retry a failed refresh of an active session', async () => {
+        const id = create({ id: getTestInstanceId() });
+
+        const refreshTokenHandler = vi
+            .fn<() => Promise<AuthData<AuthInfo> & { expiration: string; refreshToken: string }>>()
+            .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+            .mockImplementation(async () => freshTokens());
+        const refresh = setRefreshTokenHook<AuthInfo>(id, refreshTokenHandler, { retry: () => true });
+
+        await authenticate<AuthInfo>(id, {
+            accessToken: 'test-access-token',
+            refreshToken: 'test-refresh-token',
+            expiration: hourFromNow(),
+        });
+
+        const session = await refresh({ forceRefresh: true });
+
+        expect(refreshTokenHandler).toHaveBeenCalledTimes(2);
+        expect(session).toMatchObject({ status: 'authenticated', data: { accessToken: 'new-access-token' } });
 
         await destroy(id);
     });

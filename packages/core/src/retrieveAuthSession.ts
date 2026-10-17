@@ -59,8 +59,9 @@ export async function retrieveAuthSessionInner<AuthInfo>(id: BearAuth<AuthInfo>[
             await hooks.refreshToken(authSession as RefreshingSession<AuthInfo>['data']);
         }
 
-        if (authSession.authInfo && hooks.fetchAuthInfo) {
-            await hooks.fetchAuthInfo?.({
+        // Fetch even when the persisted auth info is missing, so a session persisted without it recovers.
+        if (hooks.fetchAuthInfo) {
+            await hooks.fetchAuthInfo({
                 ...authSession,
                 ...store.getSession().data,
             });
@@ -99,7 +100,7 @@ export async function retrieveAuthSessionInner<AuthInfo>(id: BearAuth<AuthInfo>[
  * - Attempts to retrieve the auth session from the storage.
  * - If refresh token isn't available but the access token is valid, it sets the session as authenticated.
  * - Refreshes the access token if it's expired, refresh token and the refreshToken hook are available.
- * - Refetches the auth info if it's available.
+ * - Fetches the auth info if the `fetchAuthInfo` hook is set.
  * - Persists the fresh session in the storage.
  * - Calls `onAuthStateChanged` callbacks.
  * - If any of the above steps fail, destroys the instance.

@@ -49,22 +49,23 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             );
         }
 
-        await store.setSession(setRefreshingSession);
+        // During session retrieval the store is still empty, so the refreshed session must be derived from the retrieved one.
+        const authSession = retrievedAuthSession ?? (store.getSession().data as AuthData<AuthInfo>);
+
+        await store.setSession(() => setRefreshingSession(authSession));
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
         await stopTokenAutoRefresh<AuthInfo>(id);
 
         try {
-            const authSession = retrievedAuthSession ?? (store.getSession().data as AuthData<AuthInfo>);
-
             logger.debug('[refreshToken]', 'Using auth session:', authSession);
 
             const result = await handler(authSession);
 
             logger.debug('[refreshToken]', 'Received refresh access token result:', result);
 
-            await store.setSession(session => updateSessionAfterRefreshToken(session, result));
+            await store.setSession(() => updateSessionAfterRefreshToken(authSession, result));
 
             await persistAuthSession<AuthInfo>(id, store.getSession().data);
 
@@ -81,7 +82,8 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             failureCount++;
 
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
-                return refreshToken(retrievedAuthSession, failureCount);
+                // The store is in the refreshing state now, so the retry needs the session explicitly.
+                return refreshToken(authSession, failureCount);
             } else {
                 await store.setSession(setUnauthenticatedSession);
 
