@@ -8,4 +8,4 @@ Keep `authInfo` when the access token is refreshed during session retrieval. Pre
 
 `retrieveAuthSession` now calls `fetchAuthInfo` whenever the hook is set, even when the persisted session has no `authInfo`, so such sessions recover on the next retrieval.
 
-Retrying a failed refresh of an active session no longer fails with `bear-auth/not-authenticated`.
+Retrying a failed refresh of an active session no longer fails with `bear-auth/not-authenticated`. A retry reads the session from the store again, so it uses tokens another tab delivered while the refresh was in flight, and it stops when the session was destroyed in the meantime. A successful refresh keeps `authInfo` delivered by another tab while the refresh was in flight.

@@ -297,4 +297,120 @@ describe('Auth info across access token refreshes', () => {
 
         await destroy(id);
     });
+
+    test('should retry with the session delivered by another tab while the refresh was in flight', async () => {
+        const id = create({ id: getTestInstanceId() });
+
+        setFetchAuthInfoHook<AuthInfo>(id, async () => authInfo);
+
+        let rejectFirstAttempt: (error: Error) => void = () => {};
+        const refreshTokenHandler = vi
+            .fn<
+                (
+                    session: AuthData<AuthInfo>,
+                ) => Promise<AuthData<AuthInfo> & { expiration: string; refreshToken: string }>
+            >()
+            .mockImplementationOnce(() => new Promise((_, reject) => (rejectFirstAttempt = reject)))
+            .mockImplementation(async () => freshTokens());
+        const refresh = setRefreshTokenHook<AuthInfo>(id, refreshTokenHandler, { retry: () => true });
+
+        await authenticate<AuthInfo>(id, {
+            accessToken: 'test-access-token',
+            refreshToken: 'test-refresh-token',
+            expiration: hourFromNow(),
+            authInfo,
+        });
+
+        const refreshing = refresh({ forceRefresh: true });
+
+        await vi.waitFor(() => expect(refreshTokenHandler).toHaveBeenCalledTimes(1));
+
+        // Another tab has rotated the refresh token, so the in-flight attempt fails.
+        await authenticate<AuthInfo>(id, {
+            accessToken: 'other-tab-access-token',
+            refreshToken: 'other-tab-refresh-token',
+            expiration: hourFromNow(),
+            authInfo,
+        });
+        rejectFirstAttempt(new Error('Refresh token already used'));
+
+        await refreshing;
+
+        expect(refreshTokenHandler).toHaveBeenCalledTimes(2);
+        expect(refreshTokenHandler.mock.calls[1]![0].refreshToken).toBe('other-tab-refresh-token');
+
+        await destroy(id);
+    });
+
+    test('should keep authInfo delivered by another tab while the refresh was in flight', async () => {
+        const id = create({ id: getTestInstanceId() });
+
+        setFetchAuthInfoHook<AuthInfo>(id, async () => authInfo);
+
+        let resolveRefresh: (tokens: ReturnType<typeof freshTokens>) => void = () => {};
+        const refreshTokenHandler = vi.fn(
+            () => new Promise<ReturnType<typeof freshTokens>>(resolve => (resolveRefresh = resolve)),
+        );
+        const refresh = setRefreshTokenHook<AuthInfo>(id, refreshTokenHandler);
+
+        await authenticate<AuthInfo>(id, {
+            accessToken: 'test-access-token',
+            refreshToken: 'test-refresh-token',
+            expiration: hourFromNow(),
+            authInfo,
+        });
+
+        const refreshing = refresh({ forceRefresh: true });
+
+        await vi.waitFor(() => expect(refreshTokenHandler).toHaveBeenCalledTimes(1));
+
+        const otherTabAuthInfo = { userId: 'other-tab-user' };
+        await authenticate<AuthInfo>(id, {
+            accessToken: 'other-tab-access-token',
+            refreshToken: 'test-refresh-token',
+            expiration: hourFromNow(),
+            authInfo: otherTabAuthInfo,
+        });
+        resolveRefresh(freshTokens());
+
+        expect((await refreshing).data?.authInfo).toEqual(otherTabAuthInfo);
+
+        await destroy(id);
+    });
+
+    test('should not retry a refresh when the session was destroyed between attempts', async () => {
+        const id = create({ id: getTestInstanceId() });
+
+        let destroying: Promise<void> = Promise.resolve();
+        const refreshTokenHandler = vi.fn(async () => {
+            throw new TypeError('Failed to fetch');
+        });
+        const refresh = setRefreshTokenHook<AuthInfo>(id, refreshTokenHandler, {
+            retry: async () => {
+                const signedOut = new Promise<void>(resolve => {
+                    onAuthStateChanged<AuthInfo>(id, session => {
+                        if (session.status === 'unauthenticated') {
+                            resolve();
+                        }
+                    });
+                });
+
+                destroying = destroy(id);
+                await signedOut;
+
+                return true;
+            },
+        });
+
+        await authenticate<AuthInfo>(id, {
+            accessToken: 'test-access-token',
+            refreshToken: 'test-refresh-token',
+            expiration: hourFromNow(),
+        });
+
+        await expect(refresh({ forceRefresh: true })).rejects.toMatchObject({ code: 'bear-auth/not-authenticated' });
+        expect(refreshTokenHandler).toHaveBeenCalledTimes(1);
+
+        await destroying;
+    });
 });

@@ -95,14 +95,14 @@ export function setAuthenticatedSession<AuthInfo>({
 }
 
 export function updateSessionAfterRefreshToken<AuthInfo>(
-    refreshedSessionData: RefreshingSession<AuthInfo>['data'],
+    session: State<AuthInfo>['session'],
     { accessToken, refreshToken, expiration, authInfo: freshAuthInfo }: RefreshingSession<AuthInfo>['data'],
 ): AuthenticatedSession<AuthInfo> {
     return setAuthenticatedSession({
         accessToken,
         refreshToken,
         expiration: getExpirationTimestampWithBuffer(expiration),
-        authInfo: freshAuthInfo ?? refreshedSessionData.authInfo ?? null,
+        authInfo: freshAuthInfo ?? session.data?.authInfo ?? null,
     });
 }
 
