@@ -42,29 +42,36 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
 
         await continueWhenOnline('refreshToken');
 
-        if (!retrievedAuthSession && store.getSession().status !== 'authenticated') {
+        const session = store.getSession();
+        // A retry finds the store in the refreshing state left by the failed attempt.
+        const isRefreshable =
+            session.status === 'authenticated' || (failureCount > 0 && session.status === 'refreshing');
+
+        if (!retrievedAuthSession && !isRefreshable) {
             throw new BearAuthError(
                 'bear-auth/not-authenticated',
                 `Can't refresh access token. No auth sesssion active.`,
             );
         }
 
-        await store.setSession(setRefreshingSession);
+        // During session retrieval the store is still empty, so the refreshed session must be derived from the retrieved one.
+        const authSession = retrievedAuthSession ?? (session.data as AuthData<AuthInfo>);
+
+        await store.setSession(() => setRefreshingSession(authSession));
 
         await runOnAuthStateChangedCallbacks<AuthInfo>(id);
 
         await stopTokenAutoRefresh<AuthInfo>(id);
 
         try {
-            const authSession = retrievedAuthSession ?? (store.getSession().data as AuthData<AuthInfo>);
-
             logger.debug('[refreshToken]', 'Using auth session:', authSession);
 
             const result = await handler(authSession);
 
             logger.debug('[refreshToken]', 'Received refresh access token result:', result);
 
-            await store.setSession(session => updateSessionAfterRefreshToken(session, result));
+            // The store may hold a newer session delivered by another tab while the handler was running.
+            await store.setSession(currentSession => updateSessionAfterRefreshToken(currentSession, result));
 
             await persistAuthSession<AuthInfo>(id, store.getSession().data);
 
@@ -81,7 +88,8 @@ export function setRefreshTokenHook<AuthInfo, AuthHook extends RefreshTokenHook<
             failureCount++;
 
             if ((await resolveRetry(options?.retry, error, failureCount)) && failureCount < MAX_RETRY_COUNT) {
-                return refreshToken(retrievedAuthSession, failureCount);
+                // Read the session from the store again: another tab may have refreshed it, or it may have been signed out.
+                return refreshToken(undefined, failureCount);
             } else {
                 await store.setSession(setUnauthenticatedSession);
 
