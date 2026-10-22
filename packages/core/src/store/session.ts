@@ -55,11 +55,10 @@ export function createSession(): Readonly<RetrievingSession> {
     };
 }
 
-export function setRefreshingSession<AuthInfo>(session: State<AuthInfo>['session']): RefreshingSession<AuthInfo> {
+export function setRefreshingSession<AuthInfo>(data: RefreshingSession<AuthInfo>['data']): RefreshingSession<AuthInfo> {
     return {
         status: 'refreshing',
-        // @ts-expect-error
-        data: session.data,
+        data,
     } as const;
 }
 
